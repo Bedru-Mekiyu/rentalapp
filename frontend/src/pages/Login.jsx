@@ -100,7 +100,7 @@ export default function Login() {
                 value={form.email}
                 onChange={handleChange}
                 required
-                className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-200"
+                className="form-input text-sm"
                 placeholder="admin@example.com"
               />
             </div>
@@ -115,7 +115,7 @@ export default function Login() {
                 value={form.password}
                 onChange={handleChange}
                 required
-                className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-200"
+                className="form-input text-sm"
                 placeholder="••••••••"
               />
             </div>

@@ -7,6 +7,7 @@ import DashboardCard from "../components/DashboardCard";
 import PageHeader from "../components/PageHeader";
 import SkeletonRow from "../components/SkeletonRow";
 import SkeletonTable from "../components/SkeletonTable";
+import SkeletonCard from "../components/SkeletonCard";
 
 export default function UnitDetailPage() {
   const { unitId } = useParams();
@@ -66,16 +67,16 @@ export default function UnitDetailPage() {
           title="Unit Detail"
           subtitle="Loading unit details..."
         />
-        <DashboardCard title="Unit Information">
+        <SkeletonCard title="Unit Information">
           <div className="grid gap-4 md:grid-cols-3">
             <SkeletonRow className="h-16 w-full" />
             <SkeletonRow className="h-16 w-full" />
             <SkeletonRow className="h-16 w-full" />
           </div>
-        </DashboardCard>
-        <DashboardCard title="Lease History">
+        </SkeletonCard>
+        <SkeletonCard title="Lease History">
           <SkeletonTable rows={4} columns={5} />
-        </DashboardCard>
+        </SkeletonCard>
       </div>
     );
   }
@@ -179,9 +180,12 @@ export default function UnitDetailPage() {
         description="Current and past leases associated with this unit."
       >
         {leases.length === 0 ? (
-          <p className="text-xs text-slate-500">
-            No leases found for this unit.
-          </p>
+          <div className="space-y-3">
+            <SkeletonTable rows={3} columns={5} />
+            <p className="text-xs text-slate-500">
+              No leases found for this unit.
+            </p>
+          </div>
         ) : (
           <div className="overflow-hidden rounded-xl border border-slate-200">
             <table className="min-w-full divide-y divide-slate-200 text-xs">

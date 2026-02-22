@@ -7,6 +7,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { DollarSign, AlertTriangle, CheckCircle, Calendar } from "lucide-react";
 import PageHeader from "../components/PageHeader";
 import SkeletonRow from "../components/SkeletonRow";
+import SkeletonCard from "../components/SkeletonCard";
 
 export default function FinancePage() {
   const [leases, setLeases] = useState([]);
@@ -98,7 +99,7 @@ export default function FinancePage() {
                 value={selectedLeaseId}
                 onChange={(e) => setSelectedLeaseId(e.target.value)}
                 disabled={leases.length === 0}
-                className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 disabled:opacity-60 transition-all"
+                className="form-select text-sm disabled:opacity-60"
               >
                 <option value="ALL">All Leases (Aggregate)</option>
                 {leases.map((lease) => (
@@ -120,26 +121,26 @@ export default function FinancePage() {
         {loadingSummary && (
           <div className="space-y-4">
             <div className="grid gap-6 md:grid-cols-3">
-              <div className="stagger-item rounded-xl border border-slate-200 bg-white p-6">
+              <SkeletonCard>
                 <SkeletonRow className="h-3 w-28" />
                 <div className="mt-3">
                   <SkeletonRow className="h-8 w-32" />
                 </div>
-              </div>
-              <div className="stagger-item rounded-xl border border-slate-200 bg-white p-6">
+              </SkeletonCard>
+              <SkeletonCard>
                 <SkeletonRow className="h-3 w-32" />
                 <div className="mt-3">
                   <SkeletonRow className="h-8 w-32" />
                 </div>
-              </div>
-              <div className="stagger-item rounded-xl border border-slate-200 bg-white p-6">
+              </SkeletonCard>
+              <SkeletonCard>
                 <SkeletonRow className="h-3 w-32" />
                 <div className="mt-3">
                   <SkeletonRow className="h-8 w-24" />
                 </div>
-              </div>
+              </SkeletonCard>
             </div>
-            <div className="analytics-panel rounded-xl border border-slate-200 bg-white p-4">
+            <div className="surface-panel analytics-panel p-4">
               <SkeletonRow className="h-48 w-full" />
             </div>
           </div>
@@ -147,7 +148,7 @@ export default function FinancePage() {
 
         {!loadingSummary && summary && selectedLeaseId === "ALL" && (
           <div className="grid gap-6 md:grid-cols-3">
-            <div className="stagger-item bg-gradient-to-br from-emerald-50 to-emerald-100 p-6 rounded-xl border border-emerald-200 shadow-sm hover:shadow-md transition-shadow">
+            <div className="surface-panel card-reveal stagger-item p-6">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-emerald-700">Total Revenue (YTD)</p>
@@ -158,7 +159,7 @@ export default function FinancePage() {
                 <DollarSign className="h-8 w-8 text-emerald-600" />
               </div>
             </div>
-            <div className="stagger-item bg-gradient-to-br from-red-50 to-red-100 p-6 rounded-xl border border-red-200 shadow-sm hover:shadow-md transition-shadow">
+            <div className="surface-panel card-reveal stagger-item p-6">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-red-700">Outstanding Balance</p>
@@ -169,7 +170,7 @@ export default function FinancePage() {
                 <AlertTriangle className="h-8 w-8 text-red-600" />
               </div>
             </div>
-            <div className="stagger-item bg-gradient-to-br from-teal-50 to-emerald-100 p-6 rounded-xl border border-teal-200 shadow-sm hover:shadow-md transition-shadow">
+            <div className="surface-panel card-reveal stagger-item p-6">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-teal-700">On-time Payment Rate</p>
@@ -185,7 +186,7 @@ export default function FinancePage() {
 
         {!loadingSummary && summary && selectedLeaseId !== "ALL" && (
           <>
-            <div className="analytics-panel mb-4 rounded-xl bg-white/80 p-3">
+            <div className="surface-panel analytics-panel mb-4 p-3">
               <ResponsiveContainer width="100%" height={200}>
                 <BarChart data={[
                   { name: 'Billed', amount: summary.totalBilledEtb },
@@ -209,7 +210,7 @@ export default function FinancePage() {
               </ResponsiveContainer>
             </div>
             <div className="grid gap-6 md:grid-cols-4">
-              <div className="stagger-item bg-gradient-to-br from-slate-50 to-slate-100 p-4 rounded-lg border border-slate-200 shadow-sm">
+              <div className="surface-panel card-reveal stagger-item p-4">
                 <div className="flex items-center space-x-2">
                   <DollarSign className="h-5 w-5 text-slate-600" />
                   <div>
@@ -220,7 +221,7 @@ export default function FinancePage() {
                   </div>
                 </div>
               </div>
-              <div className="stagger-item bg-gradient-to-br from-emerald-50 to-emerald-100 p-4 rounded-lg border border-emerald-200 shadow-sm">
+              <div className="surface-panel card-reveal stagger-item p-4">
                 <div className="flex items-center space-x-2">
                   <CheckCircle className="h-5 w-5 text-emerald-600" />
                   <div>
@@ -231,7 +232,7 @@ export default function FinancePage() {
                   </div>
                 </div>
               </div>
-              <div className="stagger-item bg-gradient-to-br from-red-50 to-red-100 p-4 rounded-lg border border-red-200 shadow-sm">
+              <div className="surface-panel card-reveal stagger-item p-4">
                 <div className="flex items-center space-x-2">
                   <AlertTriangle className="h-5 w-5 text-red-600" />
                   <div>
@@ -242,7 +243,7 @@ export default function FinancePage() {
                   </div>
                 </div>
               </div>
-              <div className="stagger-item bg-gradient-to-br from-teal-50 to-emerald-100 p-4 rounded-lg border border-teal-200 shadow-sm">
+              <div className="surface-panel card-reveal stagger-item p-4">
                 <div className="flex items-center space-x-2">
                   <Calendar className="h-5 w-5 text-teal-600" />
                   <div>

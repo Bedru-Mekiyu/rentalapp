@@ -97,7 +97,7 @@ export default function LeaseCreation() {
               <select
                 value={tenant}
                 onChange={(e) => setTenant(e.target.value)}
-                className="w-full mt-1 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:bg-white focus:ring-1 focus:ring-emerald-500"
+                className="form-select mt-1 text-sm"
               >
                 <option value="">Select Tenant</option>
                 {tenants.map((t) => (
@@ -110,7 +110,7 @@ export default function LeaseCreation() {
               <select
                 value={unitId}
                 onChange={(e) => setUnitId(e.target.value)}
-                className="w-full mt-1 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:bg-white focus:ring-1 focus:ring-emerald-500"
+                className="form-select mt-1 text-sm"
               >
                 <option value="">Select Unit</option>
                 {units.map((u) => (
@@ -127,7 +127,7 @@ export default function LeaseCreation() {
                   type="date"
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
-                  className="w-full mt-1 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:bg-white focus:ring-1 focus:ring-emerald-500"
+                  className="form-input mt-1 text-sm"
                 />
               </div>
               <div>
@@ -136,7 +136,7 @@ export default function LeaseCreation() {
                   type="date"
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
-                  className="w-full mt-1 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:bg-white focus:ring-1 focus:ring-emerald-500"
+                  className="form-input mt-1 text-sm"
                 />
               </div>
             </div>
@@ -173,7 +173,7 @@ export default function LeaseCreation() {
                 type="number"
                 value={deposit}
                 onChange={(e) => setDeposit(e.target.value)}
-                className="w-full mt-1 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:bg-white focus:ring-1 focus:ring-emerald-500"
+                className="form-input mt-1 text-sm"
               />
             </div>
             <div>
@@ -185,7 +185,7 @@ export default function LeaseCreation() {
                 id=""
                 rows="3"
                 placeholder="Special lease terms..."
-                className="w-full mt-1 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:bg-white focus:ring-1 focus:ring-emerald-500"
+                className="form-textarea mt-1 text-sm"
               />
             </div>
           </div>

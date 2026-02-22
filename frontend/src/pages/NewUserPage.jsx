@@ -87,7 +87,7 @@ export default function NewUserPage() {
               required
               value={form.fullName}
               onChange={handleChange("fullName")}
-              className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:bg-white focus:ring-1 focus:ring-emerald-500"
+              className="form-input text-sm"
               placeholder="Alice Johnson"
             />
           </div>
@@ -101,7 +101,7 @@ export default function NewUserPage() {
               required
               value={form.email}
               onChange={handleChange("email")}
-              className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:bg-white focus:ring-1 focus:ring-emerald-500"
+              className="form-input text-sm"
               placeholder="alice@example.com"
             />
           </div>
@@ -114,7 +114,7 @@ export default function NewUserPage() {
               type="tel"
               value={form.phone}
               onChange={handleChange("phone")}
-              className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:bg-white focus:ring-1 focus:ring-emerald-500"
+              className="form-input text-sm"
               placeholder="+251..."
             />
           </div>
@@ -128,7 +128,7 @@ export default function NewUserPage() {
               required
               value={form.password}
               onChange={handleChange("password")}
-              className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:bg-white focus:ring-1 focus:ring-emerald-500"
+              className="form-input text-sm"
               placeholder="Temporary password"
             />
           </div>
@@ -140,7 +140,7 @@ export default function NewUserPage() {
             <select
               value={form.role}
               onChange={handleChange("role")}
-              className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:bg-white focus:ring-1 focus:ring-emerald-500"
+              className="form-select text-sm"
             >
               {ROLE_OPTIONS.map((r) => (
                 <option key={r} value={r}>

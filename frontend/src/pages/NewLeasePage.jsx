@@ -93,7 +93,7 @@ export default function NewLeasePage() {
               required
               value={form.unitId}
               onChange={handleChange("unitId")}
-              className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all"
+              className="form-select text-sm"
             >
               <option value="">Select Unit</option>
               {units
@@ -115,7 +115,7 @@ export default function NewLeasePage() {
               required
               value={form.tenantId}
               onChange={handleChange("tenantId")}
-              className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all"
+              className="form-select text-sm"
             >
               <option value="">Select Tenant</option>
               {tenants.map((t) => (
@@ -136,7 +136,7 @@ export default function NewLeasePage() {
               required
               value={form.startDate}
               onChange={handleChange("startDate")}
-              className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all"
+              className="form-input text-sm"
             />
           </div>
 
@@ -150,7 +150,7 @@ export default function NewLeasePage() {
               required
               value={form.endDate}
               onChange={handleChange("endDate")}
-              className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all"
+              className="form-input text-sm"
             />
           </div>
 
@@ -164,7 +164,7 @@ export default function NewLeasePage() {
               required
               value={form.monthlyRentEtb}
               onChange={handleChange("monthlyRentEtb")}
-              className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all"
+              className="form-input text-sm"
               placeholder="5000"
             />
           </div>
@@ -179,7 +179,7 @@ export default function NewLeasePage() {
               required
               value={form.securityDepositEtb}
               onChange={handleChange("securityDepositEtb")}
-              className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all"
+              className="form-input text-sm"
               placeholder="5000"
             />
           </div>
@@ -193,7 +193,7 @@ export default function NewLeasePage() {
               value={form.notes}
               onChange={handleChange("notes")}
               rows={3}
-              className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all"
+              className="form-textarea text-sm"
               placeholder="Additional notes..."
             />
           </div>

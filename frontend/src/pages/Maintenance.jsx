@@ -132,7 +132,7 @@ export default function Maintenance() {
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          className="w-full mt-1 mb-3 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:bg-white focus:ring-1 focus:ring-emerald-500"
+          className="form-select mt-1 mb-3 text-sm"
         >
           <option>Plumbing</option>
           <option>Electrical</option>
@@ -144,7 +144,7 @@ export default function Maintenance() {
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className="w-full mt-1 mb-3 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:bg-white focus:ring-1 focus:ring-emerald-500"
+          className="form-textarea mt-1 mb-3 text-sm"
           rows="3"
           placeholder="Describe the issue in detail..."
         />

@@ -18,6 +18,7 @@ import {
 import jsPDF from "jspdf";
 import Papa from "papaparse";
 import PageHeader from "../components/PageHeader";
+import SkeletonCard from "../components/SkeletonCard";
 
 export default function GeneralManagerDashboard() {
   const { user } = useAuthStore();
@@ -185,22 +186,22 @@ export default function GeneralManagerDashboard() {
   if (loading) {
     return (
       <div className="space-y-6">
-        <div className="surface-panel p-6">
+        <SkeletonCard>
           <div className="skeleton h-4 w-24" />
           <div className="mt-3 space-y-2">
             <div className="skeleton h-8 w-72" />
             <div className="skeleton h-3 w-96" />
           </div>
-        </div>
+        </SkeletonCard>
         <div className="grid gap-6 md:grid-cols-3">
           <KpiSkeleton />
           <KpiSkeleton />
           <KpiSkeleton />
         </div>
-        <div className="card-enhanced p-6">
+        <SkeletonCard>
           <div className="skeleton h-5 w-48" />
           <div className="mt-6 skeleton h-56 w-full" />
-        </div>
+        </SkeletonCard>
       </div>
     );
   }
@@ -238,16 +239,16 @@ export default function GeneralManagerDashboard() {
       </div>
 
       {/* Revenue analytics */}
-      <section className="card-enhanced analytics-panel p-6">
+      <section className="surface-panel analytics-panel card-reveal p-6">
         <div className="flex items-center gap-3 mb-6">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 shadow-lg">
             <span className="text-lg">💰</span>
           </div>
           <div>
-            <h2 className="text-lg font-bold text-slate-800">
+            <h2 className="panel-title text-lg">
               Revenue Analytics
             </h2>
-            <p className="text-sm text-slate-600">
+            <p className="panel-subtitle">
               Overview of monthly revenue performance and key financial indicators.
             </p>
           </div>
@@ -286,21 +287,21 @@ export default function GeneralManagerDashboard() {
             </ResponsiveContainer>
           </div>
           <div className="space-y-4">
-            <div className="rounded-xl bg-gradient-to-r from-green-50 to-emerald-50 p-4 border border-green-100">
+            <div className="surface-panel p-4">
               <Stat
                 label="Current Month Revenue"
                 value={formatCurrency(revenueStats.currentMonth)}
                 icon="📈"
               />
             </div>
-            <div className="rounded-xl bg-gradient-to-r from-teal-50 to-emerald-50 p-4 border border-teal-100">
+            <div className="surface-panel p-4">
               <Stat
                 label="Month-to-Date Revenue"
                 value={formatCurrency(revenueStats.monthToDate)}
                 icon="📊"
               />
             </div>
-            <div className="rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 p-4 border border-amber-100">
+            <div className="surface-panel p-4">
               <Stat
                 label="Avg Revenue per Occupied Unit"
                 value={formatCurrency(revenueStats.avgPerUnit)}
@@ -312,11 +313,11 @@ export default function GeneralManagerDashboard() {
       </section>
 
       {/* Occupancy analytics */}
-      <section className="analytics-panel rounded-xl bg-white p-4 shadow-sm">
-        <h2 className="text-sm font-semibold text-slate-800">
+      <section className="surface-panel analytics-panel p-4">
+        <h2 className="panel-title text-sm">
           Occupancy Analytics
         </h2>
-        <p className="mb-4 text-xs text-slate-500">
+        <p className="panel-subtitle mb-4">
           Current occupancy rates across property categories.
         </p>
         <div className="grid gap-4 lg:grid-cols-4">
@@ -345,9 +346,9 @@ export default function GeneralManagerDashboard() {
       </section>
 
       {/* Reports */}
-      <section className="rounded-xl bg-white p-4 shadow-sm">
+      <section className="surface-panel p-4">
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-slate-800">
+          <h2 className="panel-title text-sm">
             Financial Reports
           </h2>
           <div className="flex gap-2">
@@ -388,10 +389,10 @@ export default function GeneralManagerDashboard() {
 
 function KpiCard({ label, value, icon, gradient }) {
   return (
-    <div className={`card-enhanced card-reveal stagger-item p-6 hover:scale-[1.02] transition-all duration-300`}>
+    <div className={`surface-panel card-reveal stagger-item p-6 hover:scale-[1.02] transition-all duration-300`}>
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm font-medium text-slate-600 mb-2">{label}</p>
+          <p className="panel-subtitle mb-2 text-sm">{label}</p>
           <p className="text-4xl font-bold text-slate-900">
             {value}
           </p>
@@ -406,7 +407,7 @@ function KpiCard({ label, value, icon, gradient }) {
 
 function KpiSkeleton() {
   return (
-    <div className="card-enhanced p-6">
+    <div className="surface-panel p-6">
       <div className="flex items-center justify-between">
         <div className="space-y-3">
           <div className="skeleton h-3 w-24" />

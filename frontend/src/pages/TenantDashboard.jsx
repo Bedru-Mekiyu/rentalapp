@@ -28,6 +28,7 @@ import {
 } from "lucide-react";
 import PageHeader from "../components/PageHeader";
 import SkeletonRow from "../components/SkeletonRow";
+import SkeletonTable from "../components/SkeletonTable";
 
 const maintenanceSchema = z.object({
   description: z
@@ -401,12 +402,12 @@ export default function TenantDashboard() {
           </div>
 
           {payments.length === 0 ? (
-            <div className="text-center py-12">
-              <CreditCard className="mx-auto h-12 w-12 text-gray-300 mb-3" />
+            <div className="space-y-3 py-8 text-center">
+              <SkeletonTable rows={4} columns={4} />
               <p className="text-sm text-gray-500">
                 No payments recorded yet.
               </p>
-              <p className="text-xs text-gray-400 mt-1">
+              <p className="text-xs text-gray-400">
                 Your payment history will appear here
               </p>
             </div>
@@ -452,170 +453,193 @@ export default function TenantDashboard() {
                           </span>
                         </div>
                       </td>
-                      <div className="space-y-6">
-                        <PageHeader
-                          eyebrow="Tenant Portal"
-                          eyebrowClassName="bg-emerald-100 text-emerald-700"
-                          title={`Welcome back, ${user?.fullName?.split(" ")[0] || "Tenant"}!`}
-                          subtitle="Manage your lease, payments, and maintenance requests all in one place."
-                          actions={
-                            <div className="flex flex-wrap items-center gap-2">
-                              <span className="pill bg-slate-900 text-white">Tenant</span>
-                              <span className="pill bg-slate-100 text-slate-700">
-                                Unit {lease?.unitId?.unitNumber || "N/A"}
-                              </span>
-                            </div>
-                          }
-                        />
-            <h2 className="text-lg font-semibold text-gray-900">
-              Record New Payment
-            </h2>
-          </div>
+                      <td className="px-4 py-3">
+                        <span
+                          className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${
+                            p.status === "VERIFIED"
+                              ? "bg-emerald-100 text-emerald-700"
+                              : p.status === "PENDING"
+                              ? "bg-amber-100 text-amber-700"
+                              : "bg-rose-100 text-rose-700"
+                          }`}
+                        >
+                          {p.status || "PENDING"}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-gray-500">
+                        {p.externalTransactionId || "—"}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
 
-          <form onSubmit={handlePaymentSubmit(onPaymentSubmit)} className="space-y-6">
-            <div className="grid gap-6 md:grid-cols-2">
-              <div>
-                <label
-                  htmlFor="amountEtb"
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  Payment Amount (ETB)
-                </label>
-                <div className="relative">
-                  <DollarSign className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-                  <input
-                    id="amountEtb"
-                    type="number"
-                    step="0.01"
-                    className="w-full rounded-lg border border-gray-300 pl-10 pr-3 py-2 text-sm text-gray-900 shadow-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all"
-                    placeholder="Enter amount"
-                    {...registerPayment("amountEtb", {
-                      valueAsNumber: true,
-                      required: "Amount is required",
-                      min: { value: 0.01, message: "Amount must be greater than 0" }
-                    })}
+          {showPaymentForm && (
+            <div className="surface-panel card-reveal mt-6 p-6">
+              <div className="mb-4">
+                <h2 className="text-lg font-semibold text-gray-900">
+                  Record New Payment
+                </h2>
+                <p className="text-xs text-gray-500">
+                  Log a manual payment and keep your records up to date.
+                </p>
+              </div>
+
+              <form
+                onSubmit={handlePaymentSubmit(onPaymentSubmit)}
+                className="space-y-6"
+              >
+                <div className="grid gap-6 md:grid-cols-2">
+                  <div>
+                    <label
+                      htmlFor="amountEtb"
+                      className="block text-sm font-medium text-gray-700 mb-2"
+                    >
+                      Payment Amount (ETB)
+                    </label>
+                    <div className="relative">
+                      <DollarSign className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                      <input
+                        id="amountEtb"
+                        type="number"
+                        step="0.01"
+                          className="form-input pl-10 text-sm"
+                        placeholder="Enter amount"
+                        {...registerPayment("amountEtb", {
+                          valueAsNumber: true,
+                          required: "Amount is required",
+                          min: {
+                            value: 0.01,
+                            message: "Amount must be greater than 0",
+                          },
+                        })}
+                      />
+                    </div>
+                    {paymentErrors.amountEtb && (
+                      <p className="mt-1 text-xs text-red-500">
+                        {paymentErrors.amountEtb.message}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="paymentMethod"
+                      className="block text-sm font-medium text-gray-700 mb-2"
+                    >
+                      Payment Method
+                    </label>
+                    <select
+                      id="paymentMethod"
+                        className="form-select text-sm"
+                      {...registerPayment("paymentMethod", {
+                        required: "Payment method is required",
+                      })}
+                    >
+                      <option value="">Select method</option>
+                      <option value="Bank Transfer">🏦 Bank Transfer</option>
+                      <option value="Cash">💵 Cash</option>
+                      <option value="Check">📝 Check</option>
+                      <option value="Mobile Money">📱 Mobile Money</option>
+                      <option value="Other">🔄 Other</option>
+                    </select>
+                    {paymentErrors.paymentMethod && (
+                      <p className="mt-1 text-xs text-red-500">
+                        {paymentErrors.paymentMethod.message}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="grid gap-6 md:grid-cols-2">
+                  <div>
+                    <label
+                      htmlFor="transactionDate"
+                      className="block text-sm font-medium text-gray-700 mb-2"
+                    >
+                      Transaction Date
+                    </label>
+                    <div className="relative">
+                      <Calendar className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                      <input
+                        id="transactionDate"
+                        type="date"
+                          className="form-input pl-10 text-sm"
+                        {...registerPayment("transactionDate", {
+                          required: "Transaction date is required",
+                        })}
+                      />
+                    </div>
+                    {paymentErrors.transactionDate && (
+                      <p className="mt-1 text-xs text-red-500">
+                        {paymentErrors.transactionDate.message}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="externalTransactionId"
+                      className="block text-sm font-medium text-gray-700 mb-2"
+                    >
+                      Transaction ID (Optional)
+                    </label>
+                    <input
+                      id="externalTransactionId"
+                      type="text"
+                        className="form-input text-sm"
+                      placeholder="Bank reference or receipt number"
+                      {...registerPayment("externalTransactionId")}
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="notes"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
+                    Notes (Optional)
+                  </label>
+                  <textarea
+                    id="notes"
+                    rows={3}
+                      className="form-textarea text-sm"
+                    placeholder="Any additional notes about this payment..."
+                    {...registerPayment("notes")}
                   />
                 </div>
-                {paymentErrors.amountEtb && (
-                  <p className="mt-1 text-xs text-red-500">
-                    {paymentErrors.amountEtb.message}
-                  </p>
-                )}
-              </div>
 
-              <div>
-                <label
-                  htmlFor="paymentMethod"
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  Payment Method
-                </label>
-                <select
-                  id="paymentMethod"
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 shadow-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all"
-                  {...registerPayment("paymentMethod", {
-                    required: "Payment method is required"
-                  })}
-                >
-                  <option value="">Select method</option>
-                  <option value="Bank Transfer">🏦 Bank Transfer</option>
-                  <option value="Cash">💵 Cash</option>
-                  <option value="Check">📝 Check</option>
-                  <option value="Mobile Money">📱 Mobile Money</option>
-                  <option value="Other">🔄 Other</option>
-                </select>
-                {paymentErrors.paymentMethod && (
-                  <p className="mt-1 text-xs text-red-500">
-                    {paymentErrors.paymentMethod.message}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            <div className="grid gap-6 md:grid-cols-2">
-              <div>
-                <label
-                  htmlFor="transactionDate"
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  Transaction Date
-                </label>
-                <div className="relative">
-                  <Calendar className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-                  <input
-                    id="transactionDate"
-                    type="date"
-                    className="w-full rounded-lg border border-gray-300 pl-10 pr-3 py-2 text-sm text-gray-900 shadow-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all"
-                    {...registerPayment("transactionDate", {
-                      required: "Transaction date is required"
-                    })}
-                  />
+                <div className="flex items-center justify-end space-x-3 pt-4 border-t border-gray-200">
+                  <button
+                    type="button"
+                    onClick={() => setShowPaymentForm(false)}
+                    className="inline-flex items-center space-x-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all"
+                  >
+                    <X className="h-4 w-4" />
+                    <span>Cancel</span>
+                  </button>
+                  <button
+                    type="submit"
+                    className="inline-flex items-center space-x-2 rounded-lg bg-emerald-600 px-6 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition-all"
+                  >
+                    <CreditCard className="h-4 w-4" />
+                    <span>Record Payment</span>
+                  </button>
                 </div>
-                {paymentErrors.transactionDate && (
-                  <p className="mt-1 text-xs text-red-500">
-                    {paymentErrors.transactionDate.message}
-                  </p>
-                )}
-              </div>
-
-              <div>
-                <label
-                  htmlFor="externalTransactionId"
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  Transaction ID (Optional)
-                </label>
-                <input
-                  id="externalTransactionId"
-                  type="text"
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 shadow-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all"
-                  placeholder="Bank reference or receipt number"
-                  {...registerPayment("externalTransactionId")}
-                />
-              </div>
+              </form>
             </div>
-
-            <div>
-              <label
-                htmlFor="notes"
-                className="block text-sm font-medium text-gray-700 mb-2"
-              >
-                Notes (Optional)
-              </label>
-              <textarea
-                id="notes"
-                rows={3}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 shadow-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all"
-                placeholder="Any additional notes about this payment..."
-                {...registerPayment("notes")}
-              />
-            </div>
-
-            <div className="flex items-center justify-end space-x-3 pt-4 border-t border-gray-200">
-              <button
-                type="button"
-                onClick={() => setShowPaymentForm(false)}
-                className="inline-flex items-center space-x-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all"
-              >
-                <X className="h-4 w-4" />
-                <span>Cancel</span>
-              </button>
-              <button
-                type="submit"
-                className="inline-flex items-center space-x-2 rounded-lg bg-emerald-600 px-6 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition-all"
-              >
-                <CreditCard className="h-4 w-4" />
-                <span>Record Payment</span>
-              </button>
-            </div>
-          </form>
+          )}
         </section>
-      )}
+
+      </div>
 
       {/* Maintenance + documents + notifications */}
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Maintenance */}
-        <section className="lg:col-span-2 rounded-xl border border-gray-200 bg-gradient-to-br from-white to-gray-50 p-6 shadow-lg">
+        <section className="lg:col-span-2 surface-panel p-6">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-2">
               <div className="rounded-lg bg-orange-100 p-2">
@@ -647,7 +671,7 @@ export default function TenantDashboard() {
               <textarea
                 id="description"
                 rows={3}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 shadow-sm focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition-all"
+                  className="form-textarea text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20"
                 placeholder="Example: The kitchen sink is leaking under the cabinet..."
                 {...register("description")}
               />
@@ -668,7 +692,7 @@ export default function TenantDashboard() {
                 </label>
                 <select
                   id="urgency"
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 shadow-sm focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition-all"
+                    className="form-select text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20"
                   {...register("urgency")}
                 >
                   <option value="low">🟢 Low - Can wait</option>
@@ -758,7 +782,7 @@ export default function TenantDashboard() {
 
         {/* Documents + notifications */}
         <div className="space-y-4">
-          <section className="rounded-xl border border-gray-200 bg-gradient-to-br from-white to-gray-50 p-6 shadow-lg hover-lift">
+          <section className="surface-panel p-6 hover-lift">
             <div className="flex items-center space-x-2 mb-4">
               <div className="rounded-lg bg-teal-100 p-2">
                 <FileText className="h-5 w-5 text-teal-600" />
@@ -802,7 +826,7 @@ export default function TenantDashboard() {
             )}
           </section>
 
-          <section className="rounded-xl border border-gray-200 bg-gradient-to-br from-white to-gray-50 p-6 shadow-lg hover-lift">
+          <section className="surface-panel p-6 hover-lift">
             <div className="flex items-center space-x-2 mb-4">
               <div className="rounded-lg bg-amber-100 p-2">
                 <Bell className="h-5 w-5 text-amber-600" />

@@ -129,7 +129,7 @@ export default function UnitManagement() {
               type="number "
               value={baseRent}
               onChange={(e) => setBaseRent(+e.target.value)}
-              className="mt-2 w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2 text-sm outline-none focus:border-emerald-500 focus:bg-white focus:ring-1 focus:ring-emerald-500"
+              className="form-input mt-2 text-sm"
             />
           </Card>
 
@@ -145,14 +145,18 @@ export default function UnitManagement() {
                 <input
                   disabled
                   value={rule.minFloor}
-                  className="border px-3 rounded py-2 bg-gray-50"
+                  className="form-input text-xs bg-slate-50"
                 />
                 <input
                   disabled
                   value={rule.maxFloor}
-                  className="border px-3 rounded py-2 bg-gray-50"
+                  className="form-input text-xs bg-slate-50"
                 />
-                <input disabled value={`× ${rule.multiplier}`} />
+                <input
+                  disabled
+                  value={`× ${rule.multiplier}`}
+                  className="form-input text-xs bg-slate-50"
+                />
               </div>
             ))}
           </Card>
@@ -171,7 +175,7 @@ export default function UnitManagement() {
               <select
                 value={selectedUnitId}
                 onChange={(e) => selectedUnitId(Number(e.target.value))}
-                className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:bg-white focus:ring-1 focus:ring-emerald-500"
+                className="form-select text-sm"
               >
                 {units.map((unit) => (
                   <option key={unit.id} value={unit.id}>

@@ -19,20 +19,20 @@ const CreateLease = () => {
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-600">Tenant Name</label>
-              <input type="text" className="w-full rounded-lg border border-slate-200 bg-slate-50 p-2 mt-1 text-sm outline-none focus:border-emerald-500 focus:bg-white focus:ring-1 focus:ring-emerald-500" defaultValue="Abebe Kebede" />
+              <input type="text" className="form-input mt-1 text-sm" defaultValue="Abebe Kebede" />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-600">Unit Number</label>
-              <input type="text" className="w-full rounded-lg border border-slate-200 bg-slate-50 p-2 mt-1 text-sm outline-none focus:border-emerald-500 focus:bg-white focus:ring-1 focus:ring-emerald-500" defaultValue="Unit 101-Studio" />
+              <input type="text" className="form-input mt-1 text-sm" defaultValue="Unit 101-Studio" />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-600">Start Date</label>
-                <input type="text" className="w-full rounded-lg border border-slate-200 bg-slate-50 p-2 mt-1 text-sm outline-none focus:border-emerald-500 focus:bg-white focus:ring-1 focus:ring-emerald-500" defaultValue="Dec 13, 2025" />
+                <input type="text" className="form-input mt-1 text-sm" defaultValue="Dec 13, 2025" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-600">End Date</label>
-                <input type="text" className="w-full rounded-lg border border-slate-200 bg-slate-50 p-2 mt-1 text-sm outline-none focus:border-emerald-500 focus:bg-white focus:ring-1 focus:ring-emerald-500" defaultValue="Dec 13, 2026" />
+                <input type="text" className="form-input mt-1 text-sm" defaultValue="Dec 13, 2026" />
               </div>
             </div>
           </div>

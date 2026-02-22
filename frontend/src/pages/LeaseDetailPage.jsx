@@ -8,6 +8,7 @@ import { useAuthStore } from "../store/authStore";
 import PageHeader from "../components/PageHeader";
 import SkeletonRow from "../components/SkeletonRow";
 import SkeletonTable from "../components/SkeletonTable";
+import SkeletonCard from "../components/SkeletonCard";
 
 export default function LeaseDetailPage() {
   const { leaseId } = useParams();
@@ -94,16 +95,16 @@ export default function LeaseDetailPage() {
           title="Lease Detail"
           subtitle="Loading lease details..."
         />
-        <DashboardCard title="Lease Overview">
+        <SkeletonCard title="Lease Overview">
           <div className="grid gap-4 md:grid-cols-3">
             <SkeletonRow className="h-16 w-full" />
             <SkeletonRow className="h-16 w-full" />
             <SkeletonRow className="h-16 w-full" />
           </div>
-        </DashboardCard>
-        <DashboardCard title="Payment Summary">
+        </SkeletonCard>
+        <SkeletonCard title="Payment Summary">
           <SkeletonTable rows={4} columns={4} />
-        </DashboardCard>
+        </SkeletonCard>
       </div>
     );
   }
@@ -248,9 +249,12 @@ export default function LeaseDetailPage() {
         description="Shows manual and digital payments linked to this tenant (filtered by lease when possible)."
       >
         {payments.length === 0 ? (
-          <p className="text-xs text-slate-500">
-            No payments found for this lease.
-          </p>
+          <div className="space-y-3">
+            <SkeletonTable rows={3} columns={5} />
+            <p className="text-xs text-slate-500">
+              No payments found for this lease.
+            </p>
+          </div>
         ) : (
           <div className="overflow-hidden rounded-xl border border-slate-200">
             <table className="min-w-full divide-y divide-slate-200 text-xs">

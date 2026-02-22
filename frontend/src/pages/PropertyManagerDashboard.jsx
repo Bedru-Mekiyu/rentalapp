@@ -7,6 +7,7 @@ import API from "../services/api";
 import { Home, Users, Wrench, Plus, Eye } from "lucide-react";
 import PageHeader from "../components/PageHeader";
 import SkeletonRow from "../components/SkeletonRow";
+import SkeletonCard from "../components/SkeletonCard";
 
 const Avatar = ({ name = "Tenant" }) => {
   const initials = name
@@ -143,48 +144,48 @@ export default function PropertyManagerDashboard() {
           subtitle="Overview of your property management operations."
         />
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="surface-panel p-5">
+          <SkeletonCard className="p-5">
             <SkeletonRow className="h-3 w-24" />
             <div className="mt-3">
               <SkeletonRow className="h-8 w-16" />
             </div>
-          </div>
-          <div className="surface-panel p-5">
+          </SkeletonCard>
+          <SkeletonCard className="p-5">
             <SkeletonRow className="h-3 w-24" />
             <div className="mt-3">
               <SkeletonRow className="h-8 w-16" />
             </div>
-          </div>
-          <div className="surface-panel p-5">
+          </SkeletonCard>
+          <SkeletonCard className="p-5">
             <SkeletonRow className="h-3 w-24" />
             <div className="mt-3">
               <SkeletonRow className="h-8 w-16" />
             </div>
-          </div>
-          <div className="surface-panel p-5">
+          </SkeletonCard>
+          <SkeletonCard className="p-5">
             <SkeletonRow className="h-3 w-24" />
             <div className="mt-3">
               <SkeletonRow className="h-8 w-16" />
             </div>
-          </div>
+          </SkeletonCard>
         </div>
         <div className="grid gap-6 lg:grid-cols-3">
-          <section className="lg:col-span-2 surface-panel p-5">
+          <SkeletonCard className="lg:col-span-2 p-5">
             <SkeletonRow className="h-8 w-64" />
             <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
               <SkeletonRow className="h-28 w-full" />
               <SkeletonRow className="h-28 w-full" />
               <SkeletonRow className="h-28 w-full" />
             </div>
-          </section>
-          <section className="surface-panel p-5">
+          </SkeletonCard>
+          <SkeletonCard className="p-5">
             <SkeletonRow className="h-6 w-32" />
             <div className="mt-4 space-y-3">
               <SkeletonRow className="h-12 w-full" />
               <SkeletonRow className="h-12 w-full" />
               <SkeletonRow className="h-12 w-full" />
             </div>
-          </section>
+          </SkeletonCard>
         </div>
       </div>
     );
@@ -227,7 +228,7 @@ export default function PropertyManagerDashboard() {
                 placeholder="Search by unit, floor, or status"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full sm:w-64 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-200"
+                className="form-input w-full sm:w-64 text-sm"
               />
               <Link
                 to="/units"
@@ -482,7 +483,7 @@ export default function PropertyManagerDashboard() {
                             e.target.value
                           )
                         }
-                        className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] text-slate-700 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200"
+                        className="form-select text-[11px]"
                       >
                         <option value="open">Open</option>
                         <option value="in_progress">

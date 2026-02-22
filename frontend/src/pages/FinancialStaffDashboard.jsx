@@ -6,6 +6,7 @@ import API from "../services/api";
 import DashboardCard from "../components/DashboardCard";
 import PageHeader from "../components/PageHeader";
 import SkeletonRow from "../components/SkeletonRow";
+import SkeletonCard from "../components/SkeletonCard";
 
 const Avatar = ({ name }) => {
   const initials = (name || "")
@@ -107,38 +108,38 @@ export default function FinancialStaffDashboard() {
           subtitle="View invoices, payment status, and financial reports."
         />
         <div className="grid gap-4 md:grid-cols-4">
-          <DashboardCard>
+          <SkeletonCard>
             <SkeletonRow className="h-3 w-24" />
             <div className="mt-3">
               <SkeletonRow className="h-8 w-28" />
             </div>
-          </DashboardCard>
-          <DashboardCard>
+          </SkeletonCard>
+          <SkeletonCard>
             <SkeletonRow className="h-3 w-24" />
             <div className="mt-3">
               <SkeletonRow className="h-8 w-16" />
             </div>
-          </DashboardCard>
-          <DashboardCard>
+          </SkeletonCard>
+          <SkeletonCard>
             <SkeletonRow className="h-3 w-28" />
             <div className="mt-3">
               <SkeletonRow className="h-8 w-24" />
             </div>
-          </DashboardCard>
-          <DashboardCard>
+          </SkeletonCard>
+          <SkeletonCard>
             <SkeletonRow className="h-3 w-28" />
             <div className="mt-3">
               <SkeletonRow className="h-8 w-20" />
             </div>
-          </DashboardCard>
+          </SkeletonCard>
         </div>
-        <DashboardCard>
+        <SkeletonCard>
           <div className="space-y-3">
             <SkeletonRow />
             <SkeletonRow />
             <SkeletonRow />
           </div>
-        </DashboardCard>
+        </SkeletonCard>
       </div>
     );
   }

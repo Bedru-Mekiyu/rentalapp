@@ -146,7 +146,7 @@ export default function UnitsPage() {
               placeholder="Search by unit number or type..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2 text-sm outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-200"
+              className="form-input text-sm"
             />
           </div>
           <div className="flex flex-wrap gap-1 rounded-full bg-slate-100 p-1 text-xs">
@@ -275,7 +275,7 @@ export default function UnitsPage() {
               onChange={(e) =>
                 setForm((f) => ({ ...f, unitNumber: e.target.value }))
               }
-              className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:bg-white focus:ring-1 focus:ring-emerald-500"
+              className="form-input text-sm"
               placeholder="e.g. 10A"
             />
           </div>
@@ -289,7 +289,7 @@ export default function UnitsPage() {
               onChange={(e) =>
                 setForm((f) => ({ ...f, floor: e.target.value }))
               }
-              className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:bg-white focus:ring-1 focus:ring-emerald-500"
+              className="form-input text-sm"
               placeholder="e.g. 3"
             />
           </div>
@@ -303,7 +303,7 @@ export default function UnitsPage() {
               onChange={(e) =>
                 setForm((f) => ({ ...f, type: e.target.value }))
               }
-              className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:bg-white focus:ring-1 focus:ring-emerald-500"
+              className="form-input text-sm"
               placeholder="e.g. 2BR, Studio"
             />
           </div>
@@ -319,7 +319,7 @@ export default function UnitsPage() {
               onChange={(e) =>
                 setForm((f) => ({ ...f, areaSqm: e.target.value }))
               }
-              className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:bg-white focus:ring-1 focus:ring-emerald-500"
+              className="form-input text-sm"
               placeholder="e.g. 85"
             />
           </div>
@@ -338,7 +338,7 @@ export default function UnitsPage() {
                   basePriceEtb: e.target.value,
                 }))
               }
-              className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:bg-white focus:ring-1 focus:ring-emerald-500"
+              className="form-input text-sm"
               placeholder="e.g. 10000"
             />
           </div>
@@ -350,7 +350,7 @@ export default function UnitsPage() {
               onChange={(e) =>
                 setForm((f) => ({ ...f, status: e.target.value }))
               }
-              className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:bg-white focus:ring-1 focus:ring-emerald-500"
+              className="form-select text-sm"
             >
               <option value="VACANT">VACANT</option>
               <option value="OCCUPIED">OCCUPIED</option>

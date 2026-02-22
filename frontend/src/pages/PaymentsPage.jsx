@@ -192,13 +192,13 @@ export default function PaymentsPage() {
             <input
               type="text"
               placeholder="Search by method or transaction ID"
-              className="w-64 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2 text-sm outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-200"
+              className="form-input w-64 text-sm"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
 
             <select
-              className="rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-200"
+              className="form-select text-xs"
               value={status}
               onChange={(e) => setStatus(e.target.value)}
             >
@@ -210,7 +210,7 @@ export default function PaymentsPage() {
             </select>
 
             <select
-              className="rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-200"
+              className="form-select text-xs"
               value={method}
               onChange={(e) => setMethod(e.target.value)}
             >
@@ -242,7 +242,7 @@ export default function PaymentsPage() {
                   value={form.leaseId}
                   onChange={handleChange}
                   required
-                  className="w-full rounded-2xl border border-slate-200 bg-white px-3 py-2 text-xs outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200"
+                  className="form-input text-xs"
                   placeholder="Lease ID"
                 />
               </div>
@@ -258,7 +258,7 @@ export default function PaymentsPage() {
                   onChange={handleChange}
                   required
                   min={0}
-                  className="w-full rounded-2xl border border-slate-200 bg-white px-3 py-2 text-xs outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200"
+                  className="form-input text-xs"
                 />
               </div>
 
@@ -272,7 +272,7 @@ export default function PaymentsPage() {
                   value={form.transactionDate}
                   onChange={handleChange}
                   required
-                  className="w-full rounded-2xl border border-slate-200 bg-white px-3 py-2 text-xs outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200"
+                  className="form-input text-xs"
                 />
               </div>
 
@@ -284,7 +284,7 @@ export default function PaymentsPage() {
                   name="paymentMethod"
                   value={form.paymentMethod}
                   onChange={handleChange}
-                  className="w-full rounded-lg border border-slate-200 px-2 py-2 text-xs focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                  className="form-select text-xs"
                 >
                   {METHOD_FILTERS.filter((m) => m !== "All").map((m) => (
                     <option key={m} value={m}>
@@ -303,7 +303,7 @@ export default function PaymentsPage() {
                   name="externalTransactionId"
                   value={form.externalTransactionId}
                   onChange={handleChange}
-                  className="w-full rounded-lg border border-slate-200 px-2 py-2 text-xs focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                  className="form-input text-xs"
                 />
               </div>
             </div>

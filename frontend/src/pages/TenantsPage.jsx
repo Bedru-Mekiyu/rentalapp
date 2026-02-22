@@ -154,7 +154,7 @@ export default function TenantsPage() {
             <input
               type="text"
               placeholder="Search by name, email, or phone"
-              className="w-full rounded-lg border border-gray-300 py-3 pl-10 pr-4 text-sm shadow-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all"
+              className="form-input pl-10 text-sm"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -163,7 +163,7 @@ export default function TenantsPage() {
         <div className="flex items-center gap-3">
           <Filter className="h-4 w-4 text-gray-500" />
           <select
-            className="rounded-lg border border-gray-300 px-4 py-3 text-sm shadow-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all"
+            className="form-select text-sm"
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
           >

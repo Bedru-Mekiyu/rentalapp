@@ -108,7 +108,7 @@ export default function LeasesPage() {
               placeholder="Search by unit or tenant..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2 text-sm outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-200"
+              className="form-input text-sm"
             />
           </div>
           <div className="flex gap-1 rounded-full bg-slate-100 p-1 text-xs">

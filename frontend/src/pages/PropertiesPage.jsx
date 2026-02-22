@@ -129,7 +129,7 @@ export default function PropertiesPage() {
               onChange={(e) =>
                 setForm((f) => ({ ...f, name: e.target.value }))
               }
-              className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:bg-white focus:ring-1 focus:ring-emerald-500"
+              className="form-input text-sm"
               placeholder="e.g. Main Apartment Building"
             />
           </div>
@@ -142,7 +142,7 @@ export default function PropertiesPage() {
               onChange={(e) =>
                 setForm((f) => ({ ...f, address: e.target.value }))
               }
-              className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:bg-white focus:ring-1 focus:ring-emerald-500"
+              className="form-input text-sm"
               placeholder="e.g. Addis Ababa, Bole, XYZ Street"
             />
           </div>
@@ -158,7 +158,7 @@ export default function PropertiesPage() {
                   description: e.target.value,
                 }))
               }
-              className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:bg-white focus:ring-1 focus:ring-emerald-500"
+              className="form-textarea text-sm"
               rows={3}
             />
           </div>
