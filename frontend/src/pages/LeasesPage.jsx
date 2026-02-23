@@ -92,7 +92,7 @@ export default function LeasesPage() {
         actions={
           <Link
             to="/leases/new"
-            className="btn-primary rounded-full px-5 py-2 text-sm font-semibold"
+            className="btn-primary text-xs font-semibold"
           >
             + New Lease
           </Link>
@@ -101,7 +101,7 @@ export default function LeasesPage() {
 
       {/* Filters */}
       <DashboardCard>
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="filter-panel flex flex-wrap items-center gap-3">
           <div className="relative flex-1 min-w-[200px]">
             <input
               type="text"
@@ -111,15 +111,13 @@ export default function LeasesPage() {
               className="form-input text-sm"
             />
           </div>
-          <div className="flex gap-1 rounded-full bg-slate-100 p-1 text-xs">
+          <div className="filter-shell">
             {STATUS_FILTERS.map((s) => (
               <button
                 key={s}
                 onClick={() => setStatus(s)}
-                className={`rounded-full px-3 py-1 ${
-                  status === s
-                    ? "bg-white text-slate-900 shadow-sm"
-                    : "text-slate-500 hover:text-slate-800"
+                className={`filter-chip ${
+                  status === s ? "filter-chip-active" : ""
                 }`}
               >
                 {s === "All" ? "All" : s}
@@ -148,13 +146,15 @@ export default function LeasesPage() {
             <div className="mt-4">
               <SkeletonTable rows={4} columns={6} />
             </div>
-            <p className="text-slate-500 font-medium">No leases found matching your criteria.</p>
-            <p className="text-sm text-slate-400 mt-1">Try adjusting your search or filters.</p>
+            <div className="empty-state mt-4">
+              <div className="empty-state-title">No leases found</div>
+              <div className="empty-state-text">Try adjusting your search or filters.</div>
+            </div>
           </div>
         ) : (
-          <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <div className="table-shell">
             <table className="min-w-full divide-y divide-slate-200 text-sm">
-              <thead className="bg-gradient-to-r from-slate-50 to-slate-100">
+              <thead className="table-head">
                 <tr>
                   <th className="px-6 py-4 text-left text-xs font-bold text-slate-600 uppercase tracking-wider">
                     Unit Details
@@ -178,7 +178,7 @@ export default function LeasesPage() {
               </thead>
               <tbody className="divide-y divide-slate-100 bg-white">
                 {filteredLeases.slice(0, PAGE_SIZE).map((l, index) => (
-                  <tr key={l._id} className={`stagger-item hover:bg-gradient-to-r hover:from-slate-50 hover:to-emerald-50 transition-all duration-300 ${index % 2 === 0 ? 'bg-white' : 'bg-slate-50/30'}`}>
+                  <tr key={l._id} className={`table-row stagger-item ${index % 2 === 0 ? "bg-white" : "bg-slate-50/30"}`}>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-500 to-teal-500 text-white font-bold shadow-sm">
@@ -189,7 +189,7 @@ export default function LeasesPage() {
                             Unit {l.unitId?.unitNumber || "N/A"}
                           </div>
                           {l.unitId?.type && (
-                            <div className="text-xs text-slate-500 bg-slate-100 rounded-full px-2 py-0.5 inline-block mt-1">
+                            <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-500 bg-slate-100/80 rounded-full px-2 py-0.5 inline-block mt-1">
                               {l.unitId.type}
                             </div>
                           )}
@@ -231,12 +231,12 @@ export default function LeasesPage() {
                     </td>
                     <td className="px-6 py-4">
                       <span
-                        className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold shadow-sm ${
+                        className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wide ${
                           l.status === "ACTIVE"
-                            ? "bg-gradient-to-r from-emerald-100 to-green-100 text-emerald-800 border border-emerald-200"
+                            ? "bg-emerald-100/70 text-emerald-800 border border-emerald-200"
                             : l.status === "ENDED"
-                            ? "bg-gradient-to-r from-slate-100 to-gray-100 text-slate-700 border border-slate-200"
-                            : "bg-gradient-to-r from-slate-100 to-slate-200 text-slate-700 border border-slate-300"
+                            ? "bg-slate-100/70 text-slate-700 border border-slate-200"
+                            : "bg-slate-100/70 text-slate-700 border border-slate-300"
                         }`}
                       >
                         <div className={`w-2 h-2 rounded-full ${
@@ -250,7 +250,7 @@ export default function LeasesPage() {
                       <div className="flex gap-3">
                         <Link
                           to={`/leases/${l._id}`}
-                          className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-50 px-3 py-1.5 text-xs font-medium text-emerald-700 hover:bg-emerald-100 hover:text-emerald-800 transition-all duration-200 shadow-sm"
+                          className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-emerald-700 hover:bg-emerald-100 hover:text-emerald-800 transition-all duration-200"
                         >
                           <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -261,7 +261,7 @@ export default function LeasesPage() {
                         {l.unitId?._id && (
                           <Link
                             to={`/units/${l.unitId._id}`}
-                            className="inline-flex items-center gap-1.5 rounded-lg bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100 hover:text-slate-800 transition-all duration-200 shadow-sm"
+                            className="inline-flex items-center gap-1.5 rounded-full bg-slate-50 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-slate-700 hover:bg-slate-100 hover:text-slate-800 transition-all duration-200"
                           >
                             <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />

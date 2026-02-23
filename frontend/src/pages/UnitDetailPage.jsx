@@ -87,7 +87,7 @@ export default function UnitDetailPage() {
         <p className="text-sm text-red-600">Unit not found.</p>
         <button
           onClick={() => navigate("/units")}
-          className="rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700"
+          className="rounded-full border border-slate-300 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-700"
         >
           Back to units
         </button>
@@ -108,7 +108,7 @@ export default function UnitDetailPage() {
           <button
             type="button"
             onClick={() => navigate("/units")}
-            className="rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700"
+            className="rounded-full border border-slate-300 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-700"
           >
             Back to Units
           </button>
@@ -120,9 +120,9 @@ export default function UnitDetailPage() {
         <div className="grid gap-4 md:grid-cols-3 text-sm">
           <div>
             <p className="text-xs text-slate-500">Status</p>
-            <p className="mt-1 text-sm font-semibold text-slate-900">
+            <span className="mt-2 inline-flex rounded-full bg-slate-100/70 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-slate-700">
               {unit.status}
-            </p>
+            </span>
           </div>
           <div>
             <p className="text-xs text-slate-500">Base Price</p>
@@ -159,7 +159,7 @@ export default function UnitDetailPage() {
             type="button"
             disabled={updatingStatus}
             onClick={() => handleChangeStatus("VACANT")}
-            className="rounded-md border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 disabled:opacity-60"
+            className="rounded-full border border-slate-300 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-slate-700 disabled:opacity-60"
           >
             Mark as VACANT
           </button>
@@ -167,7 +167,7 @@ export default function UnitDetailPage() {
             type="button"
             disabled={updatingStatus}
             onClick={() => handleChangeStatus("MAINTENANCE")}
-            className="rounded-md border border-amber-400 px-3 py-1.5 text-xs font-medium text-amber-700 disabled:opacity-60"
+            className="rounded-full border border-amber-300 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-amber-700 disabled:opacity-60"
           >
             Mark as MAINTENANCE
           </button>
@@ -182,14 +182,15 @@ export default function UnitDetailPage() {
         {leases.length === 0 ? (
           <div className="space-y-3">
             <SkeletonTable rows={3} columns={5} />
-            <p className="text-xs text-slate-500">
-              No leases found for this unit.
-            </p>
+            <div className="empty-state">
+              <div className="empty-state-title">No leases found</div>
+              <div className="empty-state-text">This unit has no lease history yet.</div>
+            </div>
           </div>
         ) : (
-          <div className="overflow-hidden rounded-xl border border-slate-200">
+          <div className="table-shell">
             <table className="min-w-full divide-y divide-slate-200 text-xs">
-              <thead className="bg-slate-50">
+              <thead className="table-head">
                 <tr>
                   <th className="px-4 py-2 text-left font-semibold text-slate-500">
                     Tenant
@@ -210,7 +211,7 @@ export default function UnitDetailPage() {
               </thead>
               <tbody className="divide-y divide-slate-100 bg-white">
                 {leases.map((lease) => (
-                  <tr key={lease._id}>
+                  <tr key={lease._id} className="table-row">
                     <td className="px-4 py-2">
                       {lease.tenantId?.fullName || "Tenant"}
                     </td>

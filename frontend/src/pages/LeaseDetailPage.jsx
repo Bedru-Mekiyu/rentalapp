@@ -115,7 +115,7 @@ export default function LeaseDetailPage() {
         <p className="text-sm text-red-600">Lease not found.</p>
         <button
           onClick={() => navigate(user?.role === "TENANT" ? "/dashboard" : "/leases")}
-          className="rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700"
+          className="rounded-full border border-slate-300 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-700"
         >
           Back to {user?.role === "TENANT" ? "Dashboard" : "Leases"}
         </button>
@@ -139,7 +139,7 @@ export default function LeaseDetailPage() {
                   lease.unitId?._id ? `/units/${lease.unitId._id}` : "/units"
                 )
               }
-              className="rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700"
+              className="rounded-full border border-slate-300 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-700"
             >
               View Unit
             </button>
@@ -148,7 +148,7 @@ export default function LeaseDetailPage() {
                 type="button"
                 disabled={ending}
                 onClick={handleEndLease}
-                className="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
+                className="rounded-full bg-red-600 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white disabled:opacity-60"
               >
                 {ending ? "Ending..." : "End Lease"}
               </button>
@@ -162,9 +162,9 @@ export default function LeaseDetailPage() {
         <div className="grid gap-4 md:grid-cols-3 text-sm">
           <div>
             <p className="text-xs text-slate-500">Status</p>
-            <p className="mt-1 text-sm font-semibold text-slate-900">
+            <span className="mt-2 inline-flex rounded-full bg-slate-100/70 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-slate-700">
               {lease.status}
-            </p>
+            </span>
           </div>
           <div>
             <p className="text-xs text-slate-500">Monthly Rent</p>
@@ -204,13 +204,13 @@ export default function LeaseDetailPage() {
           <div className="grid gap-4 md:grid-cols-4 text-sm">
             <div>
               <p className="text-xs text-slate-500">Total Billed</p>
-              <p className="mt-1 text-lg font-semibold text-slate-900">
+              <p className="mt-2 text-lg font-semibold text-slate-900">
                 {formatCurrency(summary.totalBilledEtb)}
               </p>
             </div>
             <div>
               <p className="text-xs text-slate-500">Total Paid</p>
-              <p className="mt-1 text-lg font-semibold text-emerald-600">
+              <p className="mt-2 text-lg font-semibold text-emerald-600">
                 {formatCurrency(summary.totalPaidEtb)}
               </p>
             </div>
@@ -218,13 +218,13 @@ export default function LeaseDetailPage() {
               <p className="text-xs text-slate-500">
                 Outstanding Balance
               </p>
-              <p className="mt-1 text-lg font-semibold text-red-600">
+              <p className="mt-2 text-lg font-semibold text-red-600">
                 {formatCurrency(summary.outstandingBalanceEtb)}
               </p>
             </div>
             <div>
               <p className="text-xs text-slate-500">Next Due Date</p>
-              <p className="mt-1 text-sm font-medium text-slate-900">
+              <p className="mt-2 text-sm font-semibold text-slate-900">
                 {summary.nextDueDate
                   ? formatDate(summary.nextDueDate)
                   : "No upcoming due date"}
@@ -251,14 +251,15 @@ export default function LeaseDetailPage() {
         {payments.length === 0 ? (
           <div className="space-y-3">
             <SkeletonTable rows={3} columns={5} />
-            <p className="text-xs text-slate-500">
-              No payments found for this lease.
-            </p>
+            <div className="empty-state">
+              <div className="empty-state-title">No payments yet</div>
+              <div className="empty-state-text">Payments will appear once recorded.</div>
+            </div>
           </div>
         ) : (
-          <div className="overflow-hidden rounded-xl border border-slate-200">
+          <div className="table-shell">
             <table className="min-w-full divide-y divide-slate-200 text-xs">
-              <thead className="bg-slate-50">
+              <thead className="table-head">
                 <tr>
                   <th className="px-4 py-2 text-left font-semibold text-slate-500">
                     Date
@@ -279,7 +280,7 @@ export default function LeaseDetailPage() {
               </thead>
               <tbody className="divide-y divide-slate-100 bg-white">
                 {payments.map((p) => (
-                  <tr key={p._id}>
+                  <tr key={p._id} className="table-row">
                     <td className="px-4 py-2">
                       {formatDate(p.transactionDate)}
                     </td>
@@ -289,12 +290,12 @@ export default function LeaseDetailPage() {
                     <td className="px-4 py-2">{p.paymentMethod}</td>
                     <td className="px-4 py-2">
                       <span
-                        className={`inline-flex rounded-full px-2 py-0.5 text-[11px] font-medium ${
+                        className={`inline-flex rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide ${
                           p.status === "VERIFIED"
-                            ? "bg-emerald-100 text-emerald-700"
+                            ? "bg-emerald-100/70 text-emerald-700"
                             : p.status === "PENDING"
-                            ? "bg-amber-100 text-amber-700"
-                            : "bg-red-100 text-red-700"
+                            ? "bg-amber-100/70 text-amber-700"
+                            : "bg-red-100/70 text-red-700"
                         }`}
                       >
                         {p.status}

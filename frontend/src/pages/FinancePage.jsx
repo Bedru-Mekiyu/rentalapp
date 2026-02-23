@@ -140,7 +140,7 @@ export default function FinancePage() {
                 </div>
               </SkeletonCard>
             </div>
-            <div className="surface-panel analytics-panel p-4">
+            <div className="surface-panel analytics-panel p-5">
               <SkeletonRow className="h-48 w-full" />
             </div>
           </div>
@@ -148,33 +148,33 @@ export default function FinancePage() {
 
         {!loadingSummary && summary && selectedLeaseId === "ALL" && (
           <div className="grid gap-6 md:grid-cols-3">
-            <div className="surface-panel card-reveal stagger-item p-6">
+            <div className="surface-panel card-reveal hover-lift stagger-item p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-emerald-700">Total Revenue (YTD)</p>
-                  <p className="text-2xl font-bold text-emerald-900 mt-1">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Total Revenue (YTD)</p>
+                  <p className="text-2xl font-semibold text-emerald-900 mt-2">
                     {formatCurrency(summary.totalRevenueYTD)}
                   </p>
                 </div>
                 <DollarSign className="h-8 w-8 text-emerald-600" />
               </div>
             </div>
-            <div className="surface-panel card-reveal stagger-item p-6">
+            <div className="surface-panel card-reveal hover-lift stagger-item p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-red-700">Outstanding Balance</p>
-                  <p className="text-2xl font-bold text-red-900 mt-1">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-red-700">Outstanding Balance</p>
+                  <p className="text-2xl font-semibold text-red-900 mt-2">
                     {formatCurrency(summary.outstandingBalance)}
                   </p>
                 </div>
                 <AlertTriangle className="h-8 w-8 text-red-600" />
               </div>
             </div>
-            <div className="surface-panel card-reveal stagger-item p-6">
+            <div className="surface-panel card-reveal hover-lift stagger-item p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-teal-700">On-time Payment Rate</p>
-                  <p className="text-2xl font-bold text-teal-900 mt-1">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-teal-700">On-time Payment Rate</p>
+                  <p className="text-2xl font-semibold text-teal-900 mt-2">
                     {summary.onTimePaymentRate}%
                   </p>
                 </div>
@@ -186,7 +186,7 @@ export default function FinancePage() {
 
         {!loadingSummary && summary && selectedLeaseId !== "ALL" && (
           <>
-            <div className="surface-panel analytics-panel mb-4 p-3">
+            <div className="surface-panel analytics-panel mb-4 p-5">
               <ResponsiveContainer width="100%" height={200}>
                 <BarChart data={[
                   { name: 'Billed', amount: summary.totalBilledEtb },
@@ -210,45 +210,45 @@ export default function FinancePage() {
               </ResponsiveContainer>
             </div>
             <div className="grid gap-6 md:grid-cols-4">
-              <div className="surface-panel card-reveal stagger-item p-4">
+              <div className="surface-panel card-reveal hover-lift stagger-item p-4">
                 <div className="flex items-center space-x-2">
                   <DollarSign className="h-5 w-5 text-slate-600" />
                   <div>
-                    <p className="text-xs text-slate-500">Total Billed</p>
+                    <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Total Billed</p>
                     <p className="text-lg font-semibold text-slate-900">
                       {formatCurrency(summary.totalBilledEtb)}
                     </p>
                   </div>
                 </div>
               </div>
-              <div className="surface-panel card-reveal stagger-item p-4">
+              <div className="surface-panel card-reveal hover-lift stagger-item p-4">
                 <div className="flex items-center space-x-2">
                   <CheckCircle className="h-5 w-5 text-emerald-600" />
                   <div>
-                    <p className="text-xs text-emerald-600">Total Paid</p>
+                    <p className="text-[11px] font-semibold uppercase tracking-wide text-emerald-600">Total Paid</p>
                     <p className="text-lg font-semibold text-emerald-900">
                       {formatCurrency(summary.totalPaidEtb)}
                     </p>
                   </div>
                 </div>
               </div>
-              <div className="surface-panel card-reveal stagger-item p-4">
+              <div className="surface-panel card-reveal hover-lift stagger-item p-4">
                 <div className="flex items-center space-x-2">
                   <AlertTriangle className="h-5 w-5 text-red-600" />
                   <div>
-                    <p className="text-xs text-red-600">Outstanding Balance</p>
+                    <p className="text-[11px] font-semibold uppercase tracking-wide text-red-600">Outstanding Balance</p>
                     <p className="text-lg font-semibold text-red-900">
                       {formatCurrency(summary.outstandingBalanceEtb)}
                     </p>
                   </div>
                 </div>
               </div>
-              <div className="surface-panel card-reveal stagger-item p-4">
+              <div className="surface-panel card-reveal hover-lift stagger-item p-4">
                 <div className="flex items-center space-x-2">
                   <Calendar className="h-5 w-5 text-teal-600" />
                   <div>
-                    <p className="text-xs text-teal-600">Next Due Date</p>
-                    <p className="text-sm font-medium text-teal-900">
+                    <p className="text-[11px] font-semibold uppercase tracking-wide text-teal-600">Next Due Date</p>
+                    <p className="text-sm font-semibold text-teal-900">
                       {summary.nextDueDate
                         ? new Date(summary.nextDueDate).toLocaleDateString()
                         : "No upcoming due date"}

@@ -93,7 +93,7 @@ export default function LeaseCreation() {
           <DashboardCard title="Tenant & Unit Selection">
             <div className="space-y-4">
             <div>
-              <label className="text-sm font-medium">Tenant Name</label>
+              <label className="text-xs font-semibold uppercase tracking-wide text-slate-500">Tenant Name</label>
               <select
                 value={tenant}
                 onChange={(e) => setTenant(e.target.value)}
@@ -106,7 +106,7 @@ export default function LeaseCreation() {
               </select>
             </div>
             <div>
-              <label className="text-sm font-medium">Unit</label>
+              <label className="text-xs font-semibold uppercase tracking-wide text-slate-500">Unit</label>
               <select
                 value={unitId}
                 onChange={(e) => setUnitId(e.target.value)}
@@ -122,7 +122,7 @@ export default function LeaseCreation() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="text-sm font-medium">Lease Start Date</label>
+                <label className="text-xs font-semibold uppercase tracking-wide text-slate-500">Lease Start Date</label>
                 <input
                   type="date"
                   value={startDate}
@@ -131,7 +131,7 @@ export default function LeaseCreation() {
                 />
               </div>
               <div>
-                <label className="text-sm font-medium">Lease End Date</label>
+                <label className="text-xs font-semibold uppercase tracking-wide text-slate-500">Lease End Date</label>
                 <input
                   type="date"
                   value={endDate}
@@ -156,7 +156,7 @@ export default function LeaseCreation() {
                 <span>ETB {value}</span>
               </div>
             ))}
-            <div className="flex justify-between font-semibold text-emerald-600 border-t mt-3 pt-3">
+            <div className="flex justify-between font-semibold text-emerald-600 border-t border-slate-100 mt-3 pt-3">
               <span>Total Monthly rent</span>
               <span>ETB {rentSummary.total}</span>
             </div>
@@ -166,7 +166,7 @@ export default function LeaseCreation() {
         <DashboardCard title="Additional Terms & Notes">
           <div className="space-y-4">
             <div>
-              <label className="text-sm font-medium">
+              <label className="text-xs font-semibold uppercase tracking-wide text-slate-500">
                 Security Deposit (ETB)
               </label>
               <input
@@ -177,7 +177,7 @@ export default function LeaseCreation() {
               />
             </div>
             <div>
-              <label htmlFor="" className="text-sm font-medium">
+              <label htmlFor="" className="text-xs font-semibold uppercase tracking-wide text-slate-500">
                 Notes
               </label>
               <textarea
@@ -195,14 +195,14 @@ export default function LeaseCreation() {
         {/* right */}
         <div className="space-y-4">
           <DashboardCard title="Lease Document Preview" description="No preview generated yet.">
-            <button className="px-4 py-2 border border-emerald-600 text-emerald-600 rounded-lg hover:bg-emerald-50">
+            <button className="rounded-full border border-emerald-200 px-4 py-2 text-[11px] font-semibold uppercase tracking-wide text-emerald-600 hover:bg-emerald-50">
               Generate Preview
             </button>
           </DashboardCard>
-          <button className="btn-primary w-full rounded-lg py-3 font-medium">
+          <button className="btn-primary w-full py-3 text-xs font-semibold">
             Finalize Lease
           </button>
-          <button className="w-full py-3 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700">
+          <button className="w-full rounded-full bg-red-600 py-3 text-xs font-semibold uppercase tracking-wide text-white hover:bg-red-700">
             Cancel
           </button>
         </div>

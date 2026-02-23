@@ -8,13 +8,13 @@ export default function BottomNav() {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <div className="flex bg-white p-3 shadow-md justify-around text-sm fixed bottom-0 right-0 left-0">
+    <div className="nav-shell fixed bottom-0 right-0 left-0 flex justify-around p-3 text-sm shadow-lg">
       
       {/* Dashboard */}
       <div
         onClick={() => navigate("/dashboard")}
         className={`flex flex-col items-center cursor-pointer ${
-          isActive("/dashboard") ? "text-indigo-500" : "text-gray-400"
+          isActive("/dashboard") ? "text-emerald-600" : "text-slate-400"
         }`}
       >
         <Home size={20} />
@@ -25,7 +25,7 @@ export default function BottomNav() {
       <div
         onClick={() => navigate("/payments")}
         className={`flex flex-col items-center cursor-pointer ${
-          isActive("/payments") ? "text-indigo-500" : "text-gray-400"
+          isActive("/payments") ? "text-emerald-600" : "text-slate-400"
         }`}
       >
         <DollarSign size={20} />
@@ -36,7 +36,7 @@ export default function BottomNav() {
       <div
         onClick={() => navigate("/maintenance")}
         className={`flex flex-col items-center cursor-pointer ${
-          isActive("/maintenance") ? "text-indigo-500" : "text-gray-400"
+          isActive("/maintenance") ? "text-emerald-600" : "text-slate-400"
         }`}
       >
         <Wrench size={20} />

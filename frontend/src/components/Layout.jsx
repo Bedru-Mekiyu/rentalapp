@@ -9,15 +9,15 @@ export default function Layout() {
   return (
     <div className="relative min-h-screen text-slate-900">
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -top-24 right-8 h-64 w-64 rounded-full bg-emerald-300/30 blur-3xl" />
-        <div className="absolute -bottom-24 left-10 h-72 w-72 rounded-full bg-teal-300/30 blur-3xl" />
-        <div className="absolute left-1/2 top-1/2 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-amber-200/25 blur-3xl" />
+        <div className="absolute -top-24 right-10 h-72 w-72 rounded-full bg-emerald-300/25 blur-3xl" />
+        <div className="absolute -bottom-24 left-12 h-80 w-80 rounded-full bg-teal-300/20 blur-3xl" />
+        <div className="absolute left-1/2 top-1/3 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-amber-200/20 blur-[120px]" />
       </div>
 
       <Navbar />
       <div className="relative flex min-h-[calc(100vh-64px)]">
         <Sidebar />
-        <main className="flex-1 overflow-y-auto px-6 pb-12 pt-10">
+        <main className="flex-1 overflow-y-auto px-6 pb-14 pt-10">
           <div className="mx-auto w-full max-w-6xl">
             <div key={location.pathname} className="page-transition">
               <Outlet />

@@ -9,7 +9,7 @@ export default function DashboardCard({
   const renderedActions = actions || action;
 
   return (
-    <section className="surface-panel card-reveal p-6">
+    <section className="surface-panel card-reveal hover-lift p-6">
       {(title || description || renderedActions) && (
         <div className="mb-4 flex items-start justify-between gap-3">
           <div>

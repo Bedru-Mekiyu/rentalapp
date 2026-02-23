@@ -8,7 +8,7 @@ export default function Card({
   children,
 }) {
   return (
-    <section className={`surface-panel card-reveal p-6 ${className}`.trim()}>
+    <section className={`surface-panel card-reveal hover-lift p-6 ${className}`.trim()}>
       {(title || description || actions) && (
         <div className="mb-4 flex items-start justify-between gap-3">
           <div>

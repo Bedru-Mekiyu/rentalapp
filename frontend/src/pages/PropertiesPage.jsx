@@ -121,7 +121,7 @@ export default function PropertiesPage() {
           className="grid gap-4 md:grid-cols-4 text-sm"
         >
           <div className="space-y-1 md:col-span-2">
-            <label className="text-xs text-slate-600">Name</label>
+            <label className="text-xs font-semibold uppercase tracking-wide text-slate-500">Name</label>
             <input
               type="text"
               required
@@ -134,7 +134,7 @@ export default function PropertiesPage() {
             />
           </div>
           <div className="space-y-1 md:col-span-2">
-            <label className="text-xs text-slate-600">Address</label>
+            <label className="text-xs font-semibold uppercase tracking-wide text-slate-500">Address</label>
             <input
               type="text"
               required
@@ -147,7 +147,7 @@ export default function PropertiesPage() {
             />
           </div>
           <div className="space-y-1 md:col-span-4">
-            <label className="text-xs text-slate-600">
+            <label className="text-xs font-semibold uppercase tracking-wide text-slate-500">
               Description (optional)
             </label>
             <textarea
@@ -166,7 +166,7 @@ export default function PropertiesPage() {
             <button
               type="submit"
               disabled={creating}
-              className="btn-primary rounded-md px-4 py-2 text-sm font-medium disabled:opacity-60"
+              className="btn-primary text-xs font-semibold disabled:opacity-60"
             >
               {creating ? "Saving..." : "Save Property"}
             </button>

@@ -18,7 +18,7 @@ const Avatar = ({ name = "Tenant" }) => {
     .slice(0, 2);
 
   return (
-    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 text-xs font-semibold text-emerald-700">
+    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 text-xs font-semibold text-white shadow-sm ring-2 ring-white">
       {initials}
     </div>
   );
@@ -26,11 +26,11 @@ const Avatar = ({ name = "Tenant" }) => {
 
 const statusColors = {
   available:
-    "inline-flex rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700",
+    "inline-flex rounded-full bg-emerald-100/70 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-emerald-700",
   occupied:
-    "inline-flex rounded-full bg-teal-50 px-2 py-0.5 text-xs font-medium text-teal-700",
+    "inline-flex rounded-full bg-sky-100/70 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-sky-700",
   "under maintenance":
-    "inline-flex rounded-full bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-700",
+    "inline-flex rounded-full bg-amber-100/70 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-amber-700",
 };
 
 export default function PropertyManagerDashboard() {
@@ -134,6 +134,12 @@ export default function PropertyManagerDashboard() {
     return { total, occupied, vacant, maintenance };
   }, [units]);
 
+  const activeLeases = useMemo(() => {
+    return leases.filter(
+      (lease) => (lease.status || "").toUpperCase() === "ACTIVE"
+    ).length;
+  }, [leases]);
+
   if (loading) {
     return (
       <div className="space-y-6">
@@ -199,17 +205,31 @@ export default function PropertyManagerDashboard() {
         title="Property Manager Dashboard"
         subtitle="Overview of your property management operations."
         actions={
-          <span className="pill bg-slate-900 text-white">
-            {user?.fullName || user?.email}
-          </span>
+          <div className="flex flex-wrap items-center gap-2">
+            <Link
+              to="/leases/new"
+              className="btn-primary text-xs font-semibold"
+            >
+              New Lease
+            </Link>
+            <Link
+              to="/units"
+              className="btn-secondary text-xs font-semibold"
+            >
+              View Units
+            </Link>
+            <span className="pill bg-slate-900 text-white">
+              {user?.fullName || user?.email}
+            </span>
+          </div>
         }
       />
 
       {/* Top stats */}
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard label="Total Units" value={occupancyStats.total} icon={Home} />
         <StatCard label="Occupied" value={occupancyStats.occupied} icon={Users} />
-        <StatCard label="Vacant" value={occupancyStats.vacant} icon={Plus} />
+        <StatCard label="Active Leases" value={activeLeases} icon={Eye} />
         <StatCard
           label="Under Maintenance"
           value={occupancyStats.maintenance}
@@ -220,26 +240,32 @@ export default function PropertyManagerDashboard() {
       {/* Units + leases */}
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Units list */}
-        <section className="lg:col-span-2 surface-panel p-5">
-          <div className="flex justify-end">
-            <div className="flex items-center gap-2">
+        <section className="lg:col-span-2 surface-panel p-6">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h2 className="panel-title">Unit Health Snapshot</h2>
+              <p className="panel-subtitle">
+                Search units and jump to key portfolio views.
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
               <input
                 type="text"
                 placeholder="Search by unit, floor, or status"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="form-input w-full sm:w-64 text-sm"
+                className="form-input w-full text-sm sm:w-64"
               />
               <Link
                 to="/units"
-                className="btn-primary inline-flex items-center space-x-2 rounded-full px-4 py-2 text-sm font-semibold"
+                className="btn-primary inline-flex items-center space-x-2 text-xs font-semibold"
               >
                 <Eye className="h-4 w-4" />
                 <span>Units</span>
               </Link>
               <Link
                 to="/users"
-                className="btn-secondary inline-flex items-center space-x-2 rounded-full px-4 py-2 text-sm font-semibold"
+                className="btn-secondary inline-flex items-center space-x-2 text-xs font-semibold"
               >
                 <Users className="h-4 w-4" />
                 <span>Users</span>
@@ -247,7 +273,7 @@ export default function PropertyManagerDashboard() {
               {user?.role === "ADMIN" || user?.role === "PM" ? (
                 <Link
                   to="/users/new"
-                  className="inline-flex items-center space-x-2 rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-emerald-700"
+                  className="inline-flex items-center space-x-2 rounded-full bg-emerald-600 px-4 py-2 text-xs font-semibold text-white transition hover:-translate-y-0.5 hover:bg-emerald-700"
                 >
                   <Plus className="h-4 w-4" />
                   <span>Create</span>
@@ -284,14 +310,14 @@ export default function PropertyManagerDashboard() {
                 return (
                   <article
                     key={unit._id}
-                    className="stagger-item flex flex-col justify-between rounded-2xl border border-slate-200 bg-white p-4 text-xs shadow-sm"
+                    className="stagger-item surface-panel flex flex-col justify-between p-4 text-xs"
                   >
                     <div className="flex items-start justify-between">
                       <div>
-                        <h3 className="text-sm font-semibold text-gray-900">
+                        <h3 className="text-sm font-semibold text-slate-900">
                           Unit {unit.unitNumber ?? "N/A"}
                         </h3>
-                        <p className="mt-1 text-[11px] text-gray-500">
+                        <p className="mt-1 text-[11px] text-slate-500">
                           Floor {unit.floor ?? "N/A"} •{" "}
                           {unit.areaSqm
                             ? `${unit.areaSqm} sqm`
@@ -303,14 +329,14 @@ export default function PropertyManagerDashboard() {
                       </span>
                     </div>
                     <div className="mt-2 flex items-center justify-between">
-                      <p className="text-xs font-medium text-gray-900">
+                      <p className="text-xs font-medium text-slate-900">
                         {unit.basePriceEtb
                           ? `${unit.basePriceEtb} ETB / month`
                           : "Price N/A"}
                       </p>
                       <Link
                         to="/leases"
-                        className="text-[11px] font-medium text-emerald-600 hover:underline"
+                        className="text-[11px] font-semibold text-emerald-600 hover:underline"
                       >
                         View details
                       </Link>
@@ -323,20 +349,18 @@ export default function PropertyManagerDashboard() {
         </section>
 
         {/* Recent leases */}
-        <section className="surface-panel p-5">
+        <section className="surface-panel p-6">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-sm font-semibold text-gray-900">
-                Recent Leases
-              </h2>
-              <p className="mt-1 text-xs text-gray-500">
+              <h2 className="panel-title">Recent Leases</h2>
+              <p className="panel-subtitle mt-1">
                 Create new leases and review existing ones for your
                 units.
               </p>
             </div>
             <Link
               to="/leases"
-              className="inline-flex items-center rounded-md bg-gray-900 px-3 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-black"
+              className="inline-flex items-center rounded-full bg-slate-900 px-3 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-black"
             >
               Manage Leases
             </Link>
@@ -353,28 +377,28 @@ export default function PropertyManagerDashboard() {
               {leases.slice(0, 5).map((lease) => (
                 <li
                   key={lease._id}
-                  className="flex items-center justify-between rounded-2xl border border-slate-100 bg-slate-50 p-3"
+                  className="flex items-center justify-between rounded-2xl border border-slate-100 bg-slate-50/70 p-3"
                 >
                   <div className="flex items-center gap-2">
                     <Avatar
                       name={lease.tenantId?.fullName || "Tenant"}
                     />
                     <div>
-                      <p className="font-medium text-gray-900">
+                      <p className="font-medium text-slate-900">
                         {lease.tenantId?.fullName || "Tenant"}
                       </p>
-                      <p className="text-[11px] text-gray-500">
+                      <p className="text-[11px] text-slate-500">
                         Unit {lease.unitId?.unitNumber || "N/A"}
                       </p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-xs font-semibold text-gray-900">
+                    <p className="text-xs font-semibold text-slate-900">
                       {lease.monthlyRentEtb
                         ? `${lease.monthlyRentEtb} ETB / month`
                         : "N/A"}
                     </p>
-                    <p className="text-[11px] text-gray-500">
+                    <p className="text-[11px] text-slate-500">
                       {lease.startDate
                         ? new Date(
                             lease.startDate
@@ -390,13 +414,11 @@ export default function PropertyManagerDashboard() {
       </div>
 
       {/* Maintenance requests */}
-      <section className="surface-panel mt-4 p-5">
+      <section className="surface-panel mt-4 p-6">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-sm font-semibold text-gray-900">
-              Maintenance Requests
-            </h2>
-            <p className="mt-1 text-xs text-gray-500">
+            <h2 className="panel-title">Maintenance Requests</h2>
+            <p className="panel-subtitle mt-1">
               Track and update maintenance issues reported by tenants.
             </p>
           </div>
@@ -414,9 +436,9 @@ export default function PropertyManagerDashboard() {
             <p className="text-sm text-gray-500">No maintenance requests yet.</p>
           </div>
         ) : (
-          <div className="mt-4 overflow-hidden rounded-2xl border border-slate-200 bg-white">
+          <div className="mt-4 table-shell">
             <table className="min-w-full divide-y divide-slate-200 text-xs">
-              <thead className="bg-slate-50">
+              <thead className="table-head">
                 <tr>
                   <th className="px-3 py-2 text-left font-medium text-gray-700">
                     Tenant
@@ -440,7 +462,7 @@ export default function PropertyManagerDashboard() {
               </thead>
               <tbody className="divide-y divide-slate-100 bg-white">
                 {maintenanceRequests.map((r) => (
-                  <tr key={r._id}>
+                  <tr key={r._id} className="table-row">
                     <td className="px-3 py-2">
                       <div className="flex items-center gap-2">
                         <Avatar
@@ -465,12 +487,12 @@ export default function PropertyManagerDashboard() {
                       </p>
                     </td>
                     <td className="px-3 py-2">
-                      <span className="inline-flex rounded-full bg-amber-50 px-2 py-0.5 text-[11px] font-medium text-amber-700">
+                      <span className="inline-flex rounded-full bg-amber-100/70 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-amber-700">
                         {r.urgency}
                       </span>
                     </td>
                     <td className="px-3 py-2">
-                      <span className="inline-flex rounded-full bg-teal-50 px-2 py-0.5 text-[11px] font-medium text-teal-700">
+                      <span className="inline-flex rounded-full bg-teal-100/70 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-teal-700">
                         {r.status.replace("_", " ")}
                       </span>
                     </td>

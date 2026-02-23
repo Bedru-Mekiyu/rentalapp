@@ -134,7 +134,7 @@ export default function Payments() {
       <Card>
         <div>
           <div className="flex justify-between items-center">
-            <p className="text-gray-600 font-medium">Current Monthly Rent</p>
+            <p className="text-slate-600 font-medium">Current Monthly Rent</p>
             <CalendarDays className="text-emerald-500" />
           </div>
 
@@ -142,7 +142,7 @@ export default function Payments() {
             ETB {rent.toLocaleString()}
           </h2>
 
-          <p className="text-sm text-gray-400 mt-1">Due: {dueDate}</p>
+          <p className="text-sm text-slate-400 mt-1">Due: {dueDate}</p>
 
           <div className="flex items-center gap-2 mt-2">
             <Clock className="w-4 h-4" />
@@ -157,22 +157,22 @@ export default function Payments() {
       <Card title="Digital Payment Options">
         <div
           onClick={() => handleDigitalPayment("Telebirr")}
-          className="flex justify-between items-center py-2 border-b cursor-pointer hover:bg-gray-50"
+          className="flex justify-between items-center py-2 border-b border-slate-100 cursor-pointer hover:bg-slate-50"
         >
           <div>
-            <p className="font-medium">Telebirr</p>
-            <p className="text-sm text-gray-400">Linked account: +251-912-345-678</p>
+            <p className="font-medium text-slate-900">Telebirr</p>
+            <p className="text-sm text-slate-400">Linked account: +251-912-345-678</p>
           </div>
           <span>›</span>
         </div>
 
         <div
           onClick={() => handleDigitalPayment("CBE Birr")}
-          className="flex justify-between items-center py-2 cursor-pointer hover:bg-gray-50"
+          className="flex justify-between items-center py-2 cursor-pointer hover:bg-slate-50"
         >
           <div>
-            <p className="font-medium">CBE Birr</p>
-            <p className="text-sm text-gray-400">Linked account: 1000012345678</p>
+            <p className="font-medium text-slate-900">CBE Birr</p>
+            <p className="text-sm text-slate-400">Linked account: 1000012345678</p>
           </div>
           <span>›</span>
         </div>
@@ -185,7 +185,7 @@ export default function Payments() {
       >
         {error && <p className="text-sm text-red-500 mt-2">{error}</p>}
 
-        <label className="mt-3 flex items-center justify-center gap-2 border rounded-md py-2 text-sm cursor-pointer hover:bg-gray-50">
+        <label className="mt-3 flex items-center justify-center gap-2 rounded-full border border-slate-200 py-2 text-xs font-semibold uppercase tracking-wide text-slate-600 cursor-pointer hover:bg-slate-50">
           <Upload className="w-4 h-4" />
           Choose File
           <input
@@ -197,7 +197,7 @@ export default function Payments() {
         </label>
 
         {receipt && (
-          <div className="flex items-center gap-2 mt-2 text-xs text-gray-500">
+          <div className="flex items-center gap-2 mt-2 text-xs text-slate-500">
             <FileText className="w-4 h-4" />
             {receipt.name}
           </div>
@@ -206,7 +206,7 @@ export default function Payments() {
         <button
           onClick={handleSubmitReceipt}
           disabled={!receipt || loading}
-          className={`w-full mt-4 py-2 rounded-lg text-white ${
+          className={`w-full mt-4 rounded-full py-2 text-[11px] font-semibold uppercase tracking-wide text-white ${
             loading ? "bg-emerald-400 cursor-not-allowed" : "bg-emerald-600 hover:bg-emerald-700"
           }`}
         >
@@ -218,23 +218,23 @@ export default function Payments() {
       {history.length > 0 && (
         <Card title="Payment History">
           {history.map((item) => (
-            <div key={item.id} className="stagger-item border-b py-3">
+            <div key={item.id} className="stagger-item border-b border-slate-100 py-3">
               <div className="flex justify-between items-center">
                 <p className="font-medium">
                   ETB {item.amount.toLocaleString()} - {item.method}
                 </p>
-                <span className="text-green-500 flex items-center gap-1 text-sm">
+                <span className="text-emerald-600 flex items-center gap-1 text-sm">
                   <CheckCircle className="w-4 h-4" />
                   {item.status}
                 </span>
               </div>
 
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-slate-400">
                 {new Date(item.date).toLocaleString()}
               </p>
 
               {item.fileName && (
-                <p className="text-xs text-gray-500">File: {item.fileName}</p>
+                <p className="text-xs text-slate-500">File: {item.fileName}</p>
               )}
             </div>
           ))}

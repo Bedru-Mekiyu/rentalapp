@@ -66,7 +66,7 @@ export default function NewUserPage() {
           <button
             type="button"
             onClick={() => navigate("/users")}
-            className="rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700"
+            className="rounded-full border border-slate-300 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-700"
           >
             Back to Users
           </button>
@@ -79,7 +79,7 @@ export default function NewUserPage() {
           className="grid gap-4 md:grid-cols-2 text-sm"
         >
           <div className="space-y-1">
-            <label className="text-xs font-medium text-slate-600">
+            <label className="text-xs font-semibold uppercase tracking-wide text-slate-500">
               Full Name
             </label>
             <input
@@ -93,7 +93,7 @@ export default function NewUserPage() {
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-medium text-slate-600">
+            <label className="text-xs font-semibold uppercase tracking-wide text-slate-500">
               Email
             </label>
             <input
@@ -107,7 +107,7 @@ export default function NewUserPage() {
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-medium text-slate-600">
+            <label className="text-xs font-semibold uppercase tracking-wide text-slate-500">
               Phone
             </label>
             <input
@@ -120,7 +120,7 @@ export default function NewUserPage() {
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-medium text-slate-600">
+            <label className="text-xs font-semibold uppercase tracking-wide text-slate-500">
               Password
             </label>
             <input
@@ -134,7 +134,7 @@ export default function NewUserPage() {
           </div>
 
           <div className="space-y-1 md:max-w-xs">
-            <label className="text-xs font-medium text-slate-600">
+            <label className="text-xs font-semibold uppercase tracking-wide text-slate-500">
               Role
             </label>
             <select
@@ -154,7 +154,7 @@ export default function NewUserPage() {
             <button
               type="submit"
               disabled={submitting}
-              className="btn-primary rounded-md px-4 py-2 text-sm font-medium disabled:opacity-60"
+              className="btn-primary text-xs font-semibold disabled:opacity-60"
             >
               {submitting ? "Creating..." : "Create User"}
             </button>

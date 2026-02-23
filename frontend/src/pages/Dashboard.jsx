@@ -127,17 +127,17 @@ export default function Dashboard() {
       <Card>
         <div className="flex justify-between items-start mt-2">
           <div>
-            <p className="text-gray-600 font-medium">Monthly Rent</p>
+            <p className="text-slate-600 font-medium">Monthly Rent</p>
             <h2 className="text-emerald-600 text-3xl font-bold mt-2">
               ETB {rent.toLocaleString()}.00
             </h2>
-            <p className="text-xs text-gray-400 mt-1">
+            <p className="text-xs text-slate-400 mt-1">
               Due by {dueDate}
             </p>
 
             <button
               onClick={handleViewDetails}
-              className="text-emerald-600 text-sm mt-3 inline-block hover:underline"
+              className="text-emerald-600 text-xs font-semibold uppercase tracking-wide mt-3 inline-block hover:underline"
             >
               View Details
             </button>
@@ -152,7 +152,7 @@ export default function Dashboard() {
         <div>
           <div className="flex items-center gap-2 mb-2">
             <Clock className={iconStyle} />
-            <p className="font-medium text-gray-700">Payment Status</p>
+            <p className="font-medium text-slate-700">Payment Status</p>
           </div>
 
           <p
@@ -171,7 +171,7 @@ export default function Dashboard() {
 
           <button
             onClick={handleManagePayments}
-            className="text-emerald-600 text-sm hover:underline"
+            className="text-emerald-600 text-xs font-semibold uppercase tracking-wide hover:underline"
           >
             Manage Payments
           </button>
@@ -194,7 +194,7 @@ export default function Dashboard() {
 
           <button
             onClick={handleRenewLease}
-            className="mt-3 text-sm border rounded-md px-3 py-1 text-emerald-600 hover:bg-emerald-50"
+            className="mt-3 rounded-full border border-emerald-200 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-emerald-600 hover:bg-emerald-50"
           >
             Renew Lease
           </button>
@@ -212,11 +212,11 @@ export default function Dashboard() {
           <p className="font-semibold mt-2">Leaky Faucet in Kitchen</p>
 
           <div className="flex items-center gap-2 mt-1">
-            <span className="text-xs bg-emerald-100 text-emerald-600 px-2 py-0.5 rounded">
+            <span className="text-[11px] font-semibold uppercase tracking-wide bg-emerald-100/70 text-emerald-700 px-2.5 py-1 rounded-full">
               {maintenanceStatus}
             </span>
 
-            <span className="text-xs text-gray-400">
+            <span className="text-xs text-slate-400">
               Last updated: October 15, 2024
             </span>
           </div>

@@ -15,15 +15,15 @@ const STATUS_OPTIONS = ["ALL", "ACTIVE", "SUSPENDED", "INVITED"];
 
 const StatusBadge = ({ status }) => {
   const map = {
-    ACTIVE: "bg-emerald-100 text-emerald-700",
-    SUSPENDED: "bg-red-100 text-red-700",
-    INVITED: "bg-amber-100 text-amber-700",
+    ACTIVE: "bg-emerald-100/70 text-emerald-700",
+    SUSPENDED: "bg-red-100/70 text-red-700",
+    INVITED: "bg-amber-100/70 text-amber-700",
   };
 
   return (
     <span
-      className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
-        map[status] || "bg-gray-100 text-gray-700"
+      className={`inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide ${
+        map[status] || "bg-gray-100/70 text-gray-700"
       }`}
     >
       {status}
@@ -136,7 +136,7 @@ export default function TenantsPage() {
           currentUser?.role === "ADMIN" || currentUser?.role === "PM" ? (
             <Link
               to="/users/new?role=TENANT"
-              className="btn-primary inline-flex items-center space-x-2 rounded-lg px-4 py-2 text-sm font-semibold"
+              className="btn-primary inline-flex items-center space-x-2 text-xs font-semibold"
             >
               <UserPlus className="h-4 w-4" />
               <span>New Tenant</span>
@@ -147,7 +147,7 @@ export default function TenantsPage() {
 
       <DashboardCard title="Tenant Directory">
       {/* Filters */}
-      <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <div className="filter-panel mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="flex flex-1 items-center gap-3">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
@@ -180,40 +180,41 @@ export default function TenantsPage() {
       {filteredTenants.length === 0 ? (
         <div className="space-y-3">
           <SkeletonTable rows={4} columns={4} />
-          <div className="text-xs text-slate-500">
-            No tenants match your filters.
+          <div className="empty-state">
+            <div className="empty-state-title">No tenants match your filters</div>
+            <div className="empty-state-text">Try adjusting your search or status.</div>
           </div>
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-2xl border border-gray-200 shadow-sm">
-          <table className="min-w-full divide-y divide-gray-200 text-sm">
-            <thead className="bg-gradient-to-r from-emerald-50 to-teal-50">
+        <div className="table-shell overflow-x-auto">
+          <table className="min-w-full divide-y divide-slate-200 text-sm">
+            <thead className="table-head">
               <tr>
-                <th className="px-6 py-4 text-left font-semibold text-gray-700">
+                <th className="px-6 py-4 text-left text-xs font-semibold text-slate-500">
                   Name / Contact
                 </th>
-                <th className="px-6 py-4 text-left font-semibold text-gray-700">
+                <th className="px-6 py-4 text-left text-xs font-semibold text-slate-500">
                   Status
                 </th>
-                <th className="px-6 py-4 text-left font-semibold text-gray-700">
+                <th className="px-6 py-4 text-left text-xs font-semibold text-slate-500">
                   Created
                 </th>
-                <th className="px-6 py-4 text-right font-semibold text-gray-700">
+                <th className="px-6 py-4 text-right text-xs font-semibold text-slate-500">
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100 bg-white">
+            <tbody className="divide-y divide-slate-100 bg-white">
               {filteredTenants.map((t) => (
-                <tr key={t._id} className="stagger-item hover:bg-gray-50 transition-colors">
+                <tr key={t._id} className="table-row stagger-item">
                   <td className="px-6 py-4">
-                    <div className="font-medium text-gray-900">
+                    <div className="font-medium text-slate-900">
                       {t.fullName || "Unnamed"}
                     </div>
-                    <div className="text-xs text-gray-500">
+                    <div className="text-xs text-slate-500">
                       {t.email}
                       {t.phone && (
-                        <span className="ml-2 text-gray-400">
+                        <span className="ml-2 text-slate-400">
                           • {t.phone}
                         </span>
                       )}
@@ -222,7 +223,7 @@ export default function TenantsPage() {
                   <td className="px-6 py-4">
                     <StatusBadge status={t.status} />
                   </td>
-                  <td className="px-6 py-4 text-gray-500">
+                  <td className="px-6 py-4 text-slate-500">
                     {t.createdAt
                       ? new Date(t.createdAt).toLocaleDateString()
                       : "—"}
@@ -232,7 +233,7 @@ export default function TenantsPage() {
                       {canDeactivate && t.status !== "SUSPENDED" && (
                         <button
                           onClick={() => handleDeactivate(t._id)}
-                          className="inline-flex items-center space-x-1 rounded-lg border border-red-200 px-3 py-2 text-xs font-medium text-red-600 hover:bg-red-50 transition-colors"
+                          className="inline-flex items-center space-x-1 rounded-full border border-red-200 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-red-600 hover:bg-red-50 transition-colors"
                         >
                           <UserX className="h-3 w-3" />
                           <span>Deactivate</span>
@@ -241,7 +242,7 @@ export default function TenantsPage() {
                       {canReactivate && t.status === "SUSPENDED" && (
                         <button
                           onClick={() => handleReactivate(t._id)}
-                          className="inline-flex items-center space-x-1 rounded-lg border border-emerald-200 px-3 py-2 text-xs font-medium text-emerald-600 hover:bg-emerald-50 transition-colors"
+                          className="inline-flex items-center space-x-1 rounded-full border border-emerald-200 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-emerald-600 hover:bg-emerald-50 transition-colors"
                         >
                           <UserCheck className="h-3 w-3" />
                           <span>Reactivate</span>
@@ -249,7 +250,7 @@ export default function TenantsPage() {
                       )}
                       <Link
                         to={`/users/${t._id}`}
-                        className="inline-flex items-center space-x-1 rounded-lg border border-gray-200 px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+                        className="inline-flex items-center space-x-1 rounded-full border border-slate-200 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-slate-700 hover:bg-slate-50 transition-colors"
                       >
                         <Eye className="h-3 w-3" />
                         <span>View</span>

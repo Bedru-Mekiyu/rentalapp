@@ -214,6 +214,22 @@ export default function GeneralManagerDashboard() {
         eyebrowClassName="bg-emerald-100 text-emerald-700"
         title="General Manager Dashboard"
         subtitle={`Welcome back, ${user?.fullName || "General Manager"}. Here's your portfolio overview.`}
+        actions={
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              className="btn-secondary text-xs font-semibold"
+              onClick={exportCSV}
+            >
+              Export CSV
+            </button>
+            <button
+              className="btn-primary text-xs font-semibold"
+              onClick={exportPDF}
+            >
+              Export PDF
+            </button>
+          </div>
+        }
       />
 
       {/* KPI Cards */}
@@ -313,8 +329,8 @@ export default function GeneralManagerDashboard() {
       </section>
 
       {/* Occupancy analytics */}
-      <section className="surface-panel analytics-panel p-4">
-        <h2 className="panel-title text-sm">
+      <section className="surface-panel analytics-panel p-6">
+        <h2 className="panel-title">
           Occupancy Analytics
         </h2>
         <p className="panel-subtitle mb-4">
@@ -346,23 +362,18 @@ export default function GeneralManagerDashboard() {
       </section>
 
       {/* Reports */}
-      <section className="surface-panel p-4">
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className="panel-title text-sm">
-            Financial Reports
-          </h2>
-          <div className="flex gap-2">
-            <button className="rounded-md bg-slate-100 px-3 py-1 text-xs" onClick={exportPDF}>
-              Export to PDF
-            </button>
-            <button className="rounded-md bg-slate-100 px-3 py-1 text-xs" onClick={exportCSV}>
-              Export to CSV
-            </button>
+      <section className="surface-panel p-6">
+        <div className="mb-4 flex items-center justify-between">
+          <div>
+            <h2 className="panel-title">Financial Reports</h2>
+            <p className="panel-subtitle">
+              Export and archive portfolio performance packs.
+            </p>
           </div>
         </div>
-        <div className="overflow-hidden rounded-lg border border-slate-200">
+        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white/90">
           <table className="w-full text-xs">
-            <thead className="bg-slate-50 text-left text-slate-500">
+            <thead className="bg-slate-50/80 text-left text-slate-500">
               <tr>
                 <th className="px-3 py-2">Report ID</th>
                 <th className="px-3 py-2">Report Name</th>
@@ -389,7 +400,7 @@ export default function GeneralManagerDashboard() {
 
 function KpiCard({ label, value, icon, gradient }) {
   return (
-    <div className={`surface-panel card-reveal stagger-item p-6 hover:scale-[1.02] transition-all duration-300`}>
+    <div className="surface-panel card-reveal hover-lift stagger-item p-6">
       <div className="flex items-center justify-between">
         <div>
           <p className="panel-subtitle mb-2 text-sm">{label}</p>
@@ -397,7 +408,7 @@ function KpiCard({ label, value, icon, gradient }) {
             {value}
           </p>
         </div>
-        <div className={`flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${gradient} shadow-lg`}>
+        <div className={`flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${gradient} shadow-lg`}>
           <span className="text-xl">{icon}</span>
         </div>
       </div>
@@ -422,7 +433,9 @@ function KpiSkeleton() {
 function Stat({ label, value }) {
   return (
     <div>
-      <p className="text-slate-500">{label}</p>
+      <p className="text-slate-500 text-xs uppercase tracking-wide">
+        {label}
+      </p>
       <p className="font-semibold text-slate-900">{value}</p>
     </div>
   );

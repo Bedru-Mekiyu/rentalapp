@@ -130,7 +130,7 @@ export default function UnitsPage() {
               const el = document.getElementById("create-unit-form");
               if (el) el.scrollIntoView({ behavior: "smooth" });
             }}
-            className="btn-primary rounded-full px-5 py-2 text-sm font-semibold"
+            className="btn-primary text-xs font-semibold"
           >
             + New Unit
           </button>
@@ -139,7 +139,7 @@ export default function UnitsPage() {
 
       {/* Filters and search */}
       <DashboardCard>
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="filter-panel flex flex-wrap items-center gap-3">
           <div className="relative flex-1 min-w-[200px]">
             <input
               type="text"
@@ -149,15 +149,13 @@ export default function UnitsPage() {
               className="form-input text-sm"
             />
           </div>
-          <div className="flex flex-wrap gap-1 rounded-full bg-slate-100 p-1 text-xs">
+          <div className="filter-shell">
             {statusFilters.map((s) => (
               <button
                 key={s}
                 onClick={() => setStatus(s)}
-                className={`rounded-full px-3 py-1 ${
-                  status === s
-                    ? "bg-white text-slate-900 shadow-sm"
-                    : "text-slate-500 hover:text-slate-800"
+                className={`filter-chip ${
+                  status === s ? "filter-chip-active" : ""
                 }`}
               >
                 {s === "All" ? "All" : s}
@@ -175,12 +173,15 @@ export default function UnitsPage() {
         {filteredUnits.length === 0 ? (
           <div className="space-y-3">
             <SkeletonTable rows={4} columns={7} />
-            <p className="text-xs text-slate-500">No units found.</p>
+            <div className="empty-state">
+              <div className="empty-state-title">No units found</div>
+              <div className="empty-state-text">Try clearing filters or add a new unit.</div>
+            </div>
           </div>
         ) : (
-          <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
+          <div className="table-shell">
             <table className="min-w-full divide-y divide-slate-200 text-sm">
-              <thead className="bg-slate-50/80">
+              <thead className="table-head">
                 <tr>
                   <th className="px-4 py-2 text-left text-xs font-semibold text-slate-500">
                     Unit Number
@@ -207,7 +208,7 @@ export default function UnitsPage() {
               </thead>
               <tbody className="divide-y divide-slate-100 bg-white">
                 {filteredUnits.map((u) => (
-                  <tr key={u._id} className="stagger-item transition hover:bg-slate-50/80">
+                  <tr key={u._id} className="table-row stagger-item">
                     <td className="px-4 py-2 text-sm">
                       {u.unitNumber || `Unit ${u._id.slice(-4)}`}
                     </td>
@@ -222,14 +223,14 @@ export default function UnitsPage() {
                     </td>
                     <td className="px-4 py-2 text-sm">
                       <span
-                        className={`inline-flex rounded-full px-2 py-0.5 text-[11px] font-semibold ${
+                        className={`inline-flex rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide ${
                           u.status === "VACANT"
-                            ? "bg-emerald-100 text-emerald-700"
+                            ? "bg-emerald-100/70 text-emerald-700"
                             : u.status === "OCCUPIED"
-                            ? "bg-teal-100 text-teal-700"
+                            ? "bg-teal-100/70 text-teal-700"
                             : u.status === "UNDER_MAINTENANCE"
-                            ? "bg-amber-100 text-amber-700"
-                            : "bg-slate-100 text-slate-600"
+                            ? "bg-amber-100/70 text-amber-700"
+                            : "bg-slate-100/70 text-slate-600"
                         }`}
                       >
                         {u.status}
@@ -265,7 +266,7 @@ export default function UnitsPage() {
           className="grid gap-4 md:grid-cols-4 text-sm"
         >
           <div className="space-y-1">
-            <label className="text-xs text-slate-600">
+            <label className="text-xs font-medium text-slate-600">
               Unit Number
             </label>
             <input
@@ -281,7 +282,7 @@ export default function UnitsPage() {
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs text-slate-600">Floor</label>
+            <label className="text-xs font-medium text-slate-600">Floor</label>
             <input
               type="number"
               required
@@ -295,7 +296,7 @@ export default function UnitsPage() {
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs text-slate-600">Type</label>
+            <label className="text-xs font-medium text-slate-600">Type</label>
             <input
               type="text"
               required
@@ -309,7 +310,7 @@ export default function UnitsPage() {
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs text-slate-600">
+            <label className="text-xs font-medium text-slate-600">
               Area (sqm)
             </label>
             <input
@@ -325,7 +326,7 @@ export default function UnitsPage() {
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs text-slate-600">
+            <label className="text-xs font-medium text-slate-600">
               Base Price (ETB)
             </label>
             <input
@@ -344,7 +345,7 @@ export default function UnitsPage() {
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs text-slate-600">Status</label>
+            <label className="text-xs font-medium text-slate-600">Status</label>
             <select
               value={form.status}
               onChange={(e) =>
@@ -364,7 +365,7 @@ export default function UnitsPage() {
             <button
               type="submit"
               disabled={creating}
-              className="btn-primary rounded-md px-4 py-2 text-sm font-medium disabled:opacity-60"
+              className="btn-primary text-xs font-semibold disabled:opacity-60"
             >
               {creating ? "Creating..." : "Create Unit"}
             </button>

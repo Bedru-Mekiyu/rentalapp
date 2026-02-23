@@ -18,7 +18,7 @@ const Avatar = ({ name }) => {
     .slice(0, 2);
 
   return (
-    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 text-xs font-semibold text-emerald-700">
+    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 text-xs font-semibold text-white shadow-sm ring-2 ring-white">
       {initials || "T"}
     </div>
   );
@@ -151,10 +151,26 @@ export default function FinancialStaffDashboard() {
         eyebrowClassName="bg-emerald-100 text-emerald-700"
         title="Financial Staff Dashboard"
         subtitle="View invoices, payment status, and financial reports."
+        actions={
+          <div className="flex flex-wrap items-center gap-2">
+            <Link
+              to="/payments"
+              className="btn-secondary text-xs font-semibold"
+            >
+              Payments
+            </Link>
+            <Link
+              to="/finance"
+              className="btn-primary text-xs font-semibold"
+            >
+              Summary
+            </Link>
+          </div>
+        }
       />
 
       {/* KPI row */}
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <DashboardCard title="Total Revenue (verified)">
           <p className="text-xl font-semibold text-slate-900">
             {formatCurrency(summary.totalRevenue)}
@@ -185,19 +201,19 @@ export default function FinancialStaffDashboard() {
         <div className="grid gap-3 md:grid-cols-3 text-xs">
           <div className="space-y-1">
             <p className="text-slate-600">Tenant Name</p>
-            <p className="rounded-lg border border-slate-100 bg-slate-50 px-3 py-2 text-slate-500">
+            <p className="rounded-2xl border border-slate-100 bg-slate-50/70 px-3 py-2 text-slate-500">
               e.g. Alice Johnson
             </p>
           </div>
           <div className="space-y-1">
             <p className="text-slate-600">Invoice Amount (ETB)</p>
-            <p className="rounded-lg border border-slate-100 bg-slate-50 px-3 py-2 text-slate-500">
+            <p className="rounded-2xl border border-slate-100 bg-slate-50/70 px-3 py-2 text-slate-500">
               15,000
             </p>
           </div>
           <div className="space-y-1">
             <p className="text-slate-600">Due Date</p>
-            <p className="rounded-lg border border-slate-100 bg-slate-50 px-3 py-2 text-slate-500">
+            <p className="rounded-2xl border border-slate-100 bg-slate-50/70 px-3 py-2 text-slate-500">
               2025‑01‑31
             </p>
           </div>
@@ -217,14 +233,17 @@ export default function FinancialStaffDashboard() {
           <div className="space-y-2">
             <SkeletonRow className="h-4 w-2/3" />
             <SkeletonRow className="h-4 w-1/2" />
-            <p className="text-xs text-slate-500">No pending manual payments.</p>
+            <div className="empty-state">
+              <div className="empty-state-title">No pending manual payments</div>
+              <div className="empty-state-text">Queue will populate when payments are submitted.</div>
+            </div>
           </div>
         ) : (
           <ul className="space-y-2 text-xs">
             {queue.map((item) => (
               <li
                 key={item._id}
-                className="stagger-item flex items-center justify-between rounded-lg bg-slate-50 px-3 py-2"
+                className="stagger-item flex items-center justify-between rounded-2xl border border-slate-100 bg-slate-50/70 px-3 py-2"
               >
                 <div className="flex items-center gap-3">
                   <Avatar name={item.tenantName || "Tenant"} />
@@ -237,7 +256,7 @@ export default function FinancialStaffDashboard() {
                     </p>
                   </div>
                 </div>
-                <span className="inline-flex rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-medium text-amber-700">
+                <span className="inline-flex rounded-full bg-amber-100/70 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-amber-700">
                   Awaiting manager decision
                 </span>
               </li>
@@ -252,9 +271,9 @@ export default function FinancialStaffDashboard() {
           title="Payment History"
           description="Recent payment records."
         >
-          <div className="overflow-hidden rounded-xl border border-slate-200">
+          <div className="table-shell">
             <table className="min-w-full divide-y divide-slate-200 text-xs">
-              <thead className="bg-slate-50">
+              <thead className="table-head">
                 <tr>
                   <th className="px-3 py-2 text-left font-semibold text-slate-500">
                     Date
@@ -275,27 +294,27 @@ export default function FinancialStaffDashboard() {
               </thead>
               <tbody className="divide-y divide-slate-100 bg-white">
                 {payments.slice(0, 6).map((p) => (
-                  <tr key={p._id}>
-                    <td className="px-3 py-2">
+                  <tr key={p._id} className="table-row">
+                    <td className="px-3 py-2 text-slate-600">
                       {p.transactionDate
                         ? new Date(p.transactionDate).toLocaleDateString()
                         : "-"}
                     </td>
-                    <td className="px-3 py-2">
+                    <td className="px-3 py-2 text-slate-700">
                       {p.tenantName || "Tenant"}
                     </td>
-                    <td className="px-3 py-2">
+                    <td className="px-3 py-2 text-slate-700">
                       {formatCurrency(p.amountEtb || 0)}
                     </td>
-                    <td className="px-3 py-2">{p.paymentMethod}</td>
+                    <td className="px-3 py-2 text-slate-600">{p.paymentMethod}</td>
                     <td className="px-3 py-2">
                       <span
-                        className={`inline-flex rounded-full px-2 py-0.5 text-[11px] font-medium ${
+                        className={`inline-flex rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide ${
                           p.status === "VERIFIED"
-                            ? "bg-emerald-100 text-emerald-700"
+                            ? "bg-emerald-100/70 text-emerald-700"
                             : p.status === "PENDING"
-                            ? "bg-amber-100 text-amber-700"
-                            : "bg-red-100 text-red-700"
+                            ? "bg-amber-100/70 text-amber-700"
+                            : "bg-red-100/70 text-red-700"
                         }`}
                       >
                         {p.status}
@@ -313,7 +332,7 @@ export default function FinancialStaffDashboard() {
           description="Key financial reports (view‑only)."
         >
           <ul className="space-y-2 text-xs">
-            <li className="stagger-item flex items-center justify-between rounded-lg bg-slate-50 px-3 py-2">
+            <li className="stagger-item flex items-center justify-between rounded-2xl border border-slate-100 bg-slate-50/70 px-3 py-2">
               <span>Monthly Revenue Report</span>
               <Link
                 to="#"
@@ -322,7 +341,7 @@ export default function FinancialStaffDashboard() {
                 View
               </Link>
             </li>
-            <li className="stagger-item flex items-center justify-between rounded-lg bg-slate-50 px-3 py-2">
+            <li className="stagger-item flex items-center justify-between rounded-2xl border border-slate-100 bg-slate-50/70 px-3 py-2">
               <span>Delinquency Report</span>
               <Link
                 to="#"
@@ -331,7 +350,7 @@ export default function FinancialStaffDashboard() {
                 View
               </Link>
             </li>
-            <li className="stagger-item flex items-center justify-between rounded-lg bg-slate-50 px-3 py-2">
+            <li className="stagger-item flex items-center justify-between rounded-2xl border border-slate-100 bg-slate-50/70 px-3 py-2">
               <span>Expense Report</span>
               <Link
                 to="#"

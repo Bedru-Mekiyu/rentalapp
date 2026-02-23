@@ -1,37 +1,47 @@
 // src/components/Sidebar.jsx
 import { NavLink } from "react-router-dom";
+import {
+  LayoutDashboard,
+  Building2,
+  FileText,
+  CreditCard,
+  PiggyBank,
+  Users,
+  ClipboardList,
+  Home,
+} from "lucide-react";
 import { useAuthStore } from "../store/authStore";
 
 const menuItems = {
   ADMIN: [
-    { to: "/dashboard", label: "Dashboard", icon: "📊" },
-    { to: "/units", label: "Units", icon: "🏠" },
-    { to: "/leases", label: "Leases", icon: "📄" },
-    { to: "/payments", label: "Payments", icon: "💳" },
-    { to: "/finance", label: "Finance", icon: "💰" },
-    { to: "/users", label: "Users", icon: "👥" },
+    { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { to: "/units", label: "Units", icon: Building2 },
+    { to: "/leases", label: "Leases", icon: FileText },
+    { to: "/payments", label: "Payments", icon: CreditCard },
+    { to: "/finance", label: "Finance", icon: PiggyBank },
+    { to: "/users", label: "Users", icon: Users },
   ],
   PM: [
-    { to: "/dashboard", label: "Dashboard", icon: "📊" },
-    { to: "/units", label: "Unit Management", icon: "🏠" },
-    { to: "/leases", label: "Lease Management", icon: "📄" },
-    { to: "/tenants", label: "Tenant Management", icon: "👥" },
-    { to: "/payments", label: "Payments", icon: "💳" },
+    { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { to: "/units", label: "Unit Management", icon: Building2 },
+    { to: "/leases", label: "Lease Management", icon: FileText },
+    { to: "/tenants", label: "Tenant Management", icon: Users },
+    { to: "/payments", label: "Payments", icon: CreditCard },
   ],
   FS: [
-    { to: "/dashboard", label: "Dashboard", icon: "📊" },
-    { to: "/payments", label: "Payments", icon: "💳" },
-    { to: "/finance", label: "Financial Summary", icon: "💰" },
+    { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { to: "/payments", label: "Payments", icon: CreditCard },
+    { to: "/finance", label: "Financial Summary", icon: PiggyBank },
   ],
   GM: [
-    { to: "/dashboard", label: "Analytics Dashboard", icon: "📈" },
-    { to: "/leases", label: "Leases", icon: "📄" },
-    { to: "/units", label: "Units", icon: "🏠" },
+    { to: "/dashboard", label: "Analytics Dashboard", icon: ClipboardList },
+    { to: "/leases", label: "Leases", icon: FileText },
+    { to: "/units", label: "Units", icon: Building2 },
   ],
   TENANT: [
-    { to: "/dashboard", label: "Dashboard", icon: "📊" },
-    { to: "/my-lease", label: "My Lease", icon: "🏠" },
-    { to: "/payments", label: "Payment History", icon: "💳" },
+    { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { to: "/my-lease", label: "My Lease", icon: Home },
+    { to: "/payments", label: "Payment History", icon: CreditCard },
   ],
 };
 
@@ -56,13 +66,13 @@ export default function Sidebar() {
               to={item.to}
               className={({ isActive }) =>
                 [
-                  "nav-item",
+                  "nav-item group",
                   isActive ? "nav-item-active" : "nav-item-idle",
                 ].join(" ")
               }
             >
               <span className="nav-icon transition-transform duration-300 group-hover:scale-110">
-                {item.icon}
+                <item.icon className="h-4 w-4" />
               </span>
               <span className="transition-all duration-300">{item.label}</span>
             </NavLink>

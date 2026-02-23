@@ -88,7 +88,7 @@ export default function MyLeasePage() {
             </p>
             <button
               onClick={() => navigate("/dashboard")}
-              className="btn-primary inline-flex items-center space-x-2 rounded-lg px-4 py-2 text-sm font-semibold"
+              className="btn-primary inline-flex items-center space-x-2 text-xs font-semibold"
             >
               Return to Dashboard
             </button>

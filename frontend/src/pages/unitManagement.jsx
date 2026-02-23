@@ -122,7 +122,7 @@ export default function UnitManagement() {
         {/* left */}
         <div className="lg:col-span-2 space-y-6">
           <Card title="Base Price Configuration">
-            <label className="text-sm text-gray-600 ">
+            <label className="text-xs font-semibold uppercase tracking-wide text-slate-500">
               Base Monthly Rent(ETB)
             </label>
             <input
@@ -134,7 +134,7 @@ export default function UnitManagement() {
           </Card>
 
           <Card title="Floor-Based Adjustments (Multipliers)">
-            <div className="grid grid-cols-3 gap-4 text-xs font-semibold mb-2 text-gray-500">
+            <div className="grid grid-cols-3 gap-4 text-[11px] font-semibold uppercase tracking-wide mb-2 text-slate-500">
               <span>Min Floor</span>
               <span>Max Floor</span>
               <span>Multiplier</span>
@@ -145,17 +145,17 @@ export default function UnitManagement() {
                 <input
                   disabled
                   value={rule.minFloor}
-                  className="form-input text-xs bg-slate-50"
+                  className="form-input text-xs bg-slate-50/70"
                 />
                 <input
                   disabled
                   value={rule.maxFloor}
-                  className="form-input text-xs bg-slate-50"
+                  className="form-input text-xs bg-slate-50/70"
                 />
                 <input
                   disabled
                   value={`× ${rule.multiplier}`}
-                  className="form-input text-xs bg-slate-50"
+                  className="form-input text-xs bg-slate-50/70"
                 />
               </div>
             ))}
@@ -165,11 +165,11 @@ export default function UnitManagement() {
         {/* right */}
         <div>
           <Card title="Rent Preview Calculator">
-            <p className="mb-4 text-sm text-gray-600">
+            <p className="mb-4 text-sm text-slate-600">
               See the estimated rent based on your configured rules.
             </p>
             <div className="mb-4">
-              <label className="mb-1 text-xs font-medium block text-gray-500  ">
+              <label className="mb-1 text-[11px] font-semibold uppercase tracking-wide block text-slate-500">
                 Select unit for preview
               </label>
               <select
@@ -197,12 +197,12 @@ export default function UnitManagement() {
               />
 
               <hr />
-              <div className="font-semibold text-lg text-emerald-600 flex justify-between  ">
+              <div className="font-semibold text-lg text-emerald-600 flex justify-between">
                 <span>Total Estimated Rent</span>
                 <span>{rent.total} ETB</span>
               </div>
 
-              <div className="pt-4 text-xs text-gray-600">
+              <div className="pt-4 text-xs text-slate-600">
                 <p>
                   <b>Unit:</b> {selectedUnit.name}
                 </p>
@@ -226,7 +226,7 @@ export default function UnitManagement() {
 
 const Row = ({ label, value }) => (
   <div className="flex justify-between">
-    <span className="text-gray-600 ">{label}</span>
-    <span className="font-medium ">{value}</span>
+    <span className="text-slate-600">{label}</span>
+    <span className="font-medium text-slate-900">{value}</span>
   </div>
 );

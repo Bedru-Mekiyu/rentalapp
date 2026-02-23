@@ -7,11 +7,11 @@ export default function AppHeader({ title }) {
         <h1 className="app-title text-lg font-semibold text-slate-900">
           {title}
         </h1>
-      <img
-        src="https://i.pravatar.cc/40"
-        alt="Profile"
-        className="h-9 w-9 rounded-full"
-      />
+        <img
+          src="https://i.pravatar.cc/40"
+          alt="Profile"
+          className="h-9 w-9 rounded-full border border-white/60 shadow"
+        />
       </div>
     </header>
   );

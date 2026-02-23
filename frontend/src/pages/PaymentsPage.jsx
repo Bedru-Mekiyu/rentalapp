@@ -184,11 +184,24 @@ export default function PaymentsPage() {
         eyebrowClassName="bg-emerald-100 text-emerald-700"
         title="Payments"
         subtitle="Record tenant payments and verify them once confirmed."
+        actions={
+          canCreate ? (
+            <button
+              onClick={() => {
+                const el = document.getElementById("payment-create-form");
+                if (el) el.scrollIntoView({ behavior: "smooth" });
+              }}
+              className="btn-primary text-xs font-semibold"
+            >
+              Record Payment
+            </button>
+          ) : null
+        }
       />
 
       <DashboardCard>
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="filter-panel flex flex-wrap items-center gap-2">
             <input
               type="text"
               placeholder="Search by method or transaction ID"
@@ -225,8 +238,9 @@ export default function PaymentsPage() {
 
         {canCreate && (
           <form
+            id="payment-create-form"
             onSubmit={handleCreate}
-            className="mb-6 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-xs"
+            className="mb-6 rounded-2xl border border-slate-200 bg-white/90 p-4 text-xs"
           >
             <div className="mb-3 font-semibold text-slate-700">
               New Payment
@@ -312,7 +326,7 @@ export default function PaymentsPage() {
               <button
                 type="submit"
                 disabled={creating}
-                className={`rounded-lg px-4 py-2 text-xs font-semibold text-white ${
+                className={`rounded-full px-4 py-2 text-[11px] font-semibold uppercase tracking-wide text-white ${
                   creating
                     ? "bg-emerald-400"
                     : "bg-emerald-600 hover:bg-emerald-700"
@@ -327,12 +341,15 @@ export default function PaymentsPage() {
         {filteredPayments.length === 0 ? (
           <div className="space-y-3 py-6 text-center text-xs text-slate-500">
             <SkeletonTable rows={4} columns={7} />
-            <div className="mt-2">No payments recorded yet.</div>
+            <div className="empty-state mt-2">
+              <div className="empty-state-title">No payments recorded</div>
+              <div className="empty-state-text">Records will appear once payments are submitted.</div>
+            </div>
           </div>
         ) : (
-          <div className="overflow-x-auto rounded-xl border border-slate-200 text-xs">
+          <div className="table-shell overflow-x-auto text-xs">
             <table className="min-w-full divide-y divide-slate-200">
-              <thead className="bg-slate-50">
+              <thead className="table-head">
                 <tr>
                   <th className="px-3 py-2 text-left font-semibold text-slate-600">
                     Date
@@ -359,7 +376,7 @@ export default function PaymentsPage() {
               </thead>
               <tbody className="divide-y divide-slate-100 bg-white">
                 {filteredPayments.slice(0, PAGE_SIZE).map((p) => (
-                  <tr key={p._id} className="stagger-item">
+                  <tr key={p._id} className="table-row stagger-item">
                     <td className="px-3 py-2">
                       {formatDate(p.transactionDate)}
                     </td>
@@ -371,12 +388,12 @@ export default function PaymentsPage() {
                     </td>
                     <td className="px-3 py-2">
                       <span
-                        className={`rounded-full px-2 py-1 text-[11px] font-medium ${
+                        className={`rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide ${
                           p.status === "VERIFIED"
-                            ? "bg-emerald-50 text-emerald-700"
+                            ? "bg-emerald-100/70 text-emerald-700"
                             : p.status === "REJECTED"
-                            ? "bg-rose-50 text-rose-700"
-                            : "bg-amber-50 text-amber-700"
+                            ? "bg-rose-100/70 text-rose-700"
+                            : "bg-amber-100/70 text-amber-700"
                         }`}
                       >
                         {p.status}
@@ -406,7 +423,7 @@ export default function PaymentsPage() {
                                 handleUpdateStatus(p._id, "VERIFIED")
                               }
                               disabled={updatingId === p._id}
-                              className="rounded-lg bg-emerald-50 px-3 py-1 text-[11px] font-semibold text-emerald-700 hover:bg-emerald-100"
+                              className="rounded-full bg-emerald-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-emerald-700 hover:bg-emerald-100"
                             >
                               {updatingId === p._id
                                 ? "Saving..."
@@ -419,7 +436,7 @@ export default function PaymentsPage() {
                                 handleUpdateStatus(p._id, "REJECTED")
                               }
                               disabled={updatingId === p._id}
-                              className="rounded-lg bg-rose-50 px-3 py-1 text-[11px] font-semibold text-rose-700 hover:bg-rose-100"
+                              className="rounded-full bg-rose-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-rose-700 hover:bg-rose-100"
                             >
                               {updatingId === p._id
                                 ? "Saving..."
