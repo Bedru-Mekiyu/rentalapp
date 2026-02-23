@@ -11,7 +11,7 @@ import SkeletonTable from "../components/SkeletonTable";
 import SkeletonCard from "../components/SkeletonCard";
 
 export default function LeaseDetailPage() {
-  const { leaseId } = useParams();
+  const { id: leaseId } = useParams();
   const navigate = useNavigate();
   const { user } = useAuthStore();
 
@@ -22,14 +22,6 @@ export default function LeaseDetailPage() {
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [ending, setEnding] = useState(false);
-
-  useEffect(() => {
-    if (!leaseId || leaseId === 'undefined') {
-      navigate('/leases');
-      return;
-    }
-    loadLease();
-  }, [leaseId, loadLease, navigate]);
 
   const loadLease = useCallback(async () => {
     try {
@@ -51,7 +43,7 @@ export default function LeaseDetailPage() {
         // filter only this lease's payments if leaseId field exists
         const allPayments = payRes.data?.data || [];
         const filtered = allPayments.filter(
-          (p) => !p.leaseId || p.leaseId === leaseId
+          (p) => !p.leaseId || String(p.leaseId) === String(leaseId)
         );
         setPayments(filtered);
       }
@@ -61,6 +53,14 @@ export default function LeaseDetailPage() {
       setLoading(false);
     }
   }, [leaseId]);
+
+  useEffect(() => {
+    if (!leaseId || leaseId === "undefined") {
+      navigate("/leases");
+      return;
+    }
+    loadLease();
+  }, [leaseId, loadLease, navigate]);
 
   const handleEndLease = async () => {
     if (!window.confirm("End this lease and mark unit as VACANT?")) return;
@@ -123,6 +123,15 @@ export default function LeaseDetailPage() {
     );
   }
 
+  const statusClass =
+    lease.status === "ACTIVE"
+      ? "status-emerald"
+      : lease.status === "PENDING"
+      ? "status-amber"
+      : ["ENDED", "TERMINATED", "CANCELLED"].includes(lease.status)
+      ? "status-rose"
+      : "status-slate";
+
   return (
     <div className="space-y-6">
       <PageHeader
@@ -162,7 +171,7 @@ export default function LeaseDetailPage() {
         <div className="grid gap-4 md:grid-cols-3 text-sm">
           <div>
             <p className="text-xs text-slate-500">Status</p>
-            <span className="mt-2 inline-flex rounded-full bg-slate-100/70 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-slate-700">
+            <span className={`status-pill ${statusClass}`}>
               {lease.status}
             </span>
           </div>
@@ -290,12 +299,12 @@ export default function LeaseDetailPage() {
                     <td className="px-4 py-2">{p.paymentMethod}</td>
                     <td className="px-4 py-2">
                       <span
-                        className={`inline-flex rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide ${
+                        className={`status-pill ${
                           p.status === "VERIFIED"
-                            ? "bg-emerald-100/70 text-emerald-700"
+                            ? "status-emerald"
                             : p.status === "PENDING"
-                            ? "bg-amber-100/70 text-amber-700"
-                            : "bg-red-100/70 text-red-700"
+                            ? "status-amber"
+                            : "status-rose"
                         }`}
                       >
                         {p.status}

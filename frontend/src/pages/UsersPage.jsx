@@ -9,24 +9,23 @@ import PageHeader from "../components/PageHeader";
 import SkeletonRow from "../components/SkeletonRow";
 import SkeletonTable from "../components/SkeletonTable";
 import SkeletonCard from "../components/SkeletonCard";
+import Pagination from "../components/Pagination";
 
 const ROLE_OPTIONS = ["ALL", "ADMIN", "PM", "GM", "FS", "TENANT"];
 const STATUS_OPTIONS = ["ALL", "ACTIVE", "SUSPENDED", "INVITED"];
 
 const RoleBadge = ({ role }) => {
   const map = {
-    ADMIN: "bg-emerald-100/70 text-emerald-700",
-    PM: "bg-teal-100/70 text-teal-700",
-    GM: "bg-amber-100/70 text-amber-700",
-    FS: "bg-sky-100/70 text-sky-700",
-    TENANT: "bg-slate-100/70 text-slate-700",
+    ADMIN: "status-emerald",
+    PM: "status-teal",
+    GM: "status-amber",
+    FS: "status-sky",
+    TENANT: "status-slate",
   };
 
   return (
     <span
-      className={`inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide ${
-        map[role] || "bg-gray-100/70 text-gray-700"
-      }`}
+      className={`status-pill ${map[role] || "status-slate"}`}
     >
       {role}
     </span>
@@ -35,16 +34,14 @@ const RoleBadge = ({ role }) => {
 
 const StatusBadge = ({ status }) => {
   const map = {
-    ACTIVE: "bg-emerald-100/70 text-emerald-700",
-    SUSPENDED: "bg-red-100/70 text-red-700",
-    INVITED: "bg-amber-100/70 text-amber-700",
+    ACTIVE: "status-emerald",
+    SUSPENDED: "status-rose",
+    INVITED: "status-amber",
   };
 
   return (
     <span
-      className={`inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide ${
-        map[status] || "bg-gray-100/70 text-gray-700"
-      }`}
+      className={`status-pill ${map[status] || "status-slate"}`}
     >
       {status}
     </span>
@@ -58,6 +55,7 @@ export default function UsersPage() {
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("ALL");
   const [statusFilter, setStatusFilter] = useState("ALL");
+  const [page, setPage] = useState(1);
 
   const canDeactivate = currentUser?.role === "ADMIN";
   const canReactivate = currentUser?.role === "ADMIN";
@@ -100,6 +98,17 @@ export default function UsersPage() {
       }),
     [users, search]
   );
+
+  useEffect(() => {
+    setPage(1);
+  }, [search, roleFilter, statusFilter]);
+
+  const PAGE_SIZE = 12;
+
+  const pagedUsers = useMemo(() => {
+    const start = (page - 1) * PAGE_SIZE;
+    return filteredUsers.slice(start, start + PAGE_SIZE);
+  }, [filteredUsers, page]);
 
   const handleDeactivate = async (id) => {
     if (!window.confirm("Deactivate this user?")) return;
@@ -213,7 +222,7 @@ export default function UsersPage() {
           </div>
         </div>
       ) : (
-        <div className="table-shell overflow-x-auto">
+        <div className="table-shell list-shell overflow-x-auto">
           <table className="min-w-full divide-y divide-slate-200 text-sm">
             <thead className="table-head">
               <tr>
@@ -235,7 +244,7 @@ export default function UsersPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 bg-white">
-              {filteredUsers.map((u) => (
+              {pagedUsers.map((u) => (
                 <tr key={u._id} className="table-row stagger-item">
                   <td className="px-4 py-3">
                     <div className="font-medium text-slate-900">
@@ -268,7 +277,7 @@ export default function UsersPage() {
                           {u.status !== "SUSPENDED" && canDeactivate && (
                             <button
                               onClick={() => handleDeactivate(u._id)}
-                              className="rounded-full border border-red-200 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-red-600 hover:bg-red-50"
+                              className="btn-pill btn-outline btn-outline-rose"
                             >
                               Deactivate
                             </button>
@@ -276,7 +285,7 @@ export default function UsersPage() {
                           {u.status === "SUSPENDED" && canReactivate && (
                             <button
                               onClick={() => handleReactivate(u._id)}
-                              className="rounded-full border border-emerald-200 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-emerald-600 hover:bg-emerald-50"
+                              className="btn-pill btn-outline btn-outline-emerald"
                             >
                               Reactivate
                             </button>
@@ -285,7 +294,7 @@ export default function UsersPage() {
                       )}
                       <Link
                         to={`/users/${u._id}`}
-                        className="rounded-full border border-slate-200 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-slate-700 hover:bg-slate-50"
+                        className="btn-pill btn-outline btn-outline-slate"
                       >
                         View
                       </Link>
@@ -297,6 +306,12 @@ export default function UsersPage() {
           </table>
         </div>
       )}
+      <Pagination
+        page={page}
+        pageSize={PAGE_SIZE}
+        total={filteredUsers.length}
+        onPageChange={setPage}
+      />
       </DashboardCard>
     </div>
   );

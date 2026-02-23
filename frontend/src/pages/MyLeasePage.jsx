@@ -79,11 +79,11 @@ export default function MyLeasePage() {
         />
         <DashboardCard>
           <div className="py-12 text-center">
-            <AlertCircle className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+            <AlertCircle className="mx-auto mb-4 h-12 w-12 text-slate-400" />
+            <h3 className="panel-title mb-2">
               No Active Lease Found
             </h3>
-            <p className="text-sm text-gray-500 mb-6">
+            <p className="text-sm text-slate-500 mb-6">
               You don't have an active lease at this time. Please contact your property manager for assistance.
             </p>
             <button

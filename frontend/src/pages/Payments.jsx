@@ -112,14 +112,14 @@ export default function Payments() {
     toast.success("Receipt submitted and verified successfully!");
   };
 
-  const statusColor =
+  const statusClass =
     paymentStatus === "Overdue"
-      ? "text-red-500"
+      ? "status-rose"
       : paymentStatus === "Due Soon"
-      ? "text-yellow-500"
+      ? "status-amber"
       : paymentStatus === "Paid"
-      ? "text-green-500"
-      : "text-gray-600";
+      ? "status-emerald"
+      : "status-slate";
 
   return (
     <div className="space-y-6">
@@ -131,22 +131,17 @@ export default function Payments() {
       />
 
       {/* 🔹 Rent Overview */}
-      <Card>
+      <Card title="Rent Overview" actions={<CalendarDays className="text-emerald-500" />}>
         <div>
-          <div className="flex justify-between items-center">
-            <p className="text-slate-600 font-medium">Current Monthly Rent</p>
-            <CalendarDays className="text-emerald-500" />
-          </div>
-
-          <h2 className="text-emerald-600 text-3xl font-bold mt-2">
+          <h2 className="text-emerald-600 text-3xl font-bold">
             ETB {rent.toLocaleString()}
           </h2>
 
           <p className="text-sm text-slate-400 mt-1">Due: {dueDate}</p>
 
-          <div className="flex items-center gap-2 mt-2">
-            <Clock className="w-4 h-4" />
-            <span className={`font-medium ${statusColor}`}>
+          <div className="flex items-center gap-2 mt-3">
+            <Clock className="w-4 h-4 text-slate-500" />
+            <span className={`status-pill ${statusClass}`}>
               {paymentStatus}
             </span>
           </div>
@@ -223,8 +218,8 @@ export default function Payments() {
                 <p className="font-medium">
                   ETB {item.amount.toLocaleString()} - {item.method}
                 </p>
-                <span className="text-emerald-600 flex items-center gap-1 text-sm">
-                  <CheckCircle className="w-4 h-4" />
+                <span className="status-pill status-emerald">
+                  <CheckCircle className="h-3 w-3" />
                   {item.status}
                 </span>
               </div>

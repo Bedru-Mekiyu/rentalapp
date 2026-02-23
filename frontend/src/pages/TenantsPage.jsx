@@ -10,21 +10,20 @@ import PageHeader from "../components/PageHeader";
 import SkeletonRow from "../components/SkeletonRow";
 import SkeletonTable from "../components/SkeletonTable";
 import SkeletonCard from "../components/SkeletonCard";
+import Pagination from "../components/Pagination";
 
 const STATUS_OPTIONS = ["ALL", "ACTIVE", "SUSPENDED", "INVITED"];
 
 const StatusBadge = ({ status }) => {
   const map = {
-    ACTIVE: "bg-emerald-100/70 text-emerald-700",
-    SUSPENDED: "bg-red-100/70 text-red-700",
-    INVITED: "bg-amber-100/70 text-amber-700",
+    ACTIVE: "status-emerald",
+    SUSPENDED: "status-rose",
+    INVITED: "status-amber",
   };
 
   return (
     <span
-      className={`inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide ${
-        map[status] || "bg-gray-100/70 text-gray-700"
-      }`}
+      className={`status-pill ${map[status] || "status-slate"}`}
     >
       {status}
     </span>
@@ -38,6 +37,7 @@ export default function TenantsPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("ALL");
+  const [page, setPage] = useState(1);
 
   const canDeactivate =
     currentUser?.role === "ADMIN" || currentUser?.role === "PM";
@@ -81,6 +81,17 @@ export default function TenantsPage() {
       }),
     [tenants, search]
   );
+
+  useEffect(() => {
+    setPage(1);
+  }, [search, statusFilter]);
+
+  const PAGE_SIZE = 12;
+
+  const pagedTenants = useMemo(() => {
+    const start = (page - 1) * PAGE_SIZE;
+    return filteredTenants.slice(start, start + PAGE_SIZE);
+  }, [filteredTenants, page]);
 
   const handleDeactivate = async (id) => {
     if (!window.confirm("Deactivate this tenant?")) return;
@@ -186,7 +197,7 @@ export default function TenantsPage() {
           </div>
         </div>
       ) : (
-        <div className="table-shell overflow-x-auto">
+        <div className="table-shell list-shell overflow-x-auto">
           <table className="min-w-full divide-y divide-slate-200 text-sm">
             <thead className="table-head">
               <tr>
@@ -205,7 +216,7 @@ export default function TenantsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 bg-white">
-              {filteredTenants.map((t) => (
+              {pagedTenants.map((t) => (
                 <tr key={t._id} className="table-row stagger-item">
                   <td className="px-6 py-4">
                     <div className="font-medium text-slate-900">
@@ -233,7 +244,7 @@ export default function TenantsPage() {
                       {canDeactivate && t.status !== "SUSPENDED" && (
                         <button
                           onClick={() => handleDeactivate(t._id)}
-                          className="inline-flex items-center space-x-1 rounded-full border border-red-200 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-red-600 hover:bg-red-50 transition-colors"
+                          className="btn-pill btn-outline btn-outline-rose"
                         >
                           <UserX className="h-3 w-3" />
                           <span>Deactivate</span>
@@ -242,15 +253,15 @@ export default function TenantsPage() {
                       {canReactivate && t.status === "SUSPENDED" && (
                         <button
                           onClick={() => handleReactivate(t._id)}
-                          className="inline-flex items-center space-x-1 rounded-full border border-emerald-200 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-emerald-600 hover:bg-emerald-50 transition-colors"
+                          className="btn-pill btn-outline btn-outline-emerald"
                         >
                           <UserCheck className="h-3 w-3" />
                           <span>Reactivate</span>
                         </button>
                       )}
                       <Link
-                        to={`/users/${t._id}`}
-                        className="inline-flex items-center space-x-1 rounded-full border border-slate-200 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-slate-700 hover:bg-slate-50 transition-colors"
+                        to={`/tenants/${t._id}`}
+                        className="btn-pill btn-outline btn-outline-slate"
                       >
                         <Eye className="h-3 w-3" />
                         <span>View</span>
@@ -263,6 +274,12 @@ export default function TenantsPage() {
           </table>
         </div>
       )}
+      <Pagination
+        page={page}
+        pageSize={PAGE_SIZE}
+        total={filteredTenants.length}
+        onPageChange={setPage}
+      />
       </DashboardCard>
     </div>
   );

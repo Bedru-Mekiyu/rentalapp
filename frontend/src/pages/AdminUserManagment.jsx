@@ -54,7 +54,7 @@ const AdminUserManagement = () => {
                     <div className="text-xs text-slate-500">{user.email}</div>
                   </td>
                   <td className="p-4">
-                    <span className="rounded-full bg-slate-100/70 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-slate-600">
+                    <span className="status-pill status-slate">
                       {user.role}
                     </span>
                   </td>
@@ -66,7 +66,7 @@ const AdminUserManagement = () => {
                   </td>
                   <td className="p-4 text-xs text-slate-500 font-mono">{user.last}</td>
                   <td className="p-4 text-center">
-                    <button className="text-[11px] font-semibold uppercase tracking-wide text-emerald-600 hover:underline">
+                    <button className="link-action link-action-caps link-action-emerald">
                       Edit Account
                     </button>
                   </td>
@@ -79,10 +79,10 @@ const AdminUserManagement = () => {
         <div className="mt-4 flex flex-wrap items-center justify-between text-xs text-slate-500">
           <span>Page 1 of 5</span>
           <div className="flex gap-2">
-            <button className="rounded-full border border-slate-200 bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-wide disabled:opacity-50">
+            <button className="btn-pill btn-outline btn-outline-slate disabled:opacity-50">
               Previous
             </button>
-            <button className="rounded-full border border-slate-200 bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-wide">
+            <button className="btn-pill btn-outline btn-outline-slate">
               Next
             </button>
           </div>

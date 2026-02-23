@@ -19,6 +19,7 @@ import jsPDF from "jspdf";
 import Papa from "papaparse";
 import PageHeader from "../components/PageHeader";
 import SkeletonCard from "../components/SkeletonCard";
+import { Sparkles } from "lucide-react";
 
 export default function GeneralManagerDashboard() {
   const { user } = useAuthStore();
@@ -232,6 +233,26 @@ export default function GeneralManagerDashboard() {
         }
       />
 
+      <section className="insight-banner">
+        <div className="insight-icon">
+          <Sparkles className="h-5 w-5" />
+        </div>
+        <div>
+          <div className="insight-title">Portfolio insight</div>
+          <div className="insight-text">
+            Occupancy is at {kpis.occupancyRate}% with {occupancyStats.vacantUnits} vacant units. Consider targeted campaigns in low-occupancy unit types.
+          </div>
+        </div>
+        <div className="insight-actions">
+          <button className="btn-pill btn-outline btn-outline-teal" onClick={exportPDF}>
+            Export Snapshot
+          </button>
+          <button className="btn-pill btn-outline btn-outline-emerald" onClick={exportCSV}>
+            Download CSV
+          </button>
+        </div>
+      </section>
+
       {/* KPI Cards */}
       <div className="grid gap-6 md:grid-cols-3">
         <KpiCard
@@ -403,8 +424,8 @@ function KpiCard({ label, value, icon, gradient }) {
     <div className="surface-panel card-reveal hover-lift stagger-item p-6">
       <div className="flex items-center justify-between">
         <div>
-          <p className="panel-subtitle mb-2 text-sm">{label}</p>
-          <p className="text-4xl font-bold text-slate-900">
+          <p className="kpi-label mb-2">{label}</p>
+          <p className="kpi-value-lg">
             {value}
           </p>
         </div>
@@ -433,10 +454,10 @@ function KpiSkeleton() {
 function Stat({ label, value }) {
   return (
     <div>
-      <p className="text-slate-500 text-xs uppercase tracking-wide">
+      <p className="kpi-label">
         {label}
       </p>
-      <p className="font-semibold text-slate-900">{value}</p>
+      <p className="kpi-value-sm">{value}</p>
     </div>
   );
 }

@@ -7,6 +7,7 @@ import DashboardCard from "../components/DashboardCard";
 import PageHeader from "../components/PageHeader";
 import SkeletonRow from "../components/SkeletonRow";
 import SkeletonCard from "../components/SkeletonCard";
+import { Sparkles } from "lucide-react";
 
 const Avatar = ({ name }) => {
   const initials = (name || "")
@@ -169,25 +170,45 @@ export default function FinancialStaffDashboard() {
         }
       />
 
+      <section className="insight-banner">
+        <div className="insight-icon">
+          <Sparkles className="h-5 w-5" />
+        </div>
+        <div>
+          <div className="insight-title">Queue spotlight</div>
+          <div className="insight-text">
+            {summary.pendingPayments} manual payments are waiting for review. Verify high-value payments first to reduce overdue balance.
+          </div>
+        </div>
+        <div className="insight-actions">
+          <Link to="/payments" className="btn-pill btn-outline btn-outline-emerald">
+            Review Payments
+          </Link>
+          <Link to="/finance" className="btn-pill btn-outline btn-outline-teal">
+            View Summary
+          </Link>
+        </div>
+      </section>
+
       {/* KPI row */}
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <DashboardCard title="Total Revenue (verified)">
-          <p className="text-xl font-semibold text-slate-900">
+          <p className="kpi-value">
             {formatCurrency(summary.totalRevenue)}
           </p>
         </DashboardCard>
         <DashboardCard title="Pending Payments">
-          <p className="text-xl font-semibold text-amber-600">
+          <p className="kpi-value text-amber-600">
             {summary.pendingPayments}
           </p>
         </DashboardCard>
         <DashboardCard title="Overdue Amount">
-          <p className="text-xl font-semibold text-red-600">
+          <p className="kpi-value text-red-600">
             {formatCurrency(summary.overdueAmount)}
           </p>
         </DashboardCard>
         <DashboardCard title="Processed Payments">
-          <p className="text-xl font-semibold text-emerald-600">
+          <p className="kpi-value text-emerald-600">
             {summary.processedPayments}
           </p>
         </DashboardCard>
@@ -256,7 +277,7 @@ export default function FinancialStaffDashboard() {
                     </p>
                   </div>
                 </div>
-                <span className="inline-flex rounded-full bg-amber-100/70 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-amber-700">
+                <span className="status-pill status-amber">
                   Awaiting manager decision
                 </span>
               </li>
@@ -309,12 +330,12 @@ export default function FinancialStaffDashboard() {
                     <td className="px-3 py-2 text-slate-600">{p.paymentMethod}</td>
                     <td className="px-3 py-2">
                       <span
-                        className={`inline-flex rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide ${
+                        className={`status-pill ${
                           p.status === "VERIFIED"
-                            ? "bg-emerald-100/70 text-emerald-700"
+                            ? "status-emerald"
                             : p.status === "PENDING"
-                            ? "bg-amber-100/70 text-amber-700"
-                            : "bg-red-100/70 text-red-700"
+                            ? "status-amber"
+                            : "status-rose"
                         }`}
                       >
                         {p.status}
@@ -335,8 +356,8 @@ export default function FinancialStaffDashboard() {
             <li className="stagger-item flex items-center justify-between rounded-2xl border border-slate-100 bg-slate-50/70 px-3 py-2">
               <span>Monthly Revenue Report</span>
               <Link
-                to="#"
-                className="text-emerald-600 hover:text-emerald-700"
+                to="/reports/monthly-revenue"
+                className="link-action link-action-emerald"
               >
                 View
               </Link>
@@ -344,8 +365,8 @@ export default function FinancialStaffDashboard() {
             <li className="stagger-item flex items-center justify-between rounded-2xl border border-slate-100 bg-slate-50/70 px-3 py-2">
               <span>Delinquency Report</span>
               <Link
-                to="#"
-                className="text-emerald-600 hover:text-emerald-700"
+                to="/reports/delinquency"
+                className="link-action link-action-emerald"
               >
                 View
               </Link>
@@ -353,8 +374,8 @@ export default function FinancialStaffDashboard() {
             <li className="stagger-item flex items-center justify-between rounded-2xl border border-slate-100 bg-slate-50/70 px-3 py-2">
               <span>Expense Report</span>
               <Link
-                to="#"
-                className="text-emerald-600 hover:text-emerald-700"
+                to="/reports/expense"
+                className="link-action link-action-emerald"
               >
                 View
               </Link>

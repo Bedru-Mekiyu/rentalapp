@@ -15,15 +15,19 @@ import TenantDashboard from "./pages/TenantDashboard";
 import UnitsPage from "./pages/UnitsPage";
 import LeasesPage from "./pages/LeasesPage";
 import PaymentsPage from "./pages/PaymentsPage";
+import PaymentDetailPage from "./pages/PaymentDetailPage";
 import FinancePage from "./pages/FinancePage";
 
 import NewLeasePage from "./pages/NewLeasePage";
 import UsersPage from "./pages/UsersPage";
 import NewUserPage from "./pages/NewUserPage";
+import UserDetailPage from "./pages/UserDetailPage";
+import TenantDetailPage from "./pages/TenantDetailPage";
 import UnitDetailPage from "./pages/UnitDetailPage";
 import LeaseDetailPage from "./pages/LeaseDetailPage";
 import TenantsPage from "./pages/TenantsPage";
 import MyLeasePage from "./pages/MyLeasePage";
+import ReportDetailPage from "./pages/ReportDetailPage";
 import SkeletonRow from "./components/SkeletonRow";
 
 function App() {
@@ -98,10 +102,14 @@ function App() {
         <Route path="leases/:id" element={<LeaseDetailPage />} />
 
         <Route path="payments" element={<PaymentsPage />} />
+        <Route path="payments/:id" element={<PaymentDetailPage />} />
         <Route path="finance" element={<FinancePage />} />
 
         <Route path="users" element={<UsersPage />} />
         <Route path="users/new" element={<NewUserPage />} />
+        <Route path="users/:id" element={<UserDetailPage />} />
+
+        <Route path="reports/:reportId" element={<ReportDetailPage />} />
 
         {/* My Lease - TENANT only */}
         <Route
@@ -121,6 +129,16 @@ function App() {
           element={
             user?.role === "ADMIN" || user?.role === "PM" ? (
               <TenantsPage />
+            ) : (
+              <Navigate to="/dashboard" replace />
+            )
+          }
+        />
+        <Route
+          path="tenants/:id"
+          element={
+            user?.role === "ADMIN" || user?.role === "PM" ? (
+              <TenantDetailPage />
             ) : (
               <Navigate to="/dashboard" replace />
             )

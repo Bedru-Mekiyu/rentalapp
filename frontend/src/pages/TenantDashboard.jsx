@@ -26,6 +26,7 @@ import {
   MapPin,
   Plus,
   X,
+  Sparkles,
 } from "lucide-react";
 import PageHeader from "../components/PageHeader";
 import SkeletonRow from "../components/SkeletonRow";
@@ -49,6 +50,28 @@ export default function TenantDashboard() {
   const [requests, setRequests] = useState([]);
   const [documents, setDocuments] = useState([]);
   const [notifications, setNotifications] = useState([]);
+
+  const getMaintenanceStatusClass = (status) => {
+    const normalized = status?.toLowerCase() || "";
+    if (normalized.includes("completed") || normalized.includes("resolved")) {
+      return "status-emerald";
+    }
+    if (normalized.includes("in_progress") || normalized.includes("progress")) {
+      return "status-teal";
+    }
+    if (normalized.includes("pending") || normalized.includes("received")) {
+      return "status-amber";
+    }
+    return "status-slate";
+  };
+
+  const getUrgencyClass = (urgency) => {
+    const normalized = urgency?.toLowerCase() || "";
+    if (normalized === "emergency") return "status-rose";
+    if (normalized === "high") return "status-amber";
+    if (normalized === "medium") return "status-sky";
+    return "status-emerald";
+  };
 
   const paymentSchema = z.object({
     amountEtb: z.number().min(0.01, "Amount must be greater than 0"),
@@ -225,6 +248,33 @@ export default function TenantDashboard() {
           title="Tenant Dashboard"
           subtitle="Loading your workspace..."
         />
+              <section className="insight-banner">
+                <div className="insight-icon">
+                  <Sparkles className="h-5 w-5" />
+                </div>
+                <div>
+                  <div className="insight-title">Heads up</div>
+                  <div className="insight-text">
+                    Your next rent payment is due soon. Submit payment early to avoid late fees.
+                  </div>
+                </div>
+                <div className="insight-actions">
+                  <button
+                    type="button"
+                    className="btn-pill btn-outline btn-outline-emerald"
+                    onClick={() => setShowPaymentForm(true)}
+                  >
+                    Record Payment
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-pill btn-outline btn-outline-teal"
+                    onClick={() => document.getElementById("maintenance-form")?.scrollIntoView({ behavior: "smooth" })}
+                  >
+                    New Request
+                  </button>
+                </div>
+              </section>
         <div className="surface-panel p-6">
           <SkeletonRow className="h-8 w-64" />
           <div className="mt-4 grid gap-4 md:grid-cols-3">
@@ -377,7 +427,7 @@ export default function TenantDashboard() {
                 </div>
               </div>
               <div className="flex items-center justify-center pt-2">
-                <span className="inline-flex items-center space-x-1 rounded-full bg-emerald-100/70 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-emerald-800">
+                <span className="status-pill status-emerald">
                   <CheckCircle className="h-3 w-3" />
                   <span>{lease.status || "ACTIVE"}</span>
                 </span>
@@ -470,12 +520,12 @@ export default function TenantDashboard() {
                       </td>
                       <td className="px-4 py-3">
                         <span
-                          className={`inline-flex rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide ${
+                          className={`status-pill ${
                             p.status === "VERIFIED"
-                              ? "bg-emerald-100/70 text-emerald-700"
+                              ? "status-emerald"
                               : p.status === "PENDING"
-                              ? "bg-amber-100/70 text-amber-700"
-                              : "bg-rose-100/70 text-rose-700"
+                              ? "status-amber"
+                              : "status-rose"
                           }`}
                         >
                           {p.status || "PENDING"}
@@ -673,6 +723,7 @@ export default function TenantDashboard() {
 
           {/* Form */}
           <form
+            id="maintenance-form"
             onSubmit={handleSubmit(onMaintenanceSubmit)}
             className="mb-6 space-y-4 rounded-2xl border border-slate-200 bg-white/90 p-4"
           >
@@ -769,22 +820,12 @@ export default function TenantDashboard() {
                     </div>
                   </div>
                   <div className="flex flex-col items-end gap-2">
-                    <span className={`inline-flex items-center space-x-1 rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide ${
-                      r.status?.toLowerCase().includes('completed') ? 'bg-emerald-100 text-emerald-800' :
-                      r.status?.toLowerCase().includes('in_progress') || r.status?.toLowerCase().includes('progress') ? 'bg-teal-100 text-teal-800' :
-                      r.status?.toLowerCase().includes('pending') ? 'bg-yellow-100 text-yellow-800' :
-                      'bg-gray-100 text-gray-800'
-                    }`}>
+                    <span className={`status-pill ${getMaintenanceStatusClass(r.status)} gap-1.5`}>
                       {r.status?.toLowerCase().includes('completed') && <CheckCircle className="h-3 w-3" />}
                       {r.status?.toLowerCase().includes('progress') && <Clock className="h-3 w-3" />}
                       <span>{r.status?.replace(/_/g, ' ') || 'Unknown'}</span>
                     </span>
-                    <span className={`inline-flex items-center space-x-1 rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide ${
-                      r.urgency?.toLowerCase() === 'emergency' ? 'bg-red-100 text-red-800' :
-                      r.urgency?.toLowerCase() === 'high' ? 'bg-orange-100 text-orange-800' :
-                      r.urgency?.toLowerCase() === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-                      'bg-green-100 text-green-800'
-                    }`}>
+                    <span className={`status-pill ${getUrgencyClass(r.urgency)} gap-1.5`}>
                       <AlertCircle className="h-3 w-3" />
                       <span>{r.urgency || 'Low'}</span>
                     </span>
@@ -825,7 +866,7 @@ export default function TenantDashboard() {
                       <span className="text-sm font-medium text-slate-700">{doc}</span>
                     </div>
                     <button
-                      className="inline-flex items-center space-x-1 rounded-full border border-teal-200 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-teal-600 hover:bg-teal-50 transition-colors"
+                      className="btn-pill btn-outline btn-outline-teal"
                       onClick={() => {
                         toast.info(`Downloading ${doc}...`, {
                           description: 'Document download feature coming soon!'

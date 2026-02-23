@@ -88,6 +88,43 @@ img {
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
 }
 
+.pressable {
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.pressable:active {
+  transform: translateY(1px) scale(0.99);
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.12);
+}
+
+.focus-ring:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--ring);
+}
+
+.table-row {
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.table-row:hover {
+  background: rgba(241, 245, 249, 0.7);
+}
+
+.card-reveal {
+  animation: card-reveal 0.5s ease forwards;
+}
+
+@keyframes card-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;
@@ -122,6 +159,218 @@ html {
   letter-spacing: 0.01em;
   transition: all 0.25s ease;
   box-shadow: var(--shadow-medium);
+}
+
+.btn-primary:focus-visible,
+.btn-secondary:focus-visible,
+.btn-pill:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--ring);
+}
+
+.btn-primary:active,
+.btn-secondary:active,
+.btn-pill:active {
+  transform: translateY(1px) scale(0.99);
+}
+
+.insight-banner {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 1.1rem 1.4rem;
+  border-radius: 1.4rem;
+  background: linear-gradient(120deg, rgba(15, 118, 110, 0.12), rgba(59, 130, 246, 0.08));
+  border: 1px solid rgba(14, 116, 144, 0.18);
+  box-shadow: var(--shadow-soft);
+}
+
+.insight-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 1rem;
+  background: rgba(15, 118, 110, 0.16);
+  color: #0f766e;
+}
+
+.insight-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--ink-900);
+}
+
+.insight-text {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.insight-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.pagination-shell {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.pagination-meta {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.pagination-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.pagination-active {
+  border-color: rgba(15, 118, 110, 0.4);
+  color: #0f766e;
+  background: rgba(20, 184, 166, 0.12);
+}
+
+.pagination-ellipsis {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  padding: 0 0.25rem;
+}
+
+.list-shell {
+  min-height: clamp(360px, 55vh, 700px);
+}
+
+.link-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.link-action-caps {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.link-action-emerald {
+  color: #047857;
+}
+
+.link-action-emerald:hover {
+  color: #065f46;
+}
+
+.btn-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border-radius: 999px;
+  padding: 0.35rem 0.9rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+}
+
+.btn-outline {
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  background: rgba(255, 255, 255, 0.92);
+  color: #334155;
+}
+
+.btn-outline:hover {
+  background: rgba(248, 250, 252, 0.95);
+}
+
+.btn-outline-slate {
+  border-color: rgba(148, 163, 184, 0.45);
+  color: #334155;
+}
+
+.btn-outline-emerald {
+  border-color: rgba(16, 185, 129, 0.35);
+  color: #047857;
+}
+
+.btn-outline-emerald:hover {
+  background: rgba(16, 185, 129, 0.08);
+}
+
+.btn-outline-rose {
+  border-color: rgba(244, 63, 94, 0.35);
+  color: #be123c;
+}
+
+.btn-outline-rose:hover {
+  background: rgba(244, 63, 94, 0.08);
+}
+
+.btn-outline-amber {
+  border-color: rgba(245, 158, 11, 0.35);
+  color: #b45309;
+}
+
+.btn-outline-amber:hover {
+  background: rgba(245, 158, 11, 0.1);
+}
+
+.btn-outline-teal {
+  border-color: rgba(20, 184, 166, 0.35);
+  color: #0f766e;
+}
+
+.btn-outline-teal:hover {
+  background: rgba(20, 184, 166, 0.1);
+}
+
+.btn-soft {
+  border: 1px solid transparent;
+  background: rgba(148, 163, 184, 0.15);
+  color: #334155;
+}
+
+.btn-soft-emerald {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.2);
+  color: #047857;
+}
+
+.btn-soft-emerald:hover {
+  background: rgba(16, 185, 129, 0.18);
+}
+
+.btn-soft-rose {
+  background: rgba(244, 63, 94, 0.12);
+  border-color: rgba(244, 63, 94, 0.2);
+  color: #be123c;
+}
+
+.btn-soft-rose:hover {
+  background: rgba(244, 63, 94, 0.18);
+}
+
+.btn-soft-slate {
+  background: rgba(148, 163, 184, 0.16);
+  border-color: rgba(148, 163, 184, 0.25);
+  color: #334155;
+}
+
+.btn-soft-slate:hover {
+  background: rgba(148, 163, 184, 0.22);
 }
 
 .app-shell {
@@ -188,6 +437,34 @@ html {
 .panel-subtitle {
   font-size: 0.78rem;
   color: var(--ink-600);
+}
+
+.kpi-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #64748b;
+}
+
+.kpi-value {
+  font-size: 2.05rem;
+  font-weight: 650;
+  line-height: 1.1;
+  color: var(--ink-900);
+}
+
+.kpi-value-lg {
+  font-size: 2.35rem;
+  font-weight: 700;
+  line-height: 1.05;
+  color: var(--ink-900);
+}
+
+.kpi-value-sm {
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: var(--ink-900);
 }
 
 .page-title {
@@ -303,6 +580,47 @@ html {
 
 .table-cell-muted {
   color: #64748b;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.status-emerald {
+  background: rgba(16, 185, 129, 0.14);
+  color: #047857;
+}
+
+.status-amber {
+  background: rgba(245, 158, 11, 0.18);
+  color: #b45309;
+}
+
+.status-rose {
+  background: rgba(244, 63, 94, 0.16);
+  color: #be123c;
+}
+
+.status-teal {
+  background: rgba(20, 184, 166, 0.14);
+  color: #0f766e;
+}
+
+.status-sky {
+  background: rgba(14, 165, 233, 0.16);
+  color: #0369a1;
+}
+
+.status-slate {
+  background: rgba(148, 163, 184, 0.18);
+  color: #475569;
 }
 
 .empty-state {

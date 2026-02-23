@@ -4,6 +4,7 @@ import { Router } from "express";
 import { auth } from "../middleware/auth.js";
 import {
   createPayment,
+  getPaymentById,
   updatePaymentStatus,
   listByLease,
   listByTenant,
@@ -39,5 +40,8 @@ router.get(
   auth(["TENANT", ...STAFF_ROLES]),
   listByTenant
 );
+
+// Payment detail for tenant or staff
+router.get("/:id", auth(["TENANT", ...STAFF_ROLES]), getPaymentById);
 
 export default router;

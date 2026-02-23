@@ -195,7 +195,7 @@ export default function LeaseCreation() {
         {/* right */}
         <div className="space-y-4">
           <DashboardCard title="Lease Document Preview" description="No preview generated yet.">
-            <button className="rounded-full border border-emerald-200 px-4 py-2 text-[11px] font-semibold uppercase tracking-wide text-emerald-600 hover:bg-emerald-50">
+            <button className="btn-pill btn-outline btn-outline-emerald px-4 py-2">
               Generate Preview
             </button>
           </DashboardCard>

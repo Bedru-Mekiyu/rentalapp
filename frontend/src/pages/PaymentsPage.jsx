@@ -9,6 +9,7 @@ import PageHeader from "../components/PageHeader";
 import SkeletonRow from "../components/SkeletonRow";
 import SkeletonTable from "../components/SkeletonTable";
 import SkeletonCard from "../components/SkeletonCard";
+import Pagination from "../components/Pagination";
 
 const STATUS_FILTERS = ["All", "PENDING", "VERIFIED", "REJECTED"];
 const METHOD_FILTERS = ["All", "CASH", "BANK_TRANSFER", "CARD", "OTHER"];
@@ -24,6 +25,7 @@ export default function PaymentsPage() {
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
   const [updatingId, setUpdatingId] = useState(null);
+  const [page, setPage] = useState(1);
 
   const [form, setForm] = useState({
     leaseId: "",
@@ -84,6 +86,15 @@ export default function PaymentsPage() {
       }),
     [payments, search, status, method]
   );
+
+  useEffect(() => {
+    setPage(1);
+  }, [search, status, method]);
+
+  const pagedPayments = useMemo(() => {
+    const start = (page - 1) * PAGE_SIZE;
+    return filteredPayments.slice(start, start + PAGE_SIZE);
+  }, [filteredPayments, page]);
 
   const formatCurrency = (v) =>
     new Intl.NumberFormat("en-ET", {
@@ -347,7 +358,7 @@ export default function PaymentsPage() {
             </div>
           </div>
         ) : (
-          <div className="table-shell overflow-x-auto text-xs">
+          <div className="table-shell list-shell overflow-x-auto text-xs">
             <table className="min-w-full divide-y divide-slate-200">
               <thead className="table-head">
                 <tr>
@@ -375,7 +386,7 @@ export default function PaymentsPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 bg-white">
-                {filteredPayments.slice(0, PAGE_SIZE).map((p) => (
+                {pagedPayments.map((p) => (
                   <tr key={p._id} className="table-row stagger-item">
                     <td className="px-3 py-2">
                       {formatDate(p.transactionDate)}
@@ -388,12 +399,12 @@ export default function PaymentsPage() {
                     </td>
                     <td className="px-3 py-2">
                       <span
-                        className={`rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide ${
+                        className={`status-pill ${
                           p.status === "VERIFIED"
-                            ? "bg-emerald-100/70 text-emerald-700"
+                            ? "status-emerald"
                             : p.status === "REJECTED"
-                            ? "bg-rose-100/70 text-rose-700"
-                            : "bg-amber-100/70 text-amber-700"
+                            ? "status-rose"
+                            : "status-amber"
                         }`}
                       >
                         {p.status}
@@ -406,7 +417,7 @@ export default function PaymentsPage() {
                       {p.leaseId ? (
                         <Link
                           to={`/leases/${p.leaseId}`}
-                          className="text-emerald-600 hover:underline"
+                          className="link-action link-action-emerald"
                         >
                           View lease
                         </Link>
@@ -415,40 +426,36 @@ export default function PaymentsPage() {
                       )}
                     </td>
                     <td className="px-3 py-2">
-                      {canVerify ? (
-                        <div className="flex gap-2">
-                          {p.status !== "VERIFIED" && (
-                            <button
-                              onClick={() =>
-                                handleUpdateStatus(p._id, "VERIFIED")
-                              }
-                              disabled={updatingId === p._id}
-                              className="rounded-full bg-emerald-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-emerald-700 hover:bg-emerald-100"
-                            >
-                              {updatingId === p._id
-                                ? "Saving..."
-                                : "Verify"}
-                            </button>
-                          )}
-                          {p.status !== "REJECTED" && (
-                            <button
-                              onClick={() =>
-                                handleUpdateStatus(p._id, "REJECTED")
-                              }
-                              disabled={updatingId === p._id}
-                              className="rounded-full bg-rose-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-rose-700 hover:bg-rose-100"
-                            >
-                              {updatingId === p._id
-                                ? "Saving..."
-                                : "Reject"}
-                            </button>
-                          )}
-                        </div>
-                      ) : (
-                        <span className="text-[11px] text-slate-400">
-                          No actions
-                        </span>
-                      )}
+                      <div className="flex flex-wrap items-center gap-2">
+                        <Link
+                          to={`/payments/${p._id}`}
+                          className="link-action link-action-emerald"
+                        >
+                          View
+                        </Link>
+                        {canVerify && p.status !== "VERIFIED" && (
+                          <button
+                            onClick={() =>
+                              handleUpdateStatus(p._id, "VERIFIED")
+                            }
+                            disabled={updatingId === p._id}
+                            className="btn-pill btn-soft btn-soft-emerald"
+                          >
+                            {updatingId === p._id ? "Saving..." : "Verify"}
+                          </button>
+                        )}
+                        {canVerify && p.status !== "REJECTED" && (
+                          <button
+                            onClick={() =>
+                              handleUpdateStatus(p._id, "REJECTED")
+                            }
+                            disabled={updatingId === p._id}
+                            className="btn-pill btn-soft btn-soft-rose"
+                          >
+                            {updatingId === p._id ? "Saving..." : "Reject"}
+                          </button>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -456,6 +463,12 @@ export default function PaymentsPage() {
             </table>
           </div>
         )}
+        <Pagination
+          page={page}
+          pageSize={PAGE_SIZE}
+          total={filteredPayments.length}
+          onPageChange={setPage}
+        />
       </DashboardCard>
     </div>
   );

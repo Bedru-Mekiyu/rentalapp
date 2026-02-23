@@ -8,6 +8,7 @@ import PageHeader from "../components/PageHeader";
 import SkeletonRow from "../components/SkeletonRow";
 import SkeletonTable from "../components/SkeletonTable";
 import SkeletonCard from "../components/SkeletonCard";
+import Pagination from "../components/Pagination";
 
 const STATUS_FILTERS = ["All", "ACTIVE", "ENDED"];
 const PAGE_SIZE = 20;
@@ -17,6 +18,7 @@ export default function LeasesPage() {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("All");
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     loadLeases();
@@ -50,6 +52,15 @@ export default function LeasesPage() {
     [leases, search, status]
   );
 
+  useEffect(() => {
+    setPage(1);
+  }, [search, status]);
+
+  const pagedLeases = useMemo(() => {
+    const start = (page - 1) * PAGE_SIZE;
+    return filteredLeases.slice(start, start + PAGE_SIZE);
+  }, [filteredLeases, page]);
+
   const formatCurrency = (v) =>
     new Intl.NumberFormat("en-ET", {
       style: "currency",
@@ -59,6 +70,12 @@ export default function LeasesPage() {
 
   const formatDate = (d) =>
     d ? new Date(d).toLocaleDateString() : "—";
+
+  const getLeaseStatusClass = (value) => {
+    if (value === "ACTIVE") return "status-emerald";
+    if (value === "ENDED") return "status-slate";
+    return "status-amber";
+  };
 
   if (loading) {
     return (
@@ -152,7 +169,7 @@ export default function LeasesPage() {
             </div>
           </div>
         ) : (
-          <div className="table-shell">
+          <div className="table-shell list-shell">
             <table className="min-w-full divide-y divide-slate-200 text-sm">
               <thead className="table-head">
                 <tr>
@@ -177,7 +194,7 @@ export default function LeasesPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 bg-white">
-                {filteredLeases.slice(0, PAGE_SIZE).map((l, index) => (
+                {pagedLeases.map((l, index) => (
                   <tr key={l._id} className={`table-row stagger-item ${index % 2 === 0 ? "bg-white" : "bg-slate-50/30"}`}>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
@@ -231,18 +248,9 @@ export default function LeasesPage() {
                     </td>
                     <td className="px-6 py-4">
                       <span
-                        className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wide ${
-                          l.status === "ACTIVE"
-                            ? "bg-emerald-100/70 text-emerald-800 border border-emerald-200"
-                            : l.status === "ENDED"
-                            ? "bg-slate-100/70 text-slate-700 border border-slate-200"
-                            : "bg-slate-100/70 text-slate-700 border border-slate-300"
-                        }`}
+                        className={`status-pill ${getLeaseStatusClass(l.status)} gap-2`}
                       >
-                        <div className={`w-2 h-2 rounded-full ${
-                          l.status === "ACTIVE" ? "bg-emerald-500" :
-                          l.status === "ENDED" ? "bg-slate-500" : "bg-slate-400"
-                        }`}></div>
+                        <span className="h-2 w-2 rounded-full bg-current" />
                         {l.status}
                       </span>
                     </td>
@@ -250,7 +258,7 @@ export default function LeasesPage() {
                       <div className="flex gap-3">
                         <Link
                           to={`/leases/${l._id}`}
-                          className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-emerald-700 hover:bg-emerald-100 hover:text-emerald-800 transition-all duration-200"
+                          className="btn-pill btn-soft btn-soft-emerald"
                         >
                           <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -261,7 +269,7 @@ export default function LeasesPage() {
                         {l.unitId?._id && (
                           <Link
                             to={`/units/${l.unitId._id}`}
-                            className="inline-flex items-center gap-1.5 rounded-full bg-slate-50 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-slate-700 hover:bg-slate-100 hover:text-slate-800 transition-all duration-200"
+                            className="btn-pill btn-soft btn-soft-slate"
                           >
                             <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
@@ -277,6 +285,12 @@ export default function LeasesPage() {
             </table>
           </div>
         )}
+        <Pagination
+          page={page}
+          pageSize={PAGE_SIZE}
+          total={filteredLeases.length}
+          onPageChange={setPage}
+        />
       </DashboardCard>
     </div>
   );

@@ -8,8 +8,10 @@ import PageHeader from "../components/PageHeader";
 import SkeletonRow from "../components/SkeletonRow";
 import SkeletonTable from "../components/SkeletonTable";
 import SkeletonCard from "../components/SkeletonCard";
+import Pagination from "../components/Pagination";
 
 const statusFilters = ["All", "VACANT", "OCCUPIED", "UNDER_MAINTENANCE"];
+const PAGE_SIZE = 10;
 
 export default function UnitsPage() {
   const [units, setUnits] = useState([]);
@@ -17,6 +19,7 @@ export default function UnitsPage() {
   const [status, setStatus] = useState("All");
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
+  const [page, setPage] = useState(1);
 
   const [form, setForm] = useState({
     unitNumber: "",
@@ -58,6 +61,15 @@ export default function UnitsPage() {
       }),
     [units, search, status]
   );
+
+  useEffect(() => {
+    setPage(1);
+  }, [search, status]);
+
+  const pagedUnits = useMemo(() => {
+    const start = (page - 1) * PAGE_SIZE;
+    return filteredUnits.slice(start, start + PAGE_SIZE);
+  }, [filteredUnits, page]);
 
   const handleCreate = async (e) => {
     e.preventDefault();
@@ -179,7 +191,7 @@ export default function UnitsPage() {
             </div>
           </div>
         ) : (
-          <div className="table-shell">
+          <div className="table-shell list-shell">
             <table className="min-w-full divide-y divide-slate-200 text-sm">
               <thead className="table-head">
                 <tr>
@@ -207,7 +219,7 @@ export default function UnitsPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 bg-white">
-                {filteredUnits.map((u) => (
+                {pagedUnits.map((u) => (
                   <tr key={u._id} className="table-row stagger-item">
                     <td className="px-4 py-2 text-sm">
                       {u.unitNumber || `Unit ${u._id.slice(-4)}`}
@@ -223,14 +235,14 @@ export default function UnitsPage() {
                     </td>
                     <td className="px-4 py-2 text-sm">
                       <span
-                        className={`inline-flex rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide ${
+                        className={`status-pill ${
                           u.status === "VACANT"
-                            ? "bg-emerald-100/70 text-emerald-700"
+                            ? "status-emerald"
                             : u.status === "OCCUPIED"
-                            ? "bg-teal-100/70 text-teal-700"
+                            ? "status-teal"
                             : u.status === "UNDER_MAINTENANCE"
-                            ? "bg-amber-100/70 text-amber-700"
-                            : "bg-slate-100/70 text-slate-600"
+                            ? "status-amber"
+                            : "status-slate"
                         }`}
                       >
                         {u.status}
@@ -242,7 +254,7 @@ export default function UnitsPage() {
                     <td className="px-4 py-2 text-sm">
                       <Link
                         to={`/units/${u._id}`}
-                        className="text-xs font-semibold text-emerald-600 hover:text-emerald-700"
+                        className="link-action link-action-emerald"
                       >
                         View
                       </Link>
@@ -253,6 +265,12 @@ export default function UnitsPage() {
             </table>
           </div>
         )}
+        <Pagination
+          page={page}
+          pageSize={PAGE_SIZE}
+          total={filteredUnits.length}
+          onPageChange={setPage}
+        />
       </DashboardCard>
 
       {/* Create unit form */}

@@ -73,6 +73,22 @@ export default function Dashboard() {
 
   const iconStyle = "w-5 h-5 text-emerald-500";
 
+  const paymentStatusClass =
+    paymentStatus === "Overdue"
+      ? "status-rose"
+      : paymentStatus === "Due Soon"
+      ? "status-amber"
+      : paymentStatus === "Paid"
+      ? "status-emerald"
+      : "status-slate";
+
+  const maintenanceStatusClass =
+    maintenanceStatus === "Resolved" || maintenanceStatus === "Completed"
+      ? "status-emerald"
+      : maintenanceStatus === "In Progress" || maintenanceStatus === "Pending"
+      ? "status-amber"
+      : "status-slate";
+
   /* LOADING SPINNER */
   if (loading) {
     return (
@@ -124,54 +140,34 @@ export default function Dashboard() {
       />
 
       {/*MONTHLY RENT*/}
-      <Card>
-        <div className="flex justify-between items-start mt-2">
-          <div>
-            <p className="text-slate-600 font-medium">Monthly Rent</p>
-            <h2 className="text-emerald-600 text-3xl font-bold mt-2">
-              ETB {rent.toLocaleString()}.00
-            </h2>
-            <p className="text-xs text-slate-400 mt-1">
-              Due by {dueDate}
-            </p>
+      <Card title="Monthly Rent" actions={<Mail className={iconStyle} />}>
+        <div>
+          <h2 className="kpi-value text-emerald-600">
+            ETB {rent.toLocaleString()}.00
+          </h2>
+          <p className="text-xs text-slate-400 mt-1">
+            Due by {dueDate}
+          </p>
 
-            <button
-              onClick={handleViewDetails}
-              className="text-emerald-600 text-xs font-semibold uppercase tracking-wide mt-3 inline-block hover:underline"
-            >
-              View Details
-            </button>
-          </div>
-
-          <Mail className="w-6 h-6 text-emerald-500" />
+          <button
+            onClick={handleViewDetails}
+            className="link-action link-action-caps link-action-emerald mt-3"
+          >
+            View Details
+          </button>
         </div>
       </Card>
 
       {/*PAYMENT STATUS*/}
-      <Card>
+      <Card title="Payment Status" actions={<Clock className={iconStyle} />}>
         <div>
-          <div className="flex items-center gap-2 mb-2">
-            <Clock className={iconStyle} />
-            <p className="font-medium text-slate-700">Payment Status</p>
-          </div>
-
-          <p
-            className={`font-semibold mb-3 ${
-              paymentStatus === "Overdue"
-                ? "text-red-500"
-                : paymentStatus === "Due Soon"
-                ? "text-yellow-500"
-                : paymentStatus === "Paid"
-                ? "text-green-500"
-                : "text-gray-600"
-            }`}
-          >
+          <span className={`status-pill ${paymentStatusClass}`}>
             {paymentStatus}
-          </p>
+          </span>
 
           <button
             onClick={handleManagePayments}
-            className="text-emerald-600 text-xs font-semibold uppercase tracking-wide hover:underline"
+            className="link-action link-action-caps link-action-emerald mt-3"
           >
             Manage Payments
           </button>
@@ -179,13 +175,8 @@ export default function Dashboard() {
       </Card>
 
       {/*LEASE EXPIRATION*/}
-      <Card>
+      <Card title="Lease Expiration" actions={<CalendarDays className={iconStyle} />}>
         <div>
-          <div className="flex items-center gap-2 mb-2">
-            <CalendarDays className={iconStyle} />
-            <p className="font-medium">Lease Expiration</p>
-          </div>
-
           <p className="text-emerald-600 text-sm">
             {daysRemaining > 0
               ? `${daysRemaining} days remaining`
@@ -194,7 +185,7 @@ export default function Dashboard() {
 
           <button
             onClick={handleRenewLease}
-            className="mt-3 rounded-full border border-emerald-200 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-emerald-600 hover:bg-emerald-50"
+            className="btn-pill btn-outline btn-outline-emerald mt-3"
           >
             Renew Lease
           </button>
@@ -202,17 +193,12 @@ export default function Dashboard() {
       </Card>
 
       {/* MAINTENACE */}
-      <Card>
+      <Card title="Maintenance Request" actions={<Wrench className={iconStyle} />}>
         <div>
-          <div className="flex items-center gap-2 mb-2">
-            <Wrench className={iconStyle} />
-            <p className="font-medium">Maintenance Request</p>
-          </div>
+          <p className="font-semibold">Leaky Faucet in Kitchen</p>
 
-          <p className="font-semibold mt-2">Leaky Faucet in Kitchen</p>
-
-          <div className="flex items-center gap-2 mt-1">
-            <span className="text-[11px] font-semibold uppercase tracking-wide bg-emerald-100/70 text-emerald-700 px-2.5 py-1 rounded-full">
+          <div className="flex items-center gap-2 mt-2">
+            <span className={`status-pill ${maintenanceStatusClass}`}>
               {maintenanceStatus}
             </span>
 

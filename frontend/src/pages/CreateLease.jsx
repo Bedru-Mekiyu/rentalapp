@@ -53,7 +53,7 @@ const CreateLease = () => {
             </tbody>
           </table>
           <div className="mt-6 flex gap-3">
-            <button className="flex-1 rounded-full border border-slate-200 bg-white py-2 text-[11px] font-semibold uppercase tracking-wide text-slate-600">Save Draft</button>
+            <button className="btn-pill btn-outline btn-outline-slate flex-1 justify-center py-2">Save Draft</button>
             <button className="flex-1 btn-primary text-[11px] font-semibold uppercase tracking-wide">Finalize Lease</button>
           </div>
         </DashboardCard>

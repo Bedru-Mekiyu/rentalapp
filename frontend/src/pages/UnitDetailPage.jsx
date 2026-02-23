@@ -10,17 +10,13 @@ import SkeletonTable from "../components/SkeletonTable";
 import SkeletonCard from "../components/SkeletonCard";
 
 export default function UnitDetailPage() {
-  const { unitId } = useParams();
+  const { id: unitId } = useParams();
   const navigate = useNavigate();
 
   const [unit, setUnit] = useState(null);
   const [leases, setLeases] = useState([]);
   const [loading, setLoading] = useState(true);
   const [updatingStatus, setUpdatingStatus] = useState(false);
-
-  useEffect(() => {
-    loadUnit();
-  }, [unitId, loadUnit]);
 
   const loadUnit = useCallback(async () => {
     try {
@@ -37,6 +33,14 @@ export default function UnitDetailPage() {
       setLoading(false);
     }
   }, [unitId]);
+
+  useEffect(() => {
+    if (!unitId || unitId === "undefined") {
+      navigate("/units");
+      return;
+    }
+    loadUnit();
+  }, [unitId, loadUnit, navigate]);
 
   const handleChangeStatus = async (status) => {
     try {
@@ -96,6 +100,18 @@ export default function UnitDetailPage() {
   }
 
   const activeLease = leases.find((l) => l.status === "ACTIVE");
+  const unitStatusClass =
+    unit.status === "VACANT"
+      ? "status-emerald"
+      : unit.status === "MAINTENANCE"
+      ? "status-amber"
+      : "status-slate";
+  const leaseStatusClass = (value) =>
+    value === "ACTIVE"
+      ? "status-emerald"
+      : value === "ENDED"
+      ? "status-slate"
+      : "status-amber";
 
   return (
     <div className="space-y-6">
@@ -120,7 +136,7 @@ export default function UnitDetailPage() {
         <div className="grid gap-4 md:grid-cols-3 text-sm">
           <div>
             <p className="text-xs text-slate-500">Status</p>
-            <span className="mt-2 inline-flex rounded-full bg-slate-100/70 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-slate-700">
+            <span className={`status-pill ${unitStatusClass} mt-2`}>
               {unit.status}
             </span>
           </div>
@@ -159,7 +175,7 @@ export default function UnitDetailPage() {
             type="button"
             disabled={updatingStatus}
             onClick={() => handleChangeStatus("VACANT")}
-            className="rounded-full border border-slate-300 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-slate-700 disabled:opacity-60"
+            className="btn-pill btn-outline btn-outline-slate disabled:opacity-60"
           >
             Mark as VACANT
           </button>
@@ -167,7 +183,7 @@ export default function UnitDetailPage() {
             type="button"
             disabled={updatingStatus}
             onClick={() => handleChangeStatus("MAINTENANCE")}
-            className="rounded-full border border-amber-300 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-amber-700 disabled:opacity-60"
+            className="btn-pill btn-outline btn-outline-amber disabled:opacity-60"
           >
             Mark as MAINTENANCE
           </button>
@@ -215,7 +231,13 @@ export default function UnitDetailPage() {
                     <td className="px-4 py-2">
                       {lease.tenantId?.fullName || "Tenant"}
                     </td>
-                    <td className="px-4 py-2">{lease.status}</td>
+                    <td className="px-4 py-2">
+                      <span
+                        className={`status-pill ${leaseStatusClass(lease.status)}`}
+                      >
+                        {lease.status}
+                      </span>
+                    </td>
                     <td className="px-4 py-2">
                       {lease.startDate
                         ? new Date(
@@ -235,7 +257,7 @@ export default function UnitDetailPage() {
                     <td className="px-4 py-2">
                       <Link
                         to={`/leases/${lease._id}`}
-                        className="text-emerald-600 hover:text-emerald-700"
+                        className="link-action link-action-emerald"
                       >
                         View lease
                       </Link>
@@ -252,7 +274,7 @@ export default function UnitDetailPage() {
             Active lease:{" "}
             <Link
               to={`/leases/${activeLease._id}`}
-              className="font-medium text-emerald-600 hover:text-emerald-700"
+              className="link-action link-action-emerald"
             >
               {activeLease.tenantId?.fullName || "Tenant"}
             </Link>

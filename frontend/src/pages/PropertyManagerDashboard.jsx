@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
 import toast from "react-hot-toast";
 import API from "../services/api";
-import { Home, Users, Wrench, Plus, Eye } from "lucide-react";
+import { Home, Users, Wrench, Plus, Eye, Sparkles } from "lucide-react";
 import PageHeader from "../components/PageHeader";
 import SkeletonRow from "../components/SkeletonRow";
 import SkeletonCard from "../components/SkeletonCard";
@@ -25,12 +25,9 @@ const Avatar = ({ name = "Tenant" }) => {
 };
 
 const statusColors = {
-  available:
-    "inline-flex rounded-full bg-emerald-100/70 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-emerald-700",
-  occupied:
-    "inline-flex rounded-full bg-sky-100/70 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-sky-700",
-  "under maintenance":
-    "inline-flex rounded-full bg-amber-100/70 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-amber-700",
+  available: "status-pill status-emerald",
+  occupied: "status-pill status-sky",
+  "under maintenance": "status-pill status-amber",
 };
 
 export default function PropertyManagerDashboard() {
@@ -225,6 +222,26 @@ export default function PropertyManagerDashboard() {
         }
       />
 
+      <section className="insight-banner">
+        <div className="insight-icon">
+          <Sparkles className="h-5 w-5" />
+        </div>
+        <div>
+          <div className="insight-title">Priority focus today</div>
+          <div className="insight-text">
+            {occupancyStats.maintenance} maintenance requests need updates, and {occupancyStats.vacant} units are ready for new leases.
+          </div>
+        </div>
+        <div className="insight-actions">
+          <Link to="/maintenance" className="btn-pill btn-outline btn-outline-teal">
+            Review Maintenance
+          </Link>
+          <Link to="/leases/new" className="btn-pill btn-outline btn-outline-emerald">
+            Create Lease
+          </Link>
+        </div>
+      </section>
+
       {/* Top stats */}
       <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard label="Total Units" value={occupancyStats.total} icon={Home} />
@@ -335,8 +352,8 @@ export default function PropertyManagerDashboard() {
                           : "Price N/A"}
                       </p>
                       <Link
-                        to="/leases"
-                        className="text-[11px] font-semibold text-emerald-600 hover:underline"
+                        to={`/units/${unit._id}`}
+                        className="link-action link-action-emerald"
                       >
                         View details
                       </Link>
@@ -487,12 +504,12 @@ export default function PropertyManagerDashboard() {
                       </p>
                     </td>
                     <td className="px-3 py-2">
-                      <span className="inline-flex rounded-full bg-amber-100/70 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-amber-700">
+                      <span className="status-pill status-amber">
                         {r.urgency}
                       </span>
                     </td>
                     <td className="px-3 py-2">
-                      <span className="inline-flex rounded-full bg-teal-100/70 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-teal-700">
+                      <span className="status-pill status-teal">
                         {r.status.replace("_", " ")}
                       </span>
                     </td>
@@ -533,10 +550,10 @@ function StatCard({ label, value, icon: Icon }) {
     <div className="surface-panel card-reveal stagger-item p-5">
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+          <p className="kpi-label">
             {label}
           </p>
-          <p className="mt-2 text-3xl font-semibold text-slate-900">
+          <p className="kpi-value mt-2">
             {value}
           </p>
         </div>

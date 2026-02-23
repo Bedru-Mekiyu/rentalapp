@@ -108,6 +108,20 @@ export default function Maintenance() {
     toast.success("Maintenance request submitted!");
   };
 
+  const getRequestStatusClass = (status) => {
+    const normalized = status?.toLowerCase() || "";
+    if (normalized.includes("completed") || normalized.includes("resolved")) {
+      return "status-emerald";
+    }
+    if (normalized.includes("progress")) {
+      return "status-amber";
+    }
+    if (normalized.includes("received") || normalized.includes("pending")) {
+      return "status-slate";
+    }
+    return "status-slate";
+  };
+
   return (
     <div className="space-y-6">
       <PageHeader
@@ -248,7 +262,9 @@ export default function Maintenance() {
                 />
               )}
 
-              <span className="inline-block mt-2 text-[11px] font-semibold uppercase tracking-wide bg-emerald-100/70 text-emerald-700 px-2.5 py-1 rounded-full">
+              <span
+                className={`status-pill ${getRequestStatusClass(currentStatus || req.status)}`}
+              >
                 {currentStatus || req.status}
               </span>
             </div>

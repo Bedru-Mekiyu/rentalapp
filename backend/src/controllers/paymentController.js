@@ -249,3 +249,42 @@ export async function listByTenant(req, res) {
       .json({ success: false, message: "Failed to fetch payments by tenant" });
   }
 }
+
+/**
+ * GET /api/payments/:id
+ * Roles: TENANT, PM, ADMIN
+ */
+export async function getPaymentById(req, res) {
+  try {
+    const payment = await Payment.findById(req.params.id).populate({
+      path: "leaseId",
+      populate: [
+        { path: "unitId" },
+        { path: "tenantId", select: "fullName email" },
+      ],
+    });
+
+    if (!payment) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Payment not found" });
+    }
+
+    if (
+      req.user?.role === "TENANT" &&
+      String(payment.leaseId?.tenantId?._id || payment.leaseId?.tenantId) !==
+        String(req.user.id)
+    ) {
+      return res
+        .status(403)
+        .json({ success: false, message: "Forbidden" });
+    }
+
+    return res.json({ success: true, data: payment });
+  } catch (err) {
+    console.error("getPaymentById error:", err);
+    return res
+      .status(500)
+      .json({ success: false, message: "Failed to fetch payment" });
+  }
+}
