@@ -61,7 +61,7 @@ export default function ReportDetailPage() {
         <p className="text-sm text-red-600">Report not found.</p>
         <button
           onClick={() => navigate("/dashboard")}
-          className="btn-pill btn-outline btn-outline-slate"
+          className="rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700"
         >
           Back to Dashboard
         </button>
@@ -73,14 +73,14 @@ export default function ReportDetailPage() {
     <div className="space-y-6">
       <PageHeader
         eyebrow="Reports"
-        eyebrowClassName="bg-emerald-100 text-emerald-700"
+        eyebrowClassName="bg-indigo-100 text-indigo-700"
         title={report.title}
         subtitle={report.subtitle}
         actions={
           <button
             type="button"
             onClick={() => navigate(-1)}
-            className="btn-pill btn-outline btn-outline-slate"
+            className="rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700"
           >
             Back
           </button>
@@ -92,8 +92,8 @@ export default function ReportDetailPage() {
         <div className="mt-4 grid gap-3 md:grid-cols-3">
           {report.metrics.map((metric) => (
             <div key={metric.label} className="surface-panel p-4">
-              <p className="kpi-label">{metric.label}</p>
-              <p className="kpi-value-sm mt-2">{metric.value}</p>
+              <p className="text-xs font-medium text-slate-500">{metric.label}</p>
+              <p className="mt-2 text-lg font-semibold text-slate-900">{metric.value}</p>
             </div>
           ))}
         </div>

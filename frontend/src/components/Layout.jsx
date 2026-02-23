@@ -17,10 +17,12 @@ export default function Layout() {
       <Navbar />
       <div className="relative flex min-h-[calc(100vh-64px)]">
         <Sidebar />
-        <main className="flex-1 overflow-y-auto px-6 pb-14 pt-10">
+        <main className="app-main flex-1 px-6 pb-14 pt-10">
           <div className="mx-auto w-full max-w-6xl">
-            <div key={location.pathname} className="page-transition">
-              <Outlet />
+            <div className="app-frame">
+              <div key={location.pathname} className="page-transition">
+                <Outlet />
+              </div>
             </div>
           </div>
         </main>

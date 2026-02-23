@@ -26,6 +26,7 @@ export default function PageHeader({
           </div>
         )}
       </div>
+      <div className="section-divider mt-5" />
     </header>
   );
 }

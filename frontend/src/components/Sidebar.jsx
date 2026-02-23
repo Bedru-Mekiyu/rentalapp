@@ -52,7 +52,7 @@ export default function Sidebar() {
   if (items.length === 0) return null;
 
   return (
-    <aside className="hidden w-64 shrink-0 px-5 pb-8 pt-6 md:block">
+    <aside className="sidebar-shell hidden w-64 shrink-0 px-5 pb-8 pt-6 md:block">
       <div className="surface-panel h-full px-4 py-6">
         <div className="mb-6 flex items-center justify-between">
           <h2 className="app-title text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">

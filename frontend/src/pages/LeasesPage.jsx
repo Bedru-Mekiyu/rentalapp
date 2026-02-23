@@ -72,9 +72,9 @@ export default function LeasesPage() {
     d ? new Date(d).toLocaleDateString() : "—";
 
   const getLeaseStatusClass = (value) => {
-    if (value === "ACTIVE") return "status-emerald";
-    if (value === "ENDED") return "status-slate";
-    return "status-amber";
+    if (value === "ACTIVE") return "bg-emerald-100 text-emerald-700";
+    if (value === "ENDED") return "bg-slate-100 text-slate-700";
+    return "bg-amber-100 text-amber-700";
   };
 
   if (loading) {
@@ -82,7 +82,7 @@ export default function LeasesPage() {
       <div className="space-y-6">
         <PageHeader
           eyebrow="Leases"
-          eyebrowClassName="bg-emerald-100 text-emerald-700"
+          eyebrowClassName="bg-cyan-100 text-cyan-700"
           title="Leases"
           subtitle="View and manage active and past leases."
         />
@@ -103,13 +103,13 @@ export default function LeasesPage() {
     <div className="space-y-6">
       <PageHeader
         eyebrow="Leases"
-        eyebrowClassName="bg-emerald-100 text-emerald-700"
+        eyebrowClassName="bg-cyan-100 text-cyan-700"
         title="Leases"
         subtitle="View and manage active and past leases."
         actions={
           <Link
             to="/leases/new"
-            className="btn-primary text-xs font-semibold"
+            className="rounded-full bg-slate-900 px-5 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-slate-800"
           >
             + New Lease
           </Link>
@@ -118,14 +118,14 @@ export default function LeasesPage() {
 
       {/* Filters */}
       <DashboardCard>
-        <div className="filter-panel flex flex-wrap items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <div className="relative flex-1 min-w-[200px]">
             <input
               type="text"
               placeholder="Search by unit or tenant..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="form-input text-sm"
+              className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2 text-sm outline-none transition focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200"
             />
           </div>
           <div className="filter-shell">
@@ -248,7 +248,7 @@ export default function LeasesPage() {
                     </td>
                     <td className="px-6 py-4">
                       <span
-                        className={`status-pill ${getLeaseStatusClass(l.status)} gap-2`}
+                        className={`inline-flex items-center gap-2 rounded-full px-2.5 py-1 text-[11px] font-semibold ${getLeaseStatusClass(l.status)}`}
                       >
                         <span className="h-2 w-2 rounded-full bg-current" />
                         {l.status}

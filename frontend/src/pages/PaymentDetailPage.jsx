@@ -66,17 +66,17 @@ export default function PaymentDetailPage() {
 
   const statusClass =
     payment?.status === "VERIFIED"
-      ? "status-emerald"
+      ? "bg-emerald-100 text-emerald-700"
       : payment?.status === "REJECTED"
-      ? "status-rose"
-      : "status-amber";
+      ? "bg-rose-100 text-rose-700"
+      : "bg-amber-100 text-amber-700";
 
   if (loading) {
     return (
       <div className="space-y-6">
         <PageHeader
           eyebrow="Payments"
-          eyebrowClassName="bg-emerald-100 text-emerald-700"
+          eyebrowClassName="bg-indigo-100 text-indigo-700"
           title="Payment Detail"
           subtitle="Loading payment details..."
         />
@@ -100,7 +100,7 @@ export default function PaymentDetailPage() {
         <p className="text-sm text-red-600">Payment not found.</p>
         <button
           onClick={() => navigate("/payments")}
-          className="btn-pill btn-outline btn-outline-slate"
+          className="rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700"
         >
           Back to Payments
         </button>
@@ -116,7 +116,7 @@ export default function PaymentDetailPage() {
     <div className="space-y-6">
       <PageHeader
         eyebrow="Payments"
-        eyebrowClassName="bg-emerald-100 text-emerald-700"
+        eyebrowClassName="bg-indigo-100 text-indigo-700"
         title="Payment Detail"
         subtitle={`${tenantName} · ${unitName}`}
         actions={
@@ -124,7 +124,7 @@ export default function PaymentDetailPage() {
             <button
               type="button"
               onClick={() => navigate("/payments")}
-              className="btn-pill btn-outline btn-outline-slate"
+              className="rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700"
             >
               Back to Payments
             </button>
@@ -133,7 +133,7 @@ export default function PaymentDetailPage() {
                 type="button"
                 disabled={updating}
                 onClick={() => handleUpdateStatus("VERIFIED")}
-                className="btn-pill btn-soft btn-soft-emerald disabled:opacity-60"
+                className="rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
               >
                 Verify
               </button>
@@ -143,7 +143,7 @@ export default function PaymentDetailPage() {
                 type="button"
                 disabled={updating}
                 onClick={() => handleUpdateStatus("REJECTED")}
-                className="btn-pill btn-soft btn-soft-rose disabled:opacity-60"
+                className="rounded-md bg-rose-600 px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
               >
                 Reject
               </button>
@@ -156,7 +156,7 @@ export default function PaymentDetailPage() {
         <div className="grid gap-4 md:grid-cols-3 text-sm">
           <div>
             <p className="text-xs text-slate-500">Status</p>
-            <span className={`status-pill ${statusClass} mt-2`}>
+            <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${statusClass} mt-2`}>
               {payment.status}
             </span>
           </div>
@@ -193,9 +193,9 @@ export default function PaymentDetailPage() {
         title="References"
         description="Linked lease and tenant details."
       >
-        <div className="table-shell">
+        <div className="overflow-hidden rounded-xl border border-slate-200">
           <table className="min-w-full divide-y divide-slate-200 text-xs">
-            <thead className="table-head">
+            <thead className="bg-slate-50">
               <tr>
                 <th className="px-4 py-2 text-left font-semibold text-slate-500">
                   Lease
@@ -212,7 +212,7 @@ export default function PaymentDetailPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 bg-white">
-              <tr className="table-row">
+              <tr className="hover:bg-slate-50">
                 <td className="px-4 py-2">{lease?._id || "—"}</td>
                 <td className="px-4 py-2">{tenantName}</td>
                 <td className="px-4 py-2">{unitName}</td>
@@ -220,7 +220,7 @@ export default function PaymentDetailPage() {
                   {lease?._id ? (
                     <Link
                       to={`/leases/${lease._id}`}
-                      className="link-action link-action-emerald"
+                      className="text-xs font-semibold text-indigo-600 hover:text-indigo-700"
                     >
                       View lease
                     </Link>

@@ -144,13 +144,15 @@ export default function UsersPage() {
       <div className="space-y-6">
         <PageHeader
           eyebrow="Users"
-          eyebrowClassName="bg-emerald-100 text-emerald-700"
+          eyebrowClassName="bg-primary-100 text-primary-700"
           title="Users"
           subtitle="Manage system users, roles, and access status."
         />
-        <SkeletonCard title="Users">
-          <SkeletonTable rows={5} columns={5} />
-        </SkeletonCard>
+        <DashboardCard title="User Directory">
+          <div className="py-8 text-center text-sm text-gray-500">
+            Loading users...
+          </div>
+        </DashboardCard>
       </div>
     );
   }

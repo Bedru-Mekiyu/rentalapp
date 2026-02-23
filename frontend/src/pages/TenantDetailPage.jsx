@@ -11,9 +11,9 @@ import SkeletonCard from "../components/SkeletonCard";
 import { useAuthStore } from "../store/authStore";
 
 const statusClassMap = {
-  ACTIVE: "status-emerald",
-  SUSPENDED: "status-rose",
-  INVITED: "status-amber",
+  ACTIVE: "bg-emerald-100 text-emerald-700",
+  SUSPENDED: "bg-rose-100 text-rose-700",
+  INVITED: "bg-amber-100 text-amber-700",
 };
 
 export default function TenantDetailPage() {
@@ -92,7 +92,7 @@ export default function TenantDetailPage() {
       <div className="space-y-6">
         <PageHeader
           eyebrow="Tenants"
-          eyebrowClassName="bg-emerald-100 text-emerald-700"
+          eyebrowClassName="bg-indigo-100 text-indigo-700"
           title="Tenant Detail"
           subtitle="Loading tenant profile..."
         />
@@ -116,7 +116,7 @@ export default function TenantDetailPage() {
         <p className="text-sm text-red-600">Tenant not found.</p>
         <button
           onClick={() => navigate("/tenants")}
-          className="btn-pill btn-outline btn-outline-slate"
+          className="rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700"
         >
           Back to Tenants
         </button>
@@ -130,7 +130,7 @@ export default function TenantDetailPage() {
     <div className="space-y-6">
       <PageHeader
         eyebrow="Tenants"
-        eyebrowClassName="bg-emerald-100 text-emerald-700"
+        eyebrowClassName="bg-indigo-100 text-indigo-700"
         title={profile.fullName || "Tenant Detail"}
         subtitle={`${profile.email || "No email"} · Tenant`}
         actions={
@@ -138,7 +138,7 @@ export default function TenantDetailPage() {
             <button
               type="button"
               onClick={() => navigate("/tenants")}
-              className="btn-pill btn-outline btn-outline-slate"
+              className="rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700"
             >
               Back to Tenants
             </button>
@@ -147,7 +147,7 @@ export default function TenantDetailPage() {
                 type="button"
                 disabled={updating}
                 onClick={handleDeactivate}
-                className="btn-pill btn-outline btn-outline-rose disabled:opacity-60"
+                className="rounded-md border border-rose-200 px-4 py-2 text-sm font-medium text-rose-600 disabled:opacity-60"
               >
                 Deactivate
               </button>
@@ -157,7 +157,7 @@ export default function TenantDetailPage() {
                 type="button"
                 disabled={updating}
                 onClick={handleReactivate}
-                className="btn-pill btn-outline btn-outline-emerald disabled:opacity-60"
+                className="rounded-md border border-emerald-200 px-4 py-2 text-sm font-medium text-emerald-600 disabled:opacity-60"
               >
                 Reactivate
               </button>
@@ -170,7 +170,7 @@ export default function TenantDetailPage() {
         <div className="grid gap-4 md:grid-cols-3 text-sm">
           <div>
             <p className="text-xs text-slate-500">Status</p>
-            <span className={`status-pill ${statusClass} mt-2`}>
+            <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${statusClass} mt-2`}>
               {profile.status || "ACTIVE"}
             </span>
           </div>
@@ -190,16 +190,16 @@ export default function TenantDetailPage() {
         description="Current and past leases for this tenant."
       >
         {leases.length === 0 ? (
-          <div className="empty-state">
-            <div className="empty-state-title">No leases found</div>
-            <div className="empty-state-text">
+          <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50 px-6 py-8 text-center">
+            <div className="text-sm font-medium text-slate-700">No leases found</div>
+            <div className="mt-1 text-xs text-slate-500">
               This tenant has no lease history yet.
             </div>
           </div>
         ) : (
-          <div className="table-shell">
+          <div className="overflow-hidden rounded-xl border border-slate-200">
             <table className="min-w-full divide-y divide-slate-200 text-xs">
-              <thead className="table-head">
+              <thead className="bg-slate-50">
                 <tr>
                   <th className="px-4 py-2 text-left font-semibold text-slate-500">
                     Unit
@@ -217,18 +217,18 @@ export default function TenantDetailPage() {
               </thead>
               <tbody className="divide-y divide-slate-100 bg-white">
                 {leases.map((lease) => (
-                  <tr key={lease._id} className="table-row">
+                  <tr key={lease._id} className="hover:bg-slate-50">
                     <td className="px-4 py-2">
                       {lease.unitId?.name || lease.unitId?.unitNumber || "Unit"}
                     </td>
                     <td className="px-4 py-2">
                       <span
-                        className={`status-pill ${
+                        className={`inline-flex rounded-full px-2 py-0.5 text-[11px] font-semibold ${
                           lease.status === "ACTIVE"
-                            ? "status-emerald"
+                            ? "bg-emerald-100 text-emerald-700"
                             : lease.status === "ENDED"
-                            ? "status-slate"
-                            : "status-amber"
+                            ? "bg-slate-100 text-slate-700"
+                            : "bg-amber-100 text-amber-700"
                         }`}
                       >
                         {lease.status}
@@ -240,7 +240,7 @@ export default function TenantDetailPage() {
                     <td className="px-4 py-2">
                       <Link
                         to={`/leases/${lease._id}`}
-                        className="link-action link-action-emerald"
+                        className="text-xs font-semibold text-indigo-600 hover:text-indigo-700"
                       >
                         View lease
                       </Link>

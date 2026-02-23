@@ -238,43 +238,62 @@ export default function TenantDashboard() {
     }
   };
 
+  const handleDocumentDownload = (docName) => {
+    const safeName = docName.replace(/\s+/g, "_");
+    const content = `${docName}\n\nThis is a placeholder document for the tenant portal.`;
+    const blob = new Blob([content], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${safeName}.txt`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+
+    toast.success(`Downloaded ${docName}`);
+  };
+
   // Don't render anything if user is not available
   if (!user) {
     return (
       <div className="space-y-6">
         <PageHeader
           eyebrow="Tenant"
-          eyebrowClassName="bg-emerald-100 text-emerald-700"
+          eyebrowClassName="bg-indigo-100 text-indigo-700"
           title="Tenant Dashboard"
           subtitle="Loading your workspace..."
         />
-              <section className="insight-banner">
-                <div className="insight-icon">
-                  <Sparkles className="h-5 w-5" />
-                </div>
-                <div>
-                  <div className="insight-title">Heads up</div>
-                  <div className="insight-text">
-                    Your next rent payment is due soon. Submit payment early to avoid late fees.
-                  </div>
-                </div>
-                <div className="insight-actions">
-                  <button
-                    type="button"
-                    className="btn-pill btn-outline btn-outline-emerald"
-                    onClick={() => setShowPaymentForm(true)}
-                  >
-                    Record Payment
-                  </button>
-                  <button
-                    type="button"
-                    className="btn-pill btn-outline btn-outline-teal"
-                    onClick={() => document.getElementById("maintenance-form")?.scrollIntoView({ behavior: "smooth" })}
-                  >
-                    New Request
-                  </button>
-                </div>
-              </section>
+        <section className="surface-panel flex flex-col gap-4 p-4 md:flex-row md:items-center md:justify-between">
+          <div className="flex items-start gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-indigo-100 text-indigo-600">
+              <Sparkles className="h-5 w-5" />
+            </div>
+            <div>
+              <div className="text-sm font-semibold text-slate-900">Heads up</div>
+              <div className="text-xs text-slate-500">
+                Your next rent payment is due soon. Submit payment early to avoid late fees.
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              className="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-700 transition hover:bg-slate-50"
+              onClick={() => setShowPaymentForm(true)}
+            >
+              Record Payment
+            </button>
+            <button
+              type="button"
+              className="rounded-full bg-slate-900 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white transition hover:-translate-y-0.5"
+              onClick={() => document.getElementById("maintenance-form")?.scrollIntoView({ behavior: "smooth" })}
+            >
+              New Request
+            </button>
+          </div>
+        </section>
         <div className="surface-panel p-6">
           <SkeletonRow className="h-8 w-64" />
           <div className="mt-4 grid gap-4 md:grid-cols-3">
@@ -292,7 +311,7 @@ export default function TenantDashboard() {
       <div className="space-y-6">
         <PageHeader
           eyebrow="Tenant"
-          eyebrowClassName="bg-emerald-100 text-emerald-700"
+          eyebrowClassName="bg-indigo-100 text-indigo-700"
           title="Tenant Dashboard"
           subtitle="Loading your dashboard..."
         />
@@ -309,56 +328,40 @@ export default function TenantDashboard() {
   }
 
   return (
-    <div className="space-y-8">
-      {/* Header */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-slate-900 to-emerald-900 p-8 text-white shadow-2xl">
-        <div className="absolute inset-0 opacity-50">
-          <div className="absolute -right-10 -top-12 h-52 w-52 rounded-full bg-emerald-500/40 blur-3xl" />
-          <div className="absolute -bottom-16 left-8 h-64 w-64 rounded-full bg-amber-400/30 blur-3xl" />
-        </div>
-        <div className="relative flex items-center justify-between">
-          <div className="flex-1">
-            <span className="pill bg-white/20 text-white">Tenant Portal</span>
-            <h1 className="app-title mt-3 text-4xl font-semibold mb-2">
-              Welcome back, {user?.fullName?.split(' ')[0] || 'Tenant'}!
-            </h1>
-            <p className="text-emerald-100 text-lg">
-              Manage your lease, payments, and maintenance requests all in one place.
-            </p>
-            <div className="flex flex-wrap items-center gap-3 mt-4">
-              <div className="flex items-center gap-2 rounded-full bg-white/15 px-4 py-2 backdrop-blur-sm">
-                <User className="h-5 w-5" />
-                <span className="text-sm font-medium">
-                  {user?.fullName || user?.email}
-                </span>
-              </div>
-              <div className="flex items-center gap-2 rounded-full bg-white/15 px-4 py-2 backdrop-blur-sm">
-                <Calendar className="h-4 w-4" />
-                <span className="text-sm">
-                  {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Link
-                  to="/my-lease"
-                  className="rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white transition hover:bg-white/20"
-                >
-                  View Lease
-                </Link>
-                <Link
-                  to="/payments"
-                  className="rounded-full bg-white px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-900 transition hover:-translate-y-0.5"
-                >
-                  Payments
-                </Link>
-              </div>
-            </div>
+    <div className="space-y-6">
+      <PageHeader
+        eyebrow="Tenant Portal"
+        eyebrowClassName="bg-indigo-100 text-indigo-700"
+        title={`Welcome back, ${user?.fullName?.split(" ")[0] || "Tenant"}!`}
+        subtitle="Manage your lease, payments, and maintenance requests all in one place."
+        actions={
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="pill bg-slate-900 text-white">
+              {user?.fullName || user?.email}
+            </span>
+            <span className="pill bg-slate-100 text-slate-700">
+              {new Date().toLocaleDateString("en-US", {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+            </span>
+            <Link
+              to="/my-lease"
+              className="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-700 transition hover:bg-slate-50"
+            >
+              View Lease
+            </Link>
+            <Link
+              to="/payments"
+              className="rounded-full bg-slate-900 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white transition hover:-translate-y-0.5"
+            >
+              Payments
+            </Link>
           </div>
-          <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-white/15 backdrop-blur-sm shadow-xl">
-            <span className="text-3xl">🏠</span>
-          </div>
-        </div>
-      </div>
+        }
+      />
 
       {/* Lease + payments */}
       <div className="grid gap-6 lg:grid-cols-3">
@@ -867,11 +870,7 @@ export default function TenantDashboard() {
                     </div>
                     <button
                       className="btn-pill btn-outline btn-outline-teal"
-                      onClick={() => {
-                        toast.info(`Downloading ${doc}...`, {
-                          description: 'Document download feature coming soon!'
-                        });
-                      }}
+                      onClick={() => handleDocumentDownload(doc)}
                     >
                       <Download className="h-3 w-3" />
                       <span>View</span>

@@ -16,14 +16,16 @@ const STATUS_OPTIONS = ["ALL", "ACTIVE", "SUSPENDED", "INVITED"];
 
 const StatusBadge = ({ status }) => {
   const map = {
-    ACTIVE: "status-emerald",
-    SUSPENDED: "status-rose",
-    INVITED: "status-amber",
+    ACTIVE: "bg-emerald-100 text-emerald-700",
+    SUSPENDED: "bg-rose-100 text-rose-700",
+    INVITED: "bg-amber-100 text-amber-700",
   };
 
   return (
     <span
-      className={`status-pill ${map[status] || "status-slate"}`}
+      className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
+        map[status] || "bg-slate-100 text-slate-700"
+      }`}
     >
       {status}
     </span>
@@ -125,7 +127,7 @@ export default function TenantsPage() {
       <div className="space-y-6">
         <PageHeader
           eyebrow="Tenants"
-          eyebrowClassName="bg-emerald-100 text-emerald-700"
+          eyebrowClassName="bg-indigo-100 text-indigo-700"
           title="Tenant Management"
           subtitle="Manage tenant accounts, access status, and profiles."
         />
@@ -140,14 +142,14 @@ export default function TenantsPage() {
     <div className="space-y-6">
       <PageHeader
         eyebrow="Tenants"
-        eyebrowClassName="bg-emerald-100 text-emerald-700"
+        eyebrowClassName="bg-indigo-100 text-indigo-700"
         title="Tenant Management"
         subtitle="Manage tenant accounts, access status, and profiles."
         actions={
           currentUser?.role === "ADMIN" || currentUser?.role === "PM" ? (
             <Link
               to="/users/new?role=TENANT"
-              className="btn-primary inline-flex items-center space-x-2 text-xs font-semibold"
+              className="inline-flex items-center space-x-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 transition-colors"
             >
               <UserPlus className="h-4 w-4" />
               <span>New Tenant</span>
@@ -158,14 +160,14 @@ export default function TenantsPage() {
 
       <DashboardCard title="Tenant Directory">
       {/* Filters */}
-      <div className="filter-panel mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="flex flex-1 items-center gap-3">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
             <input
               type="text"
               placeholder="Search by name, email, or phone"
-              className="form-input pl-10 text-sm"
+              className="w-full rounded-lg border border-gray-300 py-3 pl-10 pr-4 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -174,7 +176,7 @@ export default function TenantsPage() {
         <div className="flex items-center gap-3">
           <Filter className="h-4 w-4 text-gray-500" />
           <select
-            className="form-select text-sm"
+            className="rounded-lg border border-gray-300 px-4 py-3 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all"
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
           >

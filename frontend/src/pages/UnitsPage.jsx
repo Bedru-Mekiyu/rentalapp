@@ -112,7 +112,7 @@ export default function UnitsPage() {
       <div className="space-y-6">
         <PageHeader
           eyebrow="Inventory"
-          eyebrowClassName="bg-emerald-100 text-emerald-700"
+          eyebrowClassName="bg-indigo-100 text-indigo-700"
           title="Units"
           subtitle="Manage units, pricing, and availability."
         />
@@ -133,7 +133,7 @@ export default function UnitsPage() {
     <div className="space-y-6">
       <PageHeader
         eyebrow="Inventory"
-        eyebrowClassName="bg-emerald-100 text-emerald-700"
+        eyebrowClassName="bg-indigo-100 text-indigo-700"
         title="Units"
         subtitle="Manage units, pricing, and availability."
         actions={
@@ -142,7 +142,7 @@ export default function UnitsPage() {
               const el = document.getElementById("create-unit-form");
               if (el) el.scrollIntoView({ behavior: "smooth" });
             }}
-            className="btn-primary text-xs font-semibold"
+            className="rounded-full bg-slate-900 px-5 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-slate-800"
           >
             + New Unit
           </button>
@@ -151,23 +151,25 @@ export default function UnitsPage() {
 
       {/* Filters and search */}
       <DashboardCard>
-        <div className="filter-panel flex flex-wrap items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <div className="relative flex-1 min-w-[200px]">
             <input
               type="text"
               placeholder="Search by unit number or type..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="form-input text-sm"
+              className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2 text-sm outline-none transition focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200"
             />
           </div>
-          <div className="filter-shell">
+          <div className="flex flex-wrap gap-1 rounded-full bg-slate-100 p-1 text-xs">
             {statusFilters.map((s) => (
               <button
                 key={s}
                 onClick={() => setStatus(s)}
-                className={`filter-chip ${
-                  status === s ? "filter-chip-active" : ""
+                className={`rounded-full px-3 py-1 ${
+                  status === s
+                    ? "bg-white text-slate-900 shadow-sm"
+                    : "text-slate-500 hover:text-slate-800"
                 }`}
               >
                 {s === "All" ? "All" : s}
@@ -185,15 +187,15 @@ export default function UnitsPage() {
         {filteredUnits.length === 0 ? (
           <div className="space-y-3">
             <SkeletonTable rows={4} columns={7} />
-            <div className="empty-state">
-              <div className="empty-state-title">No units found</div>
-              <div className="empty-state-text">Try clearing filters or add a new unit.</div>
+            <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50 px-6 py-8 text-center">
+              <div className="text-sm font-medium text-slate-700">No units found</div>
+              <div className="mt-1 text-xs text-slate-500">Try clearing filters or add a new unit.</div>
             </div>
           </div>
         ) : (
-          <div className="table-shell list-shell">
+          <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
             <table className="min-w-full divide-y divide-slate-200 text-sm">
-              <thead className="table-head">
+              <thead className="bg-slate-50/80">
                 <tr>
                   <th className="px-4 py-2 text-left text-xs font-semibold text-slate-500">
                     Unit Number
@@ -235,14 +237,14 @@ export default function UnitsPage() {
                     </td>
                     <td className="px-4 py-2 text-sm">
                       <span
-                        className={`status-pill ${
+                        className={`inline-flex rounded-full px-2 py-0.5 text-[11px] font-semibold ${
                           u.status === "VACANT"
-                            ? "status-emerald"
+                            ? "bg-emerald-100 text-emerald-700"
                             : u.status === "OCCUPIED"
-                            ? "status-teal"
+                            ? "bg-indigo-100 text-indigo-700"
                             : u.status === "UNDER_MAINTENANCE"
-                            ? "status-amber"
-                            : "status-slate"
+                            ? "bg-amber-100 text-amber-700"
+                            : "bg-slate-100 text-slate-600"
                         }`}
                       >
                         {u.status}
@@ -254,7 +256,7 @@ export default function UnitsPage() {
                     <td className="px-4 py-2 text-sm">
                       <Link
                         to={`/units/${u._id}`}
-                        className="link-action link-action-emerald"
+                        className="text-xs font-semibold text-indigo-600 hover:text-indigo-700"
                       >
                         View
                       </Link>
@@ -287,79 +289,79 @@ export default function UnitsPage() {
             <label className="text-xs font-medium text-slate-600">
               Unit Number
             </label>
-            <input
-              type="text"
-              required
-              value={form.unitNumber}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, unitNumber: e.target.value }))
-              }
-              className="form-input text-sm"
-              placeholder="e.g. 10A"
-            />
+              <input
+                type="text"
+                required
+                value={form.unitNumber}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, unitNumber: e.target.value }))
+                }
+                className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:bg-white focus:ring-1 focus:ring-indigo-500"
+                placeholder="e.g. 10A"
+              />
           </div>
 
           <div className="space-y-1">
             <label className="text-xs font-medium text-slate-600">Floor</label>
-            <input
-              type="number"
-              required
-              value={form.floor}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, floor: e.target.value }))
-              }
-              className="form-input text-sm"
-              placeholder="e.g. 3"
-            />
+              <input
+                type="number"
+                required
+                value={form.floor}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, floor: e.target.value }))
+                }
+                className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:bg-white focus:ring-1 focus:ring-indigo-500"
+                placeholder="e.g. 3"
+              />
           </div>
 
           <div className="space-y-1">
             <label className="text-xs font-medium text-slate-600">Type</label>
-            <input
-              type="text"
-              required
-              value={form.type}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, type: e.target.value }))
-              }
-              className="form-input text-sm"
-              placeholder="e.g. 2BR, Studio"
-            />
+              <input
+                type="text"
+                required
+                value={form.type}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, type: e.target.value }))
+                }
+                className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:bg-white focus:ring-1 focus:ring-indigo-500"
+                placeholder="e.g. 2BR, Studio"
+              />
           </div>
 
           <div className="space-y-1">
             <label className="text-xs font-medium text-slate-600">
               Area (sqm)
             </label>
-            <input
-              type="number"
-              required
-              value={form.areaSqm}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, areaSqm: e.target.value }))
-              }
-              className="form-input text-sm"
-              placeholder="e.g. 85"
-            />
+              <input
+                type="number"
+                required
+                value={form.areaSqm}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, areaSqm: e.target.value }))
+                }
+                className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:bg-white focus:ring-1 focus:ring-indigo-500"
+                placeholder="e.g. 85"
+              />
           </div>
 
           <div className="space-y-1">
             <label className="text-xs font-medium text-slate-600">
               Base Price (ETB)
             </label>
-            <input
-              type="number"
-              required
-              value={form.basePriceEtb}
-              onChange={(e) =>
-                setForm((f) => ({
-                  ...f,
-                  basePriceEtb: e.target.value,
-                }))
-              }
-              className="form-input text-sm"
-              placeholder="e.g. 10000"
-            />
+              <input
+                type="number"
+                required
+                value={form.basePriceEtb}
+                onChange={(e) =>
+                  setForm((f) => ({
+                    ...f,
+                    basePriceEtb: e.target.value,
+                  }))
+                }
+                className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:bg-white focus:ring-1 focus:ring-indigo-500"
+                placeholder="e.g. 10000"
+              />
           </div>
 
           <div className="space-y-1">
@@ -381,10 +383,10 @@ export default function UnitsPage() {
 
           <div className="md:col-span-4 flex justify-end">
             <button
-              type="submit"
-              disabled={creating}
-              className="btn-primary text-xs font-semibold disabled:opacity-60"
-            >
+                type="submit"
+                disabled={creating}
+                className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
+              >
               {creating ? "Creating..." : "Create Unit"}
             </button>
           </div>

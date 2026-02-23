@@ -91,7 +91,7 @@ export default function UnitDetailPage() {
         <p className="text-sm text-red-600">Unit not found.</p>
         <button
           onClick={() => navigate("/units")}
-          className="rounded-full border border-slate-300 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-700"
+          className="rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700"
         >
           Back to units
         </button>
@@ -102,22 +102,22 @@ export default function UnitDetailPage() {
   const activeLease = leases.find((l) => l.status === "ACTIVE");
   const unitStatusClass =
     unit.status === "VACANT"
-      ? "status-emerald"
+      ? "bg-emerald-100 text-emerald-700"
       : unit.status === "MAINTENANCE"
-      ? "status-amber"
-      : "status-slate";
+      ? "bg-amber-100 text-amber-700"
+      : "bg-slate-100 text-slate-700";
   const leaseStatusClass = (value) =>
     value === "ACTIVE"
-      ? "status-emerald"
+      ? "bg-emerald-100 text-emerald-700"
       : value === "ENDED"
-      ? "status-slate"
-      : "status-amber";
+      ? "bg-slate-100 text-slate-700"
+      : "bg-amber-100 text-amber-700";
 
   return (
     <div className="space-y-6">
       <PageHeader
         eyebrow="Unit"
-        eyebrowClassName="bg-slate-100 text-slate-700"
+        eyebrowClassName="bg-indigo-100 text-indigo-700"
         title={unit.name || "Unit Detail"}
         subtitle={`${unit.address || "No address"} · Floor ${unit.floor ?? "N/A"} · ${unit.status}`}
         actions={
@@ -136,7 +136,7 @@ export default function UnitDetailPage() {
         <div className="grid gap-4 md:grid-cols-3 text-sm">
           <div>
             <p className="text-xs text-slate-500">Status</p>
-            <span className={`status-pill ${unitStatusClass} mt-2`}>
+            <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${unitStatusClass} mt-2`}>
               {unit.status}
             </span>
           </div>
@@ -175,7 +175,7 @@ export default function UnitDetailPage() {
             type="button"
             disabled={updatingStatus}
             onClick={() => handleChangeStatus("VACANT")}
-            className="btn-pill btn-outline btn-outline-slate disabled:opacity-60"
+            className="rounded-md border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 disabled:opacity-60"
           >
             Mark as VACANT
           </button>
@@ -183,7 +183,7 @@ export default function UnitDetailPage() {
             type="button"
             disabled={updatingStatus}
             onClick={() => handleChangeStatus("MAINTENANCE")}
-            className="btn-pill btn-outline btn-outline-amber disabled:opacity-60"
+            className="rounded-md border border-amber-300 px-3 py-1.5 text-xs font-medium text-amber-700 disabled:opacity-60"
           >
             Mark as MAINTENANCE
           </button>
@@ -198,15 +198,17 @@ export default function UnitDetailPage() {
         {leases.length === 0 ? (
           <div className="space-y-3">
             <SkeletonTable rows={3} columns={5} />
-            <div className="empty-state">
-              <div className="empty-state-title">No leases found</div>
-              <div className="empty-state-text">This unit has no lease history yet.</div>
+            <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50 px-6 py-6 text-center">
+              <div className="text-sm font-medium text-slate-700">No leases found</div>
+              <div className="mt-1 text-xs text-slate-500">
+                This unit has no lease history yet.
+              </div>
             </div>
           </div>
         ) : (
-          <div className="table-shell">
+          <div className="overflow-hidden rounded-xl border border-slate-200">
             <table className="min-w-full divide-y divide-slate-200 text-xs">
-              <thead className="table-head">
+              <thead className="bg-slate-50">
                 <tr>
                   <th className="px-4 py-2 text-left font-semibold text-slate-500">
                     Tenant
@@ -227,13 +229,13 @@ export default function UnitDetailPage() {
               </thead>
               <tbody className="divide-y divide-slate-100 bg-white">
                 {leases.map((lease) => (
-                  <tr key={lease._id} className="table-row">
+                  <tr key={lease._id} className="hover:bg-slate-50">
                     <td className="px-4 py-2">
                       {lease.tenantId?.fullName || "Tenant"}
                     </td>
                     <td className="px-4 py-2">
                       <span
-                        className={`status-pill ${leaseStatusClass(lease.status)}`}
+                        className={`inline-flex rounded-full px-2 py-0.5 text-[11px] font-semibold ${leaseStatusClass(lease.status)}`}
                       >
                         {lease.status}
                       </span>
@@ -257,7 +259,7 @@ export default function UnitDetailPage() {
                     <td className="px-4 py-2">
                       <Link
                         to={`/leases/${lease._id}`}
-                        className="link-action link-action-emerald"
+                        className="text-xs font-semibold text-indigo-600 hover:text-indigo-700"
                       >
                         View lease
                       </Link>
@@ -274,7 +276,7 @@ export default function UnitDetailPage() {
             Active lease:{" "}
             <Link
               to={`/leases/${activeLease._id}`}
-              className="link-action link-action-emerald"
+              className="text-xs font-semibold text-indigo-600 hover:text-indigo-700"
             >
               {activeLease.tenantId?.fullName || "Tenant"}
             </Link>

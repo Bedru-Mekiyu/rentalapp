@@ -125,18 +125,18 @@ export default function LeaseDetailPage() {
 
   const statusClass =
     lease.status === "ACTIVE"
-      ? "status-emerald"
+      ? "bg-emerald-100 text-emerald-700"
       : lease.status === "PENDING"
-      ? "status-amber"
+      ? "bg-amber-100 text-amber-700"
       : ["ENDED", "TERMINATED", "CANCELLED"].includes(lease.status)
-      ? "status-rose"
-      : "status-slate";
+      ? "bg-rose-100 text-rose-700"
+      : "bg-slate-100 text-slate-700";
 
   return (
     <div className="space-y-6">
       <PageHeader
         eyebrow="Lease"
-        eyebrowClassName="bg-slate-100 text-slate-700"
+        eyebrowClassName="bg-indigo-100 text-indigo-700"
         title="Lease Detail"
         subtitle={`${lease.unitId?.name || "Unit"} · ${lease.tenantId?.fullName || "Tenant"}`}
         actions={
@@ -148,7 +148,7 @@ export default function LeaseDetailPage() {
                   lease.unitId?._id ? `/units/${lease.unitId._id}` : "/units"
                 )
               }
-              className="rounded-full border border-slate-300 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-700"
+              className="rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700"
             >
               View Unit
             </button>
@@ -157,7 +157,7 @@ export default function LeaseDetailPage() {
                 type="button"
                 disabled={ending}
                 onClick={handleEndLease}
-                className="rounded-full bg-red-600 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white disabled:opacity-60"
+                className="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
               >
                 {ending ? "Ending..." : "End Lease"}
               </button>
@@ -171,7 +171,7 @@ export default function LeaseDetailPage() {
         <div className="grid gap-4 md:grid-cols-3 text-sm">
           <div>
             <p className="text-xs text-slate-500">Status</p>
-            <span className={`status-pill ${statusClass}`}>
+            <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${statusClass}`}>
               {lease.status}
             </span>
           </div>
@@ -260,15 +260,17 @@ export default function LeaseDetailPage() {
         {payments.length === 0 ? (
           <div className="space-y-3">
             <SkeletonTable rows={3} columns={5} />
-            <div className="empty-state">
-              <div className="empty-state-title">No payments yet</div>
-              <div className="empty-state-text">Payments will appear once recorded.</div>
+            <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50 px-6 py-6 text-center">
+              <div className="text-sm font-medium text-slate-700">No payments yet</div>
+              <div className="mt-1 text-xs text-slate-500">
+                Payments will appear once recorded.
+              </div>
             </div>
           </div>
         ) : (
-          <div className="table-shell">
+          <div className="overflow-hidden rounded-xl border border-slate-200">
             <table className="min-w-full divide-y divide-slate-200 text-xs">
-              <thead className="table-head">
+              <thead className="bg-slate-50">
                 <tr>
                   <th className="px-4 py-2 text-left font-semibold text-slate-500">
                     Date
@@ -289,7 +291,7 @@ export default function LeaseDetailPage() {
               </thead>
               <tbody className="divide-y divide-slate-100 bg-white">
                 {payments.map((p) => (
-                  <tr key={p._id} className="table-row">
+                  <tr key={p._id} className="hover:bg-slate-50">
                     <td className="px-4 py-2">
                       {formatDate(p.transactionDate)}
                     </td>
@@ -299,12 +301,12 @@ export default function LeaseDetailPage() {
                     <td className="px-4 py-2">{p.paymentMethod}</td>
                     <td className="px-4 py-2">
                       <span
-                        className={`status-pill ${
+                        className={`inline-flex rounded-full px-2 py-0.5 text-[11px] font-semibold ${
                           p.status === "VERIFIED"
-                            ? "status-emerald"
+                            ? "bg-emerald-100 text-emerald-700"
                             : p.status === "PENDING"
-                            ? "status-amber"
-                            : "status-rose"
+                            ? "bg-amber-100 text-amber-700"
+                            : "bg-rose-100 text-rose-700"
                         }`}
                       >
                         {p.status}
