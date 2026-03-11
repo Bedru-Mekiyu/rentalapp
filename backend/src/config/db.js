@@ -5,7 +5,7 @@ export async function connectDB() {
   const MONGODB_URI = process.env.MONGODB_URI || process.env.MONGODB_URL;
   const mongoUri = MONGODB_URI;
 
-  if (!mongoUri) {
+  if (!MONGODB_URI) {
     console.error('MongoDB URI missing. Set MONGODB_URI (or MONGODB_URL).');
     process.exit(1);
   }
