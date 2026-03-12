@@ -468,7 +468,7 @@ export default function GeneralManagerDashboard() {
   );
 }
 
-function KpiCard({ label, value, icon, gradient }) {
+function KpiCard({ label, value, icon }) {
   return (
     <div className="surface-panel card-reveal hover-lift stagger-item p-6">
       <div className="flex items-center justify-between">

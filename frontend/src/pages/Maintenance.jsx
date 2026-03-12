@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import {
   Upload,
@@ -14,17 +14,14 @@ export default function Maintenance() {
   const [category, setCategory] = useState("Plumbing");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState(null);
-  const [preview, setPreview] = useState(null);
   const [error, setError] = useState("");
-  const [requests, setRequests] = useState([]);
+  const [requests, setRequests] = useState(() => {
+    const saved = localStorage.getItem("maintenanceRequests");
+    return saved ? JSON.parse(saved) : [];
+  });
   const [submitting, setSubmitting] = useState(false);
   const [currentStatus, setCurrentStatus] = useState(null);
-
-  /*  Load from localStorage */
-  useEffect(() => {
-    const saved = localStorage.getItem("maintenanceRequests");
-    if (saved) setRequests(JSON.parse(saved));
-  }, []);
+  const statusTimersRef = useRef([]);
 
   /*  Save to localStorage */
   useEffect(() => {
@@ -45,37 +42,17 @@ export default function Maintenance() {
   };
 
   /*  Image preview */
-  useEffect(() => {
-    if (!image) {
-      setPreview(null);
-      return;
-    }
-
-    const objectUrl = URL.createObjectURL(image);
-    setPreview(objectUrl);
-
-    return () => URL.revokeObjectURL(objectUrl);
+  const preview = useMemo(() => {
+    if (!image) return null;
+    return URL.createObjectURL(image);
   }, [image]);
 
-  /* 🔹 Status progression simulation */
   useEffect(() => {
-    if (requests.length === 0) return;
-
-    setCurrentStatus("Received");
-
-    const t1 = setTimeout(() => {
-      setCurrentStatus("In Progress");
-    }, 3000);
-
-    const t2 = setTimeout(() => {
-      setCurrentStatus("Completed");
-    }, 6000);
-
     return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
+      statusTimersRef.current.forEach((timer) => clearTimeout(timer));
+      statusTimersRef.current = [];
     };
-  }, [requests.length]);
+  }, []);
 
   /*  Submit handler */
   const handleSubmit = async () => {
@@ -98,11 +75,20 @@ export default function Maintenance() {
       createdAt: new Date().toISOString(),
     };
 
+    statusTimersRef.current.forEach((timer) => clearTimeout(timer));
+    setCurrentStatus("Received");
+    const t1 = setTimeout(() => {
+      setCurrentStatus("In Progress");
+    }, 3000);
+    const t2 = setTimeout(() => {
+      setCurrentStatus("Completed");
+    }, 6000);
+    statusTimersRef.current = [t1, t2];
+
     setRequests((prev) => [newRequest, ...prev]);
 
     setDescription("");
     setImage(null);
-    setPreview(null);
     setSubmitting(false);
 
     toast.success("Maintenance request submitted!");

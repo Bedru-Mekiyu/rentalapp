@@ -43,7 +43,6 @@ export default function TenantDashboard() {
   const { user } = useAuthStore();
   const userId = user?._id || user?.id;
 
-  const [showPaymentForm, setShowPaymentForm] = useState(false);
   const [loading, setLoading] = useState(true);
   const [lease, setLease] = useState(null);
   const [payments, setPayments] = useState([]);
@@ -72,29 +71,6 @@ export default function TenantDashboard() {
     if (normalized === "medium") return "status-primary";
     return "status-success";
   };
-
-  const paymentSchema = z.object({
-    amountEtb: z.number().min(0.01, "Amount must be greater than 0"),
-    paymentMethod: z.enum(["Bank Transfer", "Cash", "Check", "Mobile Money", "Other"]),
-    transactionDate: z.string().min(1, "Transaction date is required"),
-    externalTransactionId: z.string().optional(),
-    notes: z.string().optional(),
-  });
-
-  const {
-    register: registerPayment,
-    handleSubmit: handlePaymentSubmit,
-    formState: { errors: paymentErrors },
-    reset: resetPayment,
-    setValue: setPaymentValue,
-  } = useForm({
-    resolver: zodResolver(paymentSchema),
-    defaultValues: {
-      leaseId: lease?._id || "",
-      paymentMethod: "Bank Transfer",
-      transactionDate: new Date().toISOString().split('T')[0],
-    },
-  });
 
   const {
     register,
@@ -166,43 +142,6 @@ export default function TenantDashboard() {
     }
     loadData();
   }, [userId, loadData]); // loadData is memoized with useCallback
-
-  // Set default lease when lease data loads
-  useEffect(() => {
-    if (lease?._id && setPaymentValue) {
-      setPaymentValue("leaseId", lease._id);
-    }
-  }, [lease?._id, setPaymentValue]); // setPaymentValue is stable from react-hook-form
-
-  const onPaymentSubmit = async (formData) => {
-    console.log("Payment form submitted with data:", formData);
-    if (!lease) {
-      toast.error("Unable to record payment: No active lease found. Please contact your property manager.");
-      return;
-    }
-
-    try {
-      const payload = {
-        ...formData,
-        leaseId: lease._id,
-        amountEtb: Number(formData.amountEtb),
-      };
-      console.log("Payment payload:", payload);
-
-      const response = await API.post("/payments", payload);
-      console.log("Payment API response:", response);
-      toast.success("Payment recorded successfully! It will be verified by management.");
-      setShowPaymentForm(false);
-      resetPayment();
-      loadData(); // Refresh payments list
-    } catch (err) {
-      console.error("TenantDashboard payment submit error", err);
-      toast.error(
-        err?.response?.data?.message ||
-          "Failed to record payment"
-      );
-    }
-  };
 
   const onMaintenanceSubmit = async (formData) => {
     console.log("Maintenance form submitted with data:", formData);

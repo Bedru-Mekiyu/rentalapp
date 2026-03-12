@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import {
   CalendarDays,
@@ -16,39 +16,32 @@ export default function Payments() {
   const [dueDate] = useState("October 31, 2026");
   const [receipt, setReceipt] = useState(null);
   const [error, setError] = useState("");
-  const [paymentStatus, setPaymentStatus] = useState("");
   const [loading, setLoading] = useState(false);
-  const [history, setHistory] = useState([]);
-
-  const dueDateObj = new Date(dueDate);
-
-  /* 🔹 Load payment history from localStorage */
-  useEffect(() => {
+  const [history, setHistory] = useState(() => {
     const saved = localStorage.getItem("paymentHistory");
-    if (saved) setHistory(JSON.parse(saved));
-  }, []);
+    return saved ? JSON.parse(saved) : [];
+  });
 
   /* 🔹 Save payment history */
   useEffect(() => {
     localStorage.setItem("paymentHistory", JSON.stringify(history));
   }, [history]);
 
-  /* 🔹 Determine payment status */
-  useEffect(() => {
+  const paymentStatus = useMemo(() => {
     const today = new Date();
+    const dueDateObj = new Date(dueDate);
     if (history.length > 0 && history[0].status === "Paid") {
-      setPaymentStatus("Paid");
-      return;
+      return "Paid";
     }
 
     if (today > dueDateObj) {
-      setPaymentStatus("Overdue");
-    } else if (dueDateObj - today < 7 * 24 * 60 * 60 * 1000) {
-      setPaymentStatus("Due Soon");
-    } else {
-      setPaymentStatus("Upcoming");
+      return "Overdue";
     }
-  }, [history]);
+    if (dueDateObj - today < 7 * 24 * 60 * 60 * 1000) {
+      return "Due Soon";
+    }
+    return "Upcoming";
+  }, [history, dueDate]);
 
   /* 🔹 Digital Payment Handler */
   const handleDigitalPayment = async (method) => {

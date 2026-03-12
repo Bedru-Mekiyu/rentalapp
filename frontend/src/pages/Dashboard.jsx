@@ -18,13 +18,13 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [maintenanceStatus] = useState("In Progress");
 
-  const dueDateObj = new Date("October 25, 2026");
   const leaseEnd = new Date("December 31, 2026");
 
   /* PAYMENT STATUS LOGIC */
 
   useEffect(() => {
     const today = new Date();
+    const dueDateObj = new Date(dueDate);
 
     if (today > dueDateObj) {
       setPaymentStatus("Overdue");
@@ -35,7 +35,7 @@ export default function Dashboard() {
     }
 
     setLoading(false);
-  }, []);
+  }, [dueDate]);
 
   /* LEASE DAYS REMAINING */
 

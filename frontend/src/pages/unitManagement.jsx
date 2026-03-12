@@ -1,8 +1,18 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import API from "../services/api";
 import Card from "../components/Card";
 import PageHeader from "../components/PageHeader";
 import SkeletonRow from "../components/SkeletonRow";
+
+const MOCK_UNITS = [
+  {
+    id: 1,
+    name: "Unit 101 (5th floor)",
+    floor: 5,
+    amenitiesConfig: ["Balcony", "Parking"],
+    viewAttributes: ["City View"],
+  },
+];
 
 const calculateFloorMultiplier = (floor) => {
   if (floor <= 1) return 1.2; // +20% premium
@@ -39,23 +49,8 @@ const calculateRentPreview = ({ baseRent, unit }) => {
 
 export default function UnitManagement() {
   const [baseRent, setBaseRent] = useState(8000);
-  const [units, setUnits] = useState([]);
-  const [selectedUnitId, setSelectedUnitId] = useState(null);
-
-  useEffect(() => {
-    const mockUnits = [
-      {
-        id: 1,
-        name: "Unit 101 (5th floor)",
-        floor: 5,
-        amenitiesConfig: ["Balcony", "Parking"],
-        viewAttributes: ["City View"],
-      },
-    ];
-
-    setUnits(mockUnits);
-    setSelectedUnitId(mockUnits[0].id);
-  }, []);
+  const [units] = useState(MOCK_UNITS);
+  const [selectedUnitId, setSelectedUnitId] = useState(MOCK_UNITS[0]?.id ?? null);
 
   const selectedUnit = units.find((unit) => unit.id === selectedUnitId);
 
@@ -174,7 +169,7 @@ export default function UnitManagement() {
               </label>
               <select
                 value={selectedUnitId}
-                onChange={(e) => selectedUnitId(Number(e.target.value))}
+                onChange={(e) => setSelectedUnitId(Number(e.target.value))}
                 className="form-select text-sm"
               >
                 {units.map((unit) => (
