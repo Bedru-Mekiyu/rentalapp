@@ -1,6 +1,10 @@
 import { create } from "zustand";
 import axios from "axios";
 
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ||
+  (import.meta.env.DEV ? "http://localhost:5000/api" : "/api");
+
 export const useAuthStore = create((set) => ({
   user: null,
   loading: true,
@@ -22,7 +26,7 @@ export const useAuthStore = create((set) => ({
 
     if (refreshToken && storedUser) {
       axios
-        .post("http://localhost:5000/api/auth/refresh", { refreshToken })
+        .post(`${API_BASE_URL}/auth/refresh`, { refreshToken })
         .then((res) => {
           const payload = res.data?.data || res.data;
           const { token: newToken, refreshToken: newRefresh } = payload || {};
@@ -44,7 +48,7 @@ export const useAuthStore = create((set) => ({
   },
   login: async (email, password) => {
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", {
+      const res = await axios.post(`${API_BASE_URL}/auth/login`, {
         email,
         password,
       });
@@ -70,7 +74,7 @@ export const useAuthStore = create((set) => ({
     const refreshToken = localStorage.getItem("refreshToken");
     if (refreshToken) {
       try {
-        await axios.post("http://localhost:5000/api/auth/logout", {
+        await axios.post(`${API_BASE_URL}/auth/logout`, {
           refreshToken,
         });
       } catch {
