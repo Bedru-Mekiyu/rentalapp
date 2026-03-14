@@ -1,95 +1,99 @@
-// server.js
-import 'dotenv/config'
-import express from 'express'
-import cors from 'cors'
+import "dotenv/config"
+import express from "express"
+import cors from "cors"
 
-import { connectDB } from './src/config/db.js'
-import errorHandler from './src/middleware/errorHandler.js'
+import { connectDB } from "./src/config/db.js"
+import errorHandler from "./src/middleware/errorHandler.js"
 
-import authRoutes from './src/routes/auth.routes.js'
-import userRoutes from './src/routes/user.routes.js'
-import paymentRoutes from './src/routes/payment.routes.js'
-import financeRoutes from './src/routes/finance.routes.js'
-import leaseRoutes from './src/routes/lease.routes.js'
-import unitRoutes from './src/routes/unit.routes.js'
-import propertyRoutes from './src/routes/property.routes.js'
-import maintenanceRoutes from './src/routes/maintenanceRoutes.js'
+import authRoutes from "./src/routes/auth.routes.js"
+import userRoutes from "./src/routes/user.routes.js"
+import paymentRoutes from "./src/routes/payment.routes.js"
+import financeRoutes from "./src/routes/finance.routes.js"
+import leaseRoutes from "./src/routes/lease.routes.js"
+import unitRoutes from "./src/routes/unit.routes.js"
+import propertyRoutes from "./src/routes/property.routes.js"
+import maintenanceRoutes from "./src/routes/maintenanceRoutes.js"
 
-import { applyHelmet, rateLimiter } from './src/middleware/security.js'
+import { applyHelmet, rateLimiter } from "./src/middleware/security.js"
 
 const app = express()
 
-// important when deployed behind Railway proxy
-app.set('trust proxy', 1)
+app.set("trust proxy", 1)
 
 
-// --------------------
-// CORS CONFIGURATION
-// --------------------
+// ----------------------
+// CORS (FIRST MIDDLEWARE)
+// ----------------------
 
-const allowedOrigins = [
-  "http://localhost:5173",
-  "http://localhost:5174",
-  "https://rentalapp2.vercel.app"
-]
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "http://localhost:5174",
+      "https://rentalapp2.vercel.app"
+    ],
+    credentials: true,
+    methods: ["GET","POST","PUT","PATCH","DELETE","OPTIONS"],
+    allowedHeaders: ["Content-Type","Authorization"]
+  })
+)
 
-const corsOptions = {
-  origin: function (origin, callback) {
+// allow all Vercel deployments
+app.use((req, res, next) => {
+  const origin = req.headers.origin
 
-    // allow server-to-server / Postman
-    if (!origin) return callback(null, true)
+  if (origin && origin.endsWith(".vercel.app")) {
+    res.header("Access-Control-Allow-Origin", origin)
+  }
 
-    // allow local dev
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true)
-    }
+  res.header(
+    "Access-Control-Allow-Methods",
+    "GET,POST,PUT,PATCH,DELETE,OPTIONS"
+  )
 
-    // allow all vercel preview deployments
-    if (/^https:\/\/.*\.vercel\.app$/.test(origin)) {
-      return callback(null, true)
-    }
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization"
+  )
 
-    console.warn("Blocked by CORS:", origin)
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200)
+  }
 
-    // do NOT crash server
-    return callback(null, false)
-  },
-
-  credentials: true,
-  methods: ["GET","POST","PUT","PATCH","DELETE","OPTIONS"],
-  allowedHeaders: ["Content-Type","Authorization"],
-  optionsSuccessStatus: 204
-}
-
-// apply CORS BEFORE routes
-app.use(cors(corsOptions))
-app.options("*", cors(corsOptions))
+  next()
+})
 
 
-// --------------------
+// ----------------------
 // SECURITY
-// --------------------
+// ----------------------
 
 app.use(applyHelmet)
-app.use(rateLimiter)
+
+// skip rate limiter for OPTIONS requests
+app.use((req, res, next) => {
+  if (req.method === "OPTIONS") {
+    return next()
+  }
+  rateLimiter(req, res, next)
+})
 
 
-// --------------------
+// ----------------------
 // BODY PARSER
-// --------------------
+// ----------------------
 
 app.use(express.json())
 
 
-// --------------------
-// HEALTH ROUTES
-// --------------------
+// ----------------------
+// HEALTH
+// ----------------------
 
 app.get("/", (req, res) => {
   res.json({
     status: "ok",
     message: "Rental API is running",
-    health: "/health"
   })
 })
 
@@ -98,9 +102,9 @@ app.get("/health", (req, res) => {
 })
 
 
-// --------------------
-// API ROUTES
-// --------------------
+// ----------------------
+// ROUTES
+// ----------------------
 
 app.use("/api/auth", authRoutes)
 app.use("/api/users", userRoutes)
@@ -112,36 +116,30 @@ app.use("/api/properties", propertyRoutes)
 app.use("/api/maintenance", maintenanceRoutes)
 
 
-// --------------------
+// ----------------------
 // ERROR HANDLER
-// --------------------
+// ----------------------
 
 app.use(errorHandler)
 
 
-// --------------------
-// SERVER START
-// --------------------
+// ----------------------
+// START SERVER
+// ----------------------
 
 const PORT = process.env.PORT || 5000
 
 async function startServer() {
   try {
-
     await connectDB()
     console.log("MongoDB connected")
-
-    console.log("NODE_ENV:", process.env.NODE_ENV || "development")
 
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`)
     })
-
   } catch (error) {
-
     console.error("Failed to start server:", error)
     process.exit(1)
-
   }
 }
 
