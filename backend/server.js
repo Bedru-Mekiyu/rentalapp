@@ -46,7 +46,11 @@ function isAllowedOrigin(origin) {
     return true;
   }
 
-  return /^https:\/\/[a-z0-9-]+\.vercel\.app$/i.test(normalizedOrigin);
+  if (normalizedOrigin === 'http://localhost:5173' || normalizedOrigin === 'http://localhost:5174') {
+    return true;
+  }
+
+  return /^https:\/\/.*\.vercel\.app$/i.test(normalizedOrigin);
 }
 
 // CORS – allow your Vite dev origin
@@ -59,6 +63,7 @@ const corsOptions = {
     console.warn('CORS blocked origin:', origin || '[no-origin]');
     return callback(null, false);
   },
+  credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   optionsSuccessStatus: 204,
