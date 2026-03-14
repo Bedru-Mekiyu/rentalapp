@@ -23,9 +23,16 @@ const defaultOrigins = process.env.NODE_ENV === 'production'
   ? 'https://rentalapp2.vercel.app'
   : 'http://localhost:5173,http://localhost:5174,https://rentalapp2.vercel.app';
 
+function normalizeOrigin(value) {
+  return value
+    .trim()
+    .replace(/^['"]|['"]$/g, '')
+    .replace(/\/$/, '');
+}
+
 const allowedOrigins = (configuredOrigins || defaultOrigins)
   .split(',')
-  .map((origin) => origin.trim())
+  .map((origin) => normalizeOrigin(origin))
   .filter(Boolean);
 
 function isAllowedOrigin(origin) {
@@ -33,11 +40,13 @@ function isAllowedOrigin(origin) {
     return true;
   }
 
-  if (allowedOrigins.includes(origin)) {
+  const normalizedOrigin = normalizeOrigin(origin);
+
+  if (allowedOrigins.includes(normalizedOrigin)) {
     return true;
   }
 
-  return /^https:\/\/[a-z0-9-]+\.vercel\.app$/i.test(origin);
+  return /^https:\/\/[a-z0-9-]+\.vercel\.app$/i.test(normalizedOrigin);
 }
 
 // CORS – allow your Vite dev origin
@@ -46,6 +55,8 @@ const corsOptions = {
     if (isAllowedOrigin(origin)) {
       return callback(null, true);
     }
+
+    console.warn('CORS blocked origin:', origin || '[no-origin]');
     return callback(null, false);
   },
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
@@ -99,6 +110,9 @@ const PORT = process.env.PORT || 5000;
 
 async function startServer() {
   await connectDB();
+
+  console.log('NODE_ENV:', process.env.NODE_ENV || 'development');
+  console.log('CORS allowed origins:', allowedOrigins.join(', '));
 
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
