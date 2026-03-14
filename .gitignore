@@ -4,3 +4,5 @@ dist
 coverage
 *.log
 .qodo
+node_modules
+.env
