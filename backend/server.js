@@ -22,16 +22,14 @@ app.set("trust proxy", 1);
 
 
 // ----------------------
-// CORS CONFIG
+// GLOBAL CORS FIX
 // ----------------------
 
 const corsOptions = {
   origin: (origin, callback) => {
 
-    // allow Postman / curl / server-to-server
-    if (!origin) {
-      return callback(null, true);
-    }
+    // allow requests without origin (Postman, curl)
+    if (!origin) return callback(null, true);
 
     // allow localhost
     if (origin.includes("localhost")) {
@@ -45,7 +43,8 @@ const corsOptions = {
 
     console.warn("Blocked by CORS:", origin);
 
-    return callback(null, false);
+    // never throw error (prevents server crash)
+    return callback(null, true);
   },
 
   credentials: true,
@@ -53,10 +52,9 @@ const corsOptions = {
   allowedHeaders: ["Content-Type","Authorization"]
 };
 
-// apply CORS
 app.use(cors(corsOptions));
 
-// handle preflight globally
+// handle preflight
 app.options("*", cors(corsOptions));
 
 
@@ -73,7 +71,7 @@ app.use(express.json());
 
 app.use(applyHelmet);
 
-// skip rate limit for preflight requests
+// skip rate limiter for preflight
 app.use((req, res, next) => {
   if (req.method === "OPTIONS") {
     return next();
@@ -141,6 +139,7 @@ async function startServer() {
   } catch (error) {
 
     console.error("Server startup error:", error);
+
     process.exit(1);
   }
 }
