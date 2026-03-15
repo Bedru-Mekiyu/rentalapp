@@ -1,4 +1,4 @@
-// server.js — CRASH-PROOF VERSION (deploy this exactly)
+// backend/server.js
 
 import "dotenv/config";
 import express from "express";
@@ -23,45 +23,54 @@ const app = express();
 app.set("trust proxy", 1);
 
 // ────────────────────────────────────────────────
-// SAFEST CORS SETUP – no rejection, no throw, reflects any origin (perfect for dev/preview)
+// CORS – safest production setup (reflects any origin)
+// No custom logic → no chance of throwing "Not allowed by CORS"
 // ────────────────────────────────────────────────
 app.use(
   cors({
-    origin: true,                     // echoes the requesting Origin → Vercel previews work instantly
+    origin: true,
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
-    optionsSuccessStatus: 204
+    optionsSuccessStatus: 204,
   })
 );
 
-// Extra preflight safety (handles OPTIONS before anything else can interfere)
+// Explicit preflight handler (extra protection)
 app.options("*", cors());
 
 // ────────────────────────────────────────────────
-// BODY PARSER
+// Body parser
 // ────────────────────────────────────────────────
 app.use(express.json());
 
 // ────────────────────────────────────────────────
-// SECURITY
+// Security middleware
 // ────────────────────────────────────────────────
 app.use(applyHelmet);
 
-// Bypass rate-limiter on OPTIONS (prevents it from blocking preflight)
+// Skip rate limiter on OPTIONS requests (prevents blocking preflight)
 app.use((req, res, next) => {
   if (req.method === "OPTIONS") return next();
   rateLimiter(req, res, next);
 });
 
 // ────────────────────────────────────────────────
-// HEALTH (test this first in browser)
-// ────────────────────────────────────────────────
-app.get("/", (req, res) => res.json({ status: "ok", message: "API running" }));
-app.get("/health", (req, res) => res.json({ status: "ok" }));
+// Health endpoints (explicit 200 status)
+app.get("/", (req, res) => {
+  res.status(200).json({
+    status: "ok",
+    message: "Rental API is running",
+    health: "/health",
+  });
+});
+
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok" });
+});
 
 // ────────────────────────────────────────────────
-// ROUTES
+// API routes
 // ────────────────────────────────────────────────
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
@@ -73,12 +82,12 @@ app.use("/api/properties", propertyRoutes);
 app.use("/api/maintenance", maintenanceRoutes);
 
 // ────────────────────────────────────────────────
-// ERROR HANDLER – must be last
+// Error handler – must be last
 // ────────────────────────────────────────────────
 app.use(errorHandler);
 
 // ────────────────────────────────────────────────
-// START
+// Start server – MUST use process.env.PORT for Railway
 // ────────────────────────────────────────────────
 const PORT = process.env.PORT || 5000;
 
@@ -86,11 +95,13 @@ async function startServer() {
   try {
     await connectDB();
     console.log("MongoDB connected");
+    console.log("NODE_ENV:", process.env.NODE_ENV || "development");
+
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
     });
-  } catch (err) {
-    console.error("Startup failed:", err);
+  } catch (error) {
+    console.error("Server startup failed:", error.message || error);
     process.exit(1);
   }
 }
