@@ -1,4 +1,4 @@
-// backend/server.js — DIAGNOSTIC + FIXED VERSION
+// backend/server.js — FIXED FOR RAILWAY HEALTHCHECK + PORT + PROBE
 
 import "dotenv/config";
 import express from "express";
@@ -20,12 +20,15 @@ import { applyHelmet, rateLimiter } from "./src/middleware/security.js";
 
 const app = express();
 
+// Trust proxy for Railway (important for forwarded headers)
 app.set("trust proxy", 1);
 
-// Safe CORS – reflects requesting origin (no rejection possible)
+// ────────────────────────────────────────────────
+// CORS – simple reflection (allows healthcheck probe too)
+// ────────────────────────────────────────────────
 app.use(
   cors({
-    origin: true,
+    origin: true,  // Reflects any origin → works for Vercel previews + Railway probe
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -33,6 +36,7 @@ app.use(
   })
 );
 
+// Pre-flight explicit
 app.options("*", cors());
 
 // Body parser
@@ -41,22 +45,29 @@ app.use(express.json());
 // Security
 app.use(applyHelmet);
 
+// Rate limit skip for OPTIONS + healthcheck (safety)
 app.use((req, res, next) => {
-  if (req.method === "OPTIONS") return next();
+  if (req.method === "OPTIONS" || req.path === "/health") {
+    return next();
+  }
   rateLimiter(req, res, next);
 });
 
-// Health – explicit 200 + logging
+// ────────────────────────────────────────────────
+// Healthcheck – explicit 200 + logging for debug
+// ────────────────────────────────────────────────
 app.get("/health", (req, res) => {
-  console.log("[HEALTHCHECK] /health called from", req.ip || req.headers["x-forwarded-for"]);
+  console.log(`[HEALTH] Probe hit /health from ${req.ip || req.headers['x-forwarded-for'] || 'unknown'} – responding 200`);
   res.status(200).json({ status: "ok", uptime: process.uptime() });
 });
 
 app.get("/", (req, res) => {
-  res.status(200).json({ status: "ok", message: "API is running" });
+  res.status(200).json({ status: "ok", message: "API running" });
 });
 
+// ────────────────────────────────────────────────
 // Routes
+// ────────────────────────────────────────────────
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/payments", paymentRoutes);
@@ -69,24 +80,24 @@ app.use("/api/maintenance", maintenanceRoutes);
 // Error handler last
 app.use(errorHandler);
 
-// Listen – MUST use process.env.PORT
-const PORT = process.env.PORT || 5000;
+// ────────────────────────────────────────────────
+// Listen – critical: use process.env.PORT + bind to 0.0.0.0
+// ────────────────────────────────────────────────
+const PORT = process.env.PORT || 8080;  // fallback only for local
+
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server listening on http://0.0.0.0:${PORT}`);
+  console.log(`process.env.PORT was: ${process.env.PORT || '(not set – using fallback)'}`);
+  console.log("Healthcheck probe should now reach /health");
+});
 
 async function startServer() {
   try {
-    console.log("Attempting MongoDB connection...");
+    console.log("Connecting to MongoDB...");
     await connectDB();
-    console.log("MongoDB connected successfully");
-
-    console.log("Starting server on port:", PORT);
-    console.log("process.env.PORT value:", process.env.PORT || "(not set – using fallback 5000)");
-
-    app.listen(PORT, "0.0.0.0", () => {  // bind to 0.0.0.0 for Railway
-      console.log(`Server is listening on http://0.0.0.0:${PORT}`);
-      console.log("Healthcheck should now respond at /health");
-    });
-  } catch (error) {
-    console.error("Startup failed:", error.message || error);
+    console.log("MongoDB connected");
+  } catch (err) {
+    console.error("MongoDB connection failed:", err.message);
     process.exit(1);
   }
 }
