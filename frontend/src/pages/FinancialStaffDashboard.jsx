@@ -103,6 +103,11 @@ export default function FinancialStaffDashboard() {
       maximumFractionDigits: 0,
     }).format(v);
 
+  const invoicePreview = queue[0] || payments[0] || null;
+  const invoicePreviewDate = invoicePreview?.transactionDate
+    ? new Date(invoicePreview.transactionDate).toLocaleDateString()
+    : "—";
+
   if (loading) {
     return (
       <div className="space-y-6">
@@ -227,19 +232,19 @@ export default function FinancialStaffDashboard() {
           <div className="space-y-1">
             <p className="text-neutral-600">Tenant Name</p>
             <p className="rounded-2xl border border-neutral-100 bg-neutral-50/70 px-3 py-2 text-neutral-500">
-              e.g. Alice Johnson
+              {invoicePreview?.tenantName || "—"}
             </p>
           </div>
           <div className="space-y-1">
             <p className="text-neutral-600">Invoice Amount (ETB)</p>
             <p className="rounded-2xl border border-neutral-100 bg-neutral-50/70 px-3 py-2 text-neutral-500">
-              15,000
+              {invoicePreview ? formatCurrency(invoicePreview.amountEtb || 0) : "—"}
             </p>
           </div>
           <div className="space-y-1">
             <p className="text-neutral-600">Due Date</p>
             <p className="rounded-2xl border border-neutral-100 bg-neutral-50/70 px-3 py-2 text-neutral-500">
-              2025‑01‑31
+              {invoicePreviewDate}
             </p>
           </div>
         </div>

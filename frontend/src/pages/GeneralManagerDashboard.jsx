@@ -45,8 +45,6 @@ export default function GeneralManagerDashboard() {
     turnoverRate: 0,
   });
 
-  const [reports, setReports] = useState([]);
-
   useEffect(() => {
     loadDashboard();
   }, []);
@@ -137,26 +135,33 @@ export default function GeneralManagerDashboard() {
       setOccupancyByType(occupancyByTypeData);
       setRevenueTrend(revenueTrendData);
 
-      setReports([
-        {
-          id: "RPT-001",
-          name: "Monthly Portfolio Overview",
-          date: "This month",
-          status: "Ready",
-        },
-        {
-          id: "RPT-002",
-          name: "Occupancy & Vacancy Report",
-          date: "This month",
-          status: "Ready",
-        },
-      ]);
     } catch {
       toast.error("Failed to load dashboard data");
     } finally {
       setLoading(false);
     }
   };
+
+  const reportRows = [
+    {
+      id: "monthly-revenue",
+      name: "Monthly Portfolio Overview",
+      date: new Date().toLocaleDateString(),
+      status: revenueTrend.length > 0 ? "Ready" : "No Data",
+    },
+    {
+      id: "delinquency",
+      name: "Occupancy & Vacancy Report",
+      date: new Date().toLocaleDateString(),
+      status: occupancyByType.length > 0 ? "Ready" : "No Data",
+    },
+    {
+      id: "expense",
+      name: "Operations Expense Proxy",
+      date: new Date().toLocaleDateString(),
+      status: "Ready",
+    },
+  ];
 
   const formatCurrency = (v) =>
     new Intl.NumberFormat("en-ET", {
@@ -176,14 +181,14 @@ export default function GeneralManagerDashboard() {
   const exportPDF = () => {
     const doc = new jsPDF();
     doc.text("Financial Reports", 20, 20);
-    reports.forEach((r, i) => {
+    reportRows.forEach((r, i) => {
       doc.text(`${r.id}: ${r.name} - ${r.status}`, 20, 40 + i * 10);
     });
     doc.save("reports.pdf");
   };
 
   const exportCSV = () => {
-    const csv = Papa.unparse(reports);
+    const csv = Papa.unparse(reportRows);
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     const link = document.createElement("a");
     const url = URL.createObjectURL(blob);
@@ -452,7 +457,7 @@ export default function GeneralManagerDashboard() {
               </tr>
             </thead>
             <tbody className="divide-y divide-neutral-100 bg-white">
-              {reports.map((r) => (
+              {reportRows.map((r) => (
                 <tr key={r.id}>
                   <td className="px-3 py-2">{r.id}</td>
                   <td className="px-3 py-2">{r.name}</td>

@@ -1,5 +1,5 @@
 // src/components/Sidebar.jsx
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
   Building2,
@@ -47,7 +47,22 @@ const menuItems = {
 
 export default function Sidebar() {
   const { user } = useAuthStore();
+  const location = useLocation();
   const items = menuItems[user?.role] || [];
+
+  const isItemActive = (to) => {
+    const pathname = location.pathname;
+
+    if (to === "/my-lease") {
+      return pathname === "/my-lease" || pathname.startsWith("/leases/");
+    }
+
+    if (to === "/dashboard") {
+      return pathname === "/dashboard";
+    }
+
+    return pathname === to || pathname.startsWith(`${to}/`);
+  };
 
   if (items.length === 0) return null;
 
@@ -64,10 +79,10 @@ export default function Sidebar() {
             <NavLink
               key={item.to}
               to={item.to}
-              className={({ isActive }) =>
+              className={() =>
                 [
                   "nav-item group",
-                  isActive ? "nav-item-active" : "nav-item-idle",
+                  isItemActive(item.to) ? "nav-item-active" : "nav-item-idle",
                 ].join(" ")
               }
             >

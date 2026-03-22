@@ -10,6 +10,7 @@ import SkeletonRow from "../components/SkeletonRow";
 import SkeletonTable from "../components/SkeletonTable";
 import SkeletonCard from "../components/SkeletonCard";
 import Pagination from "../components/Pagination";
+import { getLeaseMonthlyRentEtb } from "../utils/pricing";
 
 const STATUS_FILTERS = ["All", "PENDING", "VERIFIED", "REJECTED"];
 const METHOD_FILTERS = ["All", "CASH", "BANK_TRANSFER", "CARD", "OTHER"];
@@ -105,6 +106,20 @@ export default function PaymentsPage() {
     const statusLabel = lease.status || "ACTIVE";
     return `${unit} · ${tenant} · ${statusLabel}`;
   };
+
+  useEffect(() => {
+    if (!form.leaseId) return;
+    const selectedLease = leaseOptions.find((lease) => lease._id === form.leaseId);
+    if (!selectedLease) return;
+
+    setForm((prev) => ({
+      ...prev,
+      amountEtb:
+        getLeaseMonthlyRentEtb(selectedLease) > 0
+          ? String(getLeaseMonthlyRentEtb(selectedLease))
+          : prev.amountEtb,
+    }));
+  }, [form.leaseId, leaseOptions]);
 
   const filteredPayments = useMemo(
     () =>

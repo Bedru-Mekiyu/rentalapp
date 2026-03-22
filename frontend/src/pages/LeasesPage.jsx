@@ -10,6 +10,7 @@ import SkeletonTable from "../components/SkeletonTable";
 import SkeletonCard from "../components/SkeletonCard";
 import Pagination from "../components/Pagination";
 import { useAuthStore } from "../store/authStore";
+import { getLeaseMonthlyRentEtb } from "../utils/pricing";
 
 const STATUS_FILTERS = ["All", "ACTIVE", "ENDED"];
 const PAGE_SIZE = 20;
@@ -239,7 +240,7 @@ export default function LeasesPage() {
                     </td>
                     <td className="px-3 py-3 sm:px-6">
                       <div className="text-base font-bold text-neutral-900">
-                        {formatCurrency(l.monthlyRentEtb)}
+                        {formatCurrency(getLeaseMonthlyRentEtb(l))}
                       </div>
                     </td>
                     <td className="px-3 py-3 sm:px-6">

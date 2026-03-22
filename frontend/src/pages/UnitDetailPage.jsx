@@ -9,6 +9,7 @@ import SkeletonRow from "../components/SkeletonRow";
 import SkeletonTable from "../components/SkeletonTable";
 import SkeletonCard from "../components/SkeletonCard";
 import MobileBackBar from "../components/MobileBackBar";
+import { getLeaseMonthlyRentEtb } from "../utils/pricing";
 import { useAuthStore } from "../store/authStore";
 
 export default function UnitDetailPage() {
@@ -239,7 +240,7 @@ export default function UnitDetailPage() {
                           : "—"}
                       </td>
                       <td className="px-4 py-2">
-                        {formatCurrency(lease.monthlyRentEtb || 0)}
+                        {formatCurrency(getLeaseMonthlyRentEtb(lease))}
                       </td>
                       <td className="px-4 py-2">
                         <Link

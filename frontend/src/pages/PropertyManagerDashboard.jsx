@@ -8,6 +8,7 @@ import { Home, Users, Wrench, Plus, Eye, Sparkles } from "lucide-react";
 import PageHeader from "../components/PageHeader";
 import SkeletonRow from "../components/SkeletonRow";
 import SkeletonCard from "../components/SkeletonCard";
+import { getLeaseMonthlyRentEtb } from "../utils/pricing";
 
 const Avatar = ({ name = "Tenant" }) => {
   const initials = name
@@ -379,8 +380,8 @@ export default function PropertyManagerDashboard() {
                   </div>
                   <div className="text-left sm:text-right">
                     <p className="text-xs font-semibold text-neutral-900">
-                      {lease.monthlyRentEtb
-                        ? `${lease.monthlyRentEtb} ETB / month`
+                      {getLeaseMonthlyRentEtb(lease)
+                        ? `${getLeaseMonthlyRentEtb(lease)} ETB / month`
                         : "N/A"}
                     </p>
                     <p className="text-[11px] text-neutral-500">

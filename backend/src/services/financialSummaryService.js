@@ -2,6 +2,7 @@
 
 import Payment from "../models/Payment.js";
 import Lease from "../models/Lease.js";
+import { calculateUnitPrice } from "./pricingService.js";
 
 const VERIFIED_STATUS = "VERIFIED";
 const ONE_DAY_MS = 1000 * 60 * 60 * 24;
@@ -90,9 +91,20 @@ function roundToSingleDecimal(value) {
   return Math.round(value * 10) / 10;
 }
 
+function resolveMonthlyRentEtb(lease) {
+  try {
+    if (lease?.unitId && typeof lease.unitId === "object") {
+      return Number(calculateUnitPrice(lease.unitId) || 0);
+    }
+  } catch {
+  }
+
+  return 0;
+}
+
 function analyzeLeaseFinancials(lease, leasePayments = [], asOfDate = new Date()) {
   const asOf = asDate(asOfDate) || new Date();
-  const monthlyRentEtb = Number(lease?.monthlyRentEtb || 0);
+  const monthlyRentEtb = resolveMonthlyRentEtb(lease);
 
   const dueDates = buildDueDates(lease?.startDate, lease?.endDate, asOf);
 
@@ -165,9 +177,9 @@ export async function getPortfolioFinancialSummary() {
   const firstTrendMonth = new Date(now.getFullYear(), now.getMonth() - 5, 1);
 
   const [trackedLeases, verifiedPayments, pendingPaymentsCount] = await Promise.all([
-    Lease.find({ status: { $in: ["ACTIVE", "ENDED"] } }).select(
-      "_id startDate endDate monthlyRentEtb status"
-    ),
+    Lease.find({ status: { $in: ["ACTIVE", "ENDED"] } })
+      .select("_id startDate endDate monthlyRentEtb status unitId")
+      .populate("unitId"),
     Payment.find({ status: VERIFIED_STATUS }).select(
       "leaseId amountEtb transactionDate"
     ),
@@ -262,7 +274,7 @@ export async function getPortfolioFinancialSummary() {
  * Compute financial summary for a tenant (all their leases)
  */
 export async function getTenantFinancialSummary(tenantId) {
-  const leases = await Lease.find({ tenantId, status: "ACTIVE" });
+  const leases = await Lease.find({ tenantId, status: "ACTIVE" }).populate("unitId");
 
   if (leases.length === 0) {
     throw new Error("No active leases found for this tenant");
@@ -332,7 +344,9 @@ export async function getTenantFinancialSummary(tenantId) {
  * - daysOverdue
  */
 export async function getLeaseFinancialSummary(leaseId) {
-  const lease = await Lease.findById(leaseId).populate("tenantId", "fullName");
+  const lease = await Lease.findById(leaseId)
+    .populate("tenantId", "fullName")
+    .populate("unitId");
   if (!lease) {
     throw new Error("Lease not found");
   }

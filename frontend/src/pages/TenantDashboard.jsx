@@ -31,6 +31,7 @@ import {
 import PageHeader from "../components/PageHeader";
 import SkeletonRow from "../components/SkeletonRow";
 import SkeletonTable from "../components/SkeletonTable";
+import { getLeaseMonthlyRentEtb } from "../utils/pricing";
 
 const maintenanceSchema = z.object({
   description: z
@@ -85,10 +86,11 @@ export default function TenantDashboard() {
     try {
       setLoading(true);
 
-      const [leaseRes, paymentRes, maintenanceRes] = await Promise.allSettled([
+      const [leaseRes, paymentRes, maintenanceRes, financeRes] = await Promise.allSettled([
         API.get(`/leases/by-tenant/${userId}`).catch(() => ({ data: { data: [] } })),
         API.get(`/payments/by-tenant/${userId}`).catch(() => ({ data: { data: [] } })),
         API.get(`/maintenance/by-tenant/${userId}`).catch(() => ({ data: { data: [] } })),
+        API.get(`/finance/tenant/${userId}/summary`).catch(() => ({ data: null })),
       ]);
 
       const leaseData =
@@ -104,28 +106,82 @@ export default function TenantDashboard() {
           ? maintenanceRes.value?.data?.data || []
           : [];
 
-      setLease(leaseData[0] || null);
+      const activeLease = leaseData.find(
+        (item) => String(item?.status || "").toUpperCase() === "ACTIVE"
+      );
+      const latestLease = [...leaseData].sort(
+        (a, b) =>
+          new Date(b?.startDate || 0).getTime() -
+          new Date(a?.startDate || 0).getTime()
+      )[0];
+
+      setLease(activeLease || latestLease || null);
       setPayments(paymentData);
       setRequests(maintenanceData);
 
-      setDocuments([
-        "Lease Agreement.pdf",
-        "Property Rules and Regulations.pdf",
-        "Move-In Checklist.pdf",
-      ]);
+      const resolvedFinanceSummary =
+        financeRes?.status === "fulfilled"
+          ? financeRes.value?.data?.data || financeRes.value?.data || null
+          : null;
 
-      setNotifications([
-        {
-          message:
-            "Your rent payment for next month is due soon.",
-          date: "Today, 10:00 AM",
-        },
-        {
-          message:
-            "Maintenance request M001 is now in progress.",
-          date: "2 days ago, 02:30 PM",
-        },
-      ]);
+      const dynamicDocuments = [];
+
+      if (leaseData[0]?.leasePdfUrl) {
+        dynamicDocuments.push({
+          id: `lease-${leaseData[0]._id || "agreement"}`,
+          name: "Lease Agreement",
+          url: leaseData[0].leasePdfUrl,
+        });
+      }
+
+      paymentData
+        .filter((p) => p?.receiptUrl)
+        .forEach((payment) => {
+          dynamicDocuments.push({
+            id: `payment-${payment._id || payment.receiptUrl}`,
+            name:
+              payment.externalTransactionId
+                ? `Receipt ${payment.externalTransactionId}`
+                : `Receipt ${new Date(
+                    payment.transactionDate || payment.createdAt || Date.now()
+                  ).toLocaleDateString()}`,
+            url: payment.receiptUrl,
+          });
+        });
+
+      setDocuments(dynamicDocuments);
+
+      const generatedNotifications = [];
+
+      if (resolvedFinanceSummary?.nextDueDate) {
+        generatedNotifications.push({
+          message: `Next payment due on ${new Date(
+            resolvedFinanceSummary.nextDueDate
+          ).toLocaleDateString()}.`,
+          date: "Finance summary",
+        });
+      }
+
+      if (Number(resolvedFinanceSummary?.daysOverdue || 0) > 0) {
+        generatedNotifications.push({
+          message: `${resolvedFinanceSummary.daysOverdue} day(s) overdue on rent payment.`,
+          date: "Finance summary",
+        });
+      }
+
+      const inProgressMaintenance = maintenanceData.find((request) =>
+        String(request.status || "").toLowerCase().includes("progress")
+      );
+      if (inProgressMaintenance) {
+        generatedNotifications.push({
+          message: "A maintenance request is currently in progress.",
+          date: inProgressMaintenance.updatedAt
+            ? new Date(inProgressMaintenance.updatedAt).toLocaleDateString()
+            : "Maintenance",
+        });
+      }
+
+      setNotifications(generatedNotifications);
     } catch (err) {
       console.error("TenantDashboard loadData error", err);
       // Don't show error toast for now, just log it
@@ -177,21 +233,14 @@ export default function TenantDashboard() {
     }
   };
 
-  const handleDocumentDownload = (docName) => {
-    const safeName = docName.replace(/\s+/g, "_");
-    const content = `${docName}\n\nThis is a placeholder document for the tenant portal.`;
-    const blob = new Blob([content], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
+  const handleDocumentDownload = (doc) => {
+    if (!doc?.url) {
+      toast.error("Document link is unavailable");
+      return;
+    }
 
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `${safeName}.txt`;
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    URL.revokeObjectURL(url);
-
-    toast.success(`Downloaded ${docName}`);
+    window.open(doc.url, "_blank", "noopener,noreferrer");
+    toast.success(`Opened ${doc.name}`);
   };
 
   // Don't render anything if user is not available
@@ -346,8 +395,8 @@ export default function TenantDashboard() {
                 <div className="flex-1 grid grid-cols-[1fr_auto] items-center gap-2">
                   <p className="text-xs text-neutral-500">Monthly Rent</p>
                   <p className="text-right font-medium text-neutral-900">
-                    {lease.monthlyRentEtb
-                      ? `${lease.monthlyRentEtb.toLocaleString()} ETB`
+                    {getLeaseMonthlyRentEtb(lease)
+                      ? `${getLeaseMonthlyRentEtb(lease).toLocaleString()} ETB`
                       : "N/A"}
                   </p>
                 </div>
@@ -618,12 +667,12 @@ export default function TenantDashboard() {
               <ul className="space-y-3">
                 {documents.map((doc) => (
                   <li
-                    key={doc}
+                    key={doc.id}
                     className="flex items-center justify-between rounded-2xl border border-neutral-100 bg-white/90 p-3"
                   >
                     <div className="flex items-center space-x-3">
                       <FileText className="h-4 w-4 text-neutral-400" />
-                      <span className="text-sm font-medium text-neutral-700">{doc}</span>
+                      <span className="text-sm font-medium text-neutral-700">{doc.name}</span>
                     </div>
                     <button
                       className="btn-pill btn-outline btn-outline-primary"

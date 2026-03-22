@@ -7,6 +7,27 @@ import { logAction } from "../utils/auditLogger.js";
 import { calculateUnitPrice } from "../services/pricingService.js";
 import { buildPaginationMeta, getPagination } from "../utils/pagination.js";
 
+function getDynamicMonthlyRent(lease) {
+  try {
+    if (!lease?.unitId || typeof lease.unitId !== "object") {
+      return null;
+    }
+    return calculateUnitPrice(lease.unitId);
+  } catch {
+    return null;
+  }
+}
+
+function withDynamicRent(lease) {
+  const leaseObject =
+    typeof lease?.toObject === "function" ? lease.toObject() : lease;
+
+  return {
+    ...leaseObject,
+    monthlyRentEtb: getDynamicMonthlyRent(leaseObject),
+  };
+}
+
 /**
  * POST /api/leases
  * Roles: PM, ADMIN
@@ -27,6 +48,19 @@ export async function createLease(req, res) {
       return res
         .status(404)
         .json({ success: false, message: "Unit not found" });
+    }
+
+    if (unit.isDeleted || unit.status !== "VACANT") {
+      return res
+        .status(400)
+        .json({ success: false, message: "Selected unit is not available for lease" });
+    }
+
+    const existingActiveLease = await Lease.exists({ unitId, status: "ACTIVE" });
+    if (existingActiveLease) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Selected unit already has an active lease" });
     }
 
     // use pricing engine
@@ -88,9 +122,11 @@ export async function listAllLeases(req, res) {
       Lease.countDocuments(filter),
     ]);
 
+    const leasesWithDynamicRent = leases.map(withDynamicRent);
+
     return res.json({
       success: true,
-      data: leases,
+      data: leasesWithDynamicRent,
       meta: buildPaginationMeta({ page, limit, total }),
     });
   } catch (err) {
@@ -133,7 +169,7 @@ export async function getLeaseById(req, res) {
         .json({ success: false, message: "Forbidden" });
     }
 
-    return res.json({ success: true, data: lease });
+    return res.json({ success: true, data: withDynamicRent(lease) });
   } catch (err) {
     console.error("getLeaseById error:", err);
     return res
@@ -166,9 +202,11 @@ export async function listLeasesByTenant(req, res) {
       Lease.countDocuments({ tenantId }),
     ]);
 
+    const leasesWithDynamicRent = leases.map(withDynamicRent);
+
     return res.json({
       success: true,
-      data: leases,
+      data: leasesWithDynamicRent,
       meta: buildPaginationMeta({ page, limit, total }),
     });
   } catch (err) {

@@ -10,6 +10,7 @@ import SkeletonRow from "../components/SkeletonRow";
 import SkeletonTable from "../components/SkeletonTable";
 import SkeletonCard from "../components/SkeletonCard";
 import MobileBackBar from "../components/MobileBackBar";
+import { getLeaseMonthlyRentEtb } from "../utils/pricing";
 
 export default function LeaseDetailPage() {
   const { id: leaseId } = useParams();
@@ -48,8 +49,18 @@ export default function LeaseDetailPage() {
         ); // list tenant payments
         // filter only this lease's payments if leaseId field exists
         const allPayments = payRes.data?.data || [];
+        const getPaymentLeaseId = (payment) => {
+          const value = payment?.leaseId;
+          if (!value) return null;
+          if (typeof value === "string") return value;
+          if (typeof value === "object") return value._id || null;
+          return String(value);
+        };
         const filtered = allPayments.filter(
-          (p) => !p.leaseId || String(p.leaseId) === String(leaseId)
+          (p) => {
+            const paymentLeaseId = getPaymentLeaseId(p);
+            return !paymentLeaseId || String(paymentLeaseId) === String(leaseId);
+          }
         );
         setPayments(filtered);
       }
@@ -195,7 +206,7 @@ export default function LeaseDetailPage() {
           <div>
             <p className="text-xs text-neutral-500">Monthly Rent</p>
             <p className="mt-1 text-sm font-semibold text-neutral-900">
-              {formatCurrency(lease.monthlyRentEtb)}
+              {formatCurrency(getLeaseMonthlyRentEtb(lease))}
             </p>
           </div>
           <div>

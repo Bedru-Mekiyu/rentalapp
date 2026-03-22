@@ -5,6 +5,7 @@ import {
   getLeaseFinancialSummary,
   getPortfolioFinancialSummary,
 } from "./financialSummaryService.js";
+import { calculateUnitPrice } from "./pricingService.js";
 
 function formatCurrencyEtb(value) {
   return new Intl.NumberFormat("en-ET", {
@@ -25,6 +26,17 @@ function monthBounds(date = new Date()) {
   return { start, end };
 }
 
+function resolveMonthlyRentEtb(lease) {
+  try {
+    if (lease?.unitId && typeof lease.unitId === "object") {
+      return Number(calculateUnitPrice(lease.unitId) || 0);
+    }
+  } catch {
+  }
+
+  return 0;
+}
+
 async function buildMonthlyRevenueReport() {
   const portfolio = await getPortfolioFinancialSummary();
   const trend = portfolio.monthlyRevenueTrend || [];
@@ -39,10 +51,12 @@ async function buildMonthlyRevenueReport() {
     status: "ACTIVE",
     startDate: { $lte: end },
     endDate: { $gte: start },
-  }).select("monthlyRentEtb");
+  })
+    .select("monthlyRentEtb unitId")
+    .populate("unitId");
 
   const expectedThisMonth = activeLeases.reduce(
-    (sum, lease) => sum + Number(lease.monthlyRentEtb || 0),
+    (sum, lease) => sum + resolveMonthlyRentEtb(lease),
     0
   );
 

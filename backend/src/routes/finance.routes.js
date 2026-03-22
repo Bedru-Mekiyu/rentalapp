@@ -6,8 +6,8 @@ import { getLeaseSummary, getPortfolioSummary, getReport, getTenantSummary } fro
 
 const router = Router();
 
-// FS, PM, GM, ADMIN can view summaries
-const ALLOWED_ROLES = ["FS", "PM", "GM", "ADMIN"];
+// FS, PM, GM, ADMIN and TENANT can view summaries
+const ALLOWED_ROLES = ["FS", "PM", "GM", "ADMIN", "TENANT"];
 
 router.get(
   "/portfolio/summary",

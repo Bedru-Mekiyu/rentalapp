@@ -5,7 +5,15 @@ export default function BottomNav() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const isActive = (path) => location.pathname === path;
+  const isActive = (path) => {
+    const pathname = location.pathname;
+
+    if (path === "/dashboard") {
+      return pathname === "/dashboard";
+    }
+
+    return pathname === path || pathname.startsWith(`${path}/`);
+  };
 
   return (
     <div className="nav-shell fixed bottom-0 right-0 left-0 z-50 flex justify-around p-3 text-sm sm:hidden">

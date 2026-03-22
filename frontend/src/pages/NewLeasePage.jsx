@@ -12,6 +12,8 @@ export default function NewLeasePage() {
   const { user } = useAuthStore();
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
+  const [loadingUnits, setLoadingUnits] = useState(true);
+  const [loadingTenants, setLoadingTenants] = useState(true);
   const [units, setUnits] = useState([]);
   const [tenants, setTenants] = useState([]);
 
@@ -20,10 +22,28 @@ export default function NewLeasePage() {
     tenantId: "",
     startDate: "",
     endDate: "",
-    monthlyRentEtb: "",
-    securityDepositEtb: "",
     notes: "",
   });
+
+  const calculateFloorMultiplier = (floor) => {
+    if (floor <= 1) return 1.2;
+    if (floor <= 5) return 1.0;
+    if (floor <= 10) return 0.95;
+    return 0.9;
+  };
+
+  const calculateAmenityBonus = (amenities = []) => 1 + amenities.length * 0.02;
+  const calculateViewBonus = (views = []) => 1 + views.length * 0.03;
+
+  const selectedUnit = units.find((unit) => unit._id === form.unitId) || null;
+  const estimatedMonthlyRent = selectedUnit
+    ? Math.round(
+        Number(selectedUnit.basePriceEtb || 0) *
+          calculateFloorMultiplier(Number(selectedUnit.floor || 0)) *
+          calculateAmenityBonus(selectedUnit.amenitiesConfig || []) *
+          calculateViewBonus(selectedUnit.viewAttributes || [])
+      )
+    : null;
 
   useEffect(() => {
     if (user && !["ADMIN", "PM"].includes(user.role)) {
@@ -36,21 +56,43 @@ export default function NewLeasePage() {
 
   const loadUnits = async () => {
     try {
-      const res = await API.get("/units");
-      setUnits(res.data?.data || []);
+      setLoadingUnits(true);
+      const res = await API.get("/units", {
+        params: {
+          status: "VACANT",
+          limit: 100,
+        },
+      });
+
+      const availableUnits = (res.data?.data || [])
+        .filter((unit) => String(unit.status || "").toUpperCase() === "VACANT")
+        .sort((a, b) => String(a.unitNumber || "").localeCompare(String(b.unitNumber || "")));
+
+      setUnits(availableUnits);
     } catch {
       toast.error("Failed to load units");
+      setUnits([]);
+    } finally {
+      setLoadingUnits(false);
     }
   };
 
   const loadTenants = async () => {
     try {
+      setLoadingTenants(true);
       const res = await API.get("/users?role=TENANT");
       setTenants(res.data?.data || []);
     } catch {
       toast.error("Failed to load tenants");
+      setTenants([]);
+    } finally {
+      setLoadingTenants(false);
     }
   };
+
+  const availableUnits = units.filter(
+    (unit) => String(unit.status || "").toUpperCase() === "VACANT"
+  );
 
   const handleChange = (field) => (e) => {
     setForm((f) => ({ ...f, [field]: e.target.value }));
@@ -65,8 +107,6 @@ export default function NewLeasePage() {
         tenantId: form.tenantId,
         startDate: form.startDate,
         endDate: form.endDate,
-        monthlyRentEtb: Number(form.monthlyRentEtb),
-        securityDepositEtb: Number(form.securityDepositEtb),
         notes: form.notes,
       });
       toast.success("Lease created");
@@ -99,17 +139,27 @@ export default function NewLeasePage() {
               required
               value={form.unitId}
               onChange={handleChange("unitId")}
+              disabled={loadingUnits || availableUnits.length === 0}
               className="form-select text-sm"
             >
-              <option value="">Select Unit</option>
-              {units
-                .filter((u) => u.status === "VACANT")
-                .map((u) => (
-                  <option key={u._id} value={u._id}>
-                    {u.unitNumber} - {u.type}
-                  </option>
-                ))}
+              <option value="">
+                {loadingUnits
+                  ? "Loading available units..."
+                  : availableUnits.length === 0
+                  ? "No available units"
+                  : "Select Available Unit"}
+              </option>
+              {availableUnits.map((u) => (
+                <option key={u._id} value={u._id}>
+                  {u.unitNumber} - {u.type} {u.floor != null ? `(Floor ${u.floor})` : ""}
+                </option>
+              ))}
             </select>
+            {!loadingUnits && availableUnits.length === 0 ? (
+              <p className="text-xs text-neutral-500">
+                There are no vacant units right now. Mark a unit as `VACANT` to create a lease.
+              </p>
+            ) : null}
           </div>
 
           <div className="space-y-2">
@@ -121,9 +171,10 @@ export default function NewLeasePage() {
               required
               value={form.tenantId}
               onChange={handleChange("tenantId")}
+              disabled={loadingTenants}
               className="form-select text-sm"
             >
-              <option value="">Select Tenant</option>
+              <option value="">{loadingTenants ? "Loading tenants..." : "Select Tenant"}</option>
               {tenants.map((t) => (
                 <option key={t._id} value={t._id}>
                   {t.fullName} - {t.email}
@@ -160,34 +211,17 @@ export default function NewLeasePage() {
             />
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-2 md:col-span-2">
             <label className="flex items-center space-x-2 text-xs font-semibold uppercase tracking-wide text-neutral-500">
               <DollarSign className="h-4 w-4" />
-              <span>Monthly Rent (ETB)</span>
+              <span>Estimated Monthly Rent (ETB)</span>
             </label>
-            <input
-              type="number"
-              required
-              value={form.monthlyRentEtb}
-              onChange={handleChange("monthlyRentEtb")}
-              className="form-input text-sm"
-              placeholder="5000"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <label className="flex items-center space-x-2 text-xs font-semibold uppercase tracking-wide text-neutral-500">
-              <DollarSign className="h-4 w-4" />
-              <span>Security Deposit (ETB)</span>
-            </label>
-            <input
-              type="number"
-              required
-              value={form.securityDepositEtb}
-              onChange={handleChange("securityDepositEtb")}
-              className="form-input text-sm"
-              placeholder="5000"
-            />
+            <div className="form-input text-sm bg-neutral-50/70">
+              {estimatedMonthlyRent != null ? estimatedMonthlyRent.toLocaleString() : "Select a unit to see calculated rent"}
+            </div>
+            <p className="text-[11px] text-neutral-500">
+              Final rent is calculated automatically from unit pricing rules when you create the lease.
+            </p>
           </div>
 
           <div className="md:col-span-2 space-y-2">
