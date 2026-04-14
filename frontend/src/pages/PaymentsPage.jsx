@@ -525,32 +525,32 @@ export default function PaymentsPage() {
             </div>
           </div>
         ) : (
-          <div className="table-shell list-shell text-xs">
-            <table className="min-w-full divide-y divide-neutral-200">
+          <div className="overflow-x-auto -mx-2 px-2 sm:mx-0 sm:px-0">
+            <table className="w-full min-w-[720px] divide-y divide-neutral-200 text-xs">
               <thead className="bg-neutral-50">
                 <tr>
-                  <th className="px-3 py-2 text-left font-semibold text-neutral-600">
+                  <th className="px-2 py-2 text-left font-semibold text-neutral-600 whitespace-nowrap">
                     Date
                   </th>
-                  <th className="px-3 py-2 text-left font-semibold text-neutral-600">
+                  <th className="px-2 py-2 text-left font-semibold text-neutral-600 whitespace-nowrap">
                     Amount
                   </th>
-                  <th className="px-3 py-2 text-left font-semibold text-neutral-600">
+                  <th className="px-2 py-2 text-left font-semibold text-neutral-600 whitespace-nowrap">
                     Method
                   </th>
-                  <th className="px-3 py-2 text-left font-semibold text-neutral-600">
+                  <th className="px-2 py-2 text-left font-semibold text-neutral-600 whitespace-nowrap">
                     Status
                   </th>
-                  <th className="px-3 py-2 text-left font-semibold text-neutral-600">
+                  <th className="px-2 py-2 text-left font-semibold text-neutral-600 whitespace-nowrap">
                     Transaction ID
                   </th>
-                  <th className="px-3 py-2 text-left font-semibold text-neutral-600">
+                  <th className="px-2 py-2 text-left font-semibold text-neutral-600 whitespace-nowrap">
                     Receipt
                   </th>
-                  <th className="px-3 py-2 text-left font-semibold text-neutral-600">
+                  <th className="px-2 py-2 text-left font-semibold text-neutral-600 whitespace-nowrap">
                     Lease
                   </th>
-                  <th className="px-3 py-2 text-left font-semibold text-neutral-600">
+                  <th className="px-2 py-2 text-left font-semibold text-neutral-600 whitespace-nowrap">
                     Actions
                   </th>
                 </tr>
@@ -558,18 +558,18 @@ export default function PaymentsPage() {
               <tbody className="divide-y divide-neutral-100 bg-white">
                 {pagedPayments.map((p) => (
                   <tr key={p._id} className="hover:bg-neutral-50">
-                    <td className="px-3 py-2">
+                    <td className="px-2 py-2 whitespace-nowrap">
                       {formatDate(p.transactionDate)}
                     </td>
-                    <td className="px-3 py-2">
+                    <td className="px-2 py-2 whitespace-nowrap">
                       {formatCurrency(p.amountEtb)}
                     </td>
-                    <td className="px-3 py-2">
+                    <td className="px-2 py-2 whitespace-nowrap">
                       {p.paymentMethod || "-"}
                     </td>
-                    <td className="px-3 py-2">
+                    <td className="px-2 py-2">
                       <span
-                        className={`inline-flex rounded-full px-2 py-0.5 text-[11px] font-semibold ${
+                        className={`inline-flex rounded-full px-2 py-0.5 text-[11px] font-semibold whitespace-nowrap ${
                           p.status === "VERIFIED"
                             ? "bg-success-100 text-success-700"
                             : p.status === "REJECTED"
@@ -578,12 +578,12 @@ export default function PaymentsPage() {
                         }`}
                       >
                         {p.status}
-                      </span>
+                    </span>
                     </td>
-                    <td className="px-3 py-2">
+                    <td className="px-2 py-2 max-w-[100px] truncate" title={p.externalTransactionId}>
                       {p.externalTransactionId || "—"}
                     </td>
-                    <td className="px-3 py-2">
+                    <td className="px-2 py-2 whitespace-nowrap">
                       {p.receiptUrl ? (
                         <a
                           href={`${import.meta.env.VITE_API_BASE_URL?.replace('/api', '') || 'http://localhost:5000'}${p.receiptUrl}`}
@@ -598,20 +598,20 @@ export default function PaymentsPage() {
                         <span className="text-xs text-neutral-400">—</span>
                       )}
                     </td>
-                    <td className="px-3 py-2">
+                    <td className="px-2 py-2 whitespace-nowrap">
                       {p.leaseId ? (
                         <Link
                           to={`/leases/${typeof p.leaseId === "object" ? p.leaseId._id : p.leaseId}`}
                           className="text-xs font-semibold text-primary-600 hover:text-primary-700"
                         >
-                          View lease
+                          View
                         </Link>
                       ) : (
                         "—"
                       )}
                     </td>
-                    <td className="px-3 py-2">
-                      <div className="flex flex-wrap items-center gap-2">
+                    <td className="px-2 py-2">
+                      <div className="flex flex-wrap items-center gap-1">
                         <Link
                           to={`/payments/${p._id}`}
                           className="text-xs font-semibold text-primary-600 hover:text-primary-700"
@@ -624,7 +624,7 @@ export default function PaymentsPage() {
                               handleUpdateStatus(p._id, "VERIFIED")
                             }
                             disabled={updatingId === p._id}
-                            className="rounded-md bg-success-600 px-3 py-1 text-xs font-semibold text-white disabled:opacity-60"
+                            className="rounded-md bg-success-600 px-2 py-1 text-[11px] font-semibold text-white disabled:opacity-60 whitespace-nowrap"
                           >
                             {updatingId === p._id ? "Saving..." : "Verify"}
                           </button>
@@ -635,7 +635,7 @@ export default function PaymentsPage() {
                               handleUpdateStatus(p._id, "REJECTED")
                             }
                             disabled={updatingId === p._id}
-                            className="rounded-md bg-danger-600 px-3 py-1 text-xs font-semibold text-white disabled:opacity-60"
+                            className="rounded-md bg-danger-600 px-2 py-1 text-[11px] font-semibold text-white disabled:opacity-60 whitespace-nowrap"
                           >
                             {updatingId === p._id ? "Saving..." : "Reject"}
                           </button>

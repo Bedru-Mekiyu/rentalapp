@@ -196,29 +196,29 @@ export default function UnitsPage() {
             <div className="empty-state-text">Try clearing filters or add a new unit.</div>
           </div>
         ) : (
-          <div className="table-shell list-shell bg-white">
-            <table className="min-w-full divide-y divide-neutral-200 text-sm">
+          <div className="overflow-x-auto -mx-2 px-2 sm:mx-0 sm:px-0">
+            <table className="w-full min-w-[640px] divide-y divide-neutral-200 text-sm">
               <thead className="bg-neutral-50/80">
                 <tr>
-                  <th className="px-4 py-2 text-left text-xs font-semibold text-neutral-500">
+                  <th className="px-2 py-2 text-left text-xs font-semibold text-neutral-500 sm:px-4 whitespace-nowrap">
                     Unit Number
                   </th>
-                  <th className="px-4 py-2 text-left text-xs font-semibold text-neutral-500">
+                  <th className="px-2 py-2 text-left text-xs font-semibold text-neutral-500 sm:px-4 whitespace-nowrap">
                     Floor
                   </th>
-                  <th className="px-4 py-2 text-left text-xs font-semibold text-neutral-500">
+                  <th className="px-2 py-2 text-left text-xs font-semibold text-neutral-500 sm:px-4 whitespace-nowrap">
                     Type
                   </th>
-                  <th className="px-4 py-2 text-left text-xs font-semibold text-neutral-500">
+                  <th className="px-2 py-2 text-left text-xs font-semibold text-neutral-500 sm:px-4 whitespace-nowrap">
                     Area (sqm)
                   </th>
-                  <th className="px-4 py-2 text-left text-xs font-semibold text-neutral-500">
+                  <th className="px-2 py-2 text-left text-xs font-semibold text-neutral-500 sm:px-4 whitespace-nowrap">
                     Status
                   </th>
-                  <th className="px-4 py-2 text-left text-xs font-semibold text-neutral-500">
+                  <th className="px-2 py-2 text-left text-xs font-semibold text-neutral-500 sm:px-4 whitespace-nowrap">
                     Base Price (ETB)
                   </th>
-                  <th className="px-4 py-2 text-left text-xs font-semibold text-neutral-500">
+                  <th className="px-2 py-2 text-left text-xs font-semibold text-neutral-500 sm:px-4 whitespace-nowrap">
                     Actions
                   </th>
                 </tr>
@@ -226,21 +226,21 @@ export default function UnitsPage() {
               <tbody className="divide-y divide-neutral-100 bg-white">
                 {pagedUnits.map((u) => (
                   <tr key={u._id} className="table-row stagger-item">
-                    <td className="px-4 py-2 text-sm">
+                    <td className="px-2 py-2 text-sm sm:px-4 whitespace-nowrap">
                       {u.unitNumber || `Unit ${u._id.slice(-4)}`}
                     </td>
-                    <td className="px-4 py-2 text-sm">
+                    <td className="px-2 py-2 text-sm sm:px-4 whitespace-nowrap">
                       {u.floor ?? "-"}
                     </td>
-                    <td className="px-4 py-2 text-sm">
+                    <td className="px-2 py-2 text-sm sm:px-4 whitespace-nowrap">
                       {u.type || "-"}
                     </td>
-                    <td className="px-4 py-2 text-sm">
+                    <td className="px-2 py-2 text-sm sm:px-4 whitespace-nowrap">
                       {u.areaSqm ?? "-"}
                     </td>
-                    <td className="px-4 py-2 text-sm">
+                    <td className="px-2 py-2 text-sm sm:px-4 whitespace-nowrap">
                       <span
-                        className={`inline-flex rounded-full px-2 py-0.5 text-[11px] font-semibold ${
+                        className={`inline-flex rounded-full px-2 py-0.5 text-[11px] font-semibold whitespace-nowrap ${
                           u.status === "VACANT"
                             ? "bg-success-100 text-success-700"
                             : u.status === "OCCUPIED"
@@ -253,10 +253,10 @@ export default function UnitsPage() {
                         {u.status}
                       </span>
                     </td>
-                    <td className="px-4 py-2 text-sm">
+                    <td className="px-2 py-2 text-sm sm:px-4 whitespace-nowrap">
                       {u.basePriceEtb ?? "-"}
                     </td>
-                    <td className="px-4 py-2 text-sm">
+                    <td className="px-2 py-2 text-sm sm:px-4 whitespace-nowrap">
                       <Link
                         to={`/units/${u._id}`}
                         className="text-xs font-semibold text-primary-600 hover:text-primary-700"

@@ -3,26 +3,40 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import API from "../services/api";
+import { memo } from "react";
 import DashboardCard from "../components/DashboardCard";
 import PageHeader from "../components/PageHeader";
 import SkeletonRow from "../components/SkeletonRow";
+import Avatar from "../components/Avatar";
 import { Sparkles } from "lucide-react";
 
-const Avatar = ({ name }) => {
-  const initials = (name || "")
-    .split(" ")
-    .filter(Boolean)
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase()
-    .slice(0, 2);
+// Memoized PaymentCard for performance
+const PaymentCard = memo(function PaymentCard({ payment }) {
+  const name = payment?.lease?.tenant?.fullName || "Unknown";
+  const unit = payment?.lease?.unit?.unitNumber || "-";
+  const amount = payment?.amount?.toLocaleString() || "0";
+  const status = payment?.status || "unknown";
+
+  const statusClass =
+    status === "completed"
+      ? "status-success"
+      : status === "pending"
+      ? "status-warning"
+      : "status-neutral";
 
   return (
-    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-600 text-xs font-semibold text-white ring-2 ring-white">
-      {initials || "T"}
+    <div className="flex items-center gap-3 rounded-lg bg-white/60 p-3 transition-colors hover:bg-white">
+      <Avatar name={name} />
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-sm font-medium text-slate-900">{name}</p>
+        <p className="text-xs text-slate-500">
+          Unit {unit} · {amount} ETB
+        </p>
+      </div>
+      <span className={`status-pill ${statusClass}`}>{status}</span>
     </div>
   );
-};
+});
 
 export default function FinancialStaffDashboard() {
   const [loading, setLoading] = useState(true);
@@ -276,23 +290,23 @@ export default function FinancialStaffDashboard() {
           title="Payment History"
           description="Recent payment records."
         >
-          <div className="table-shell">
-            <table className="min-w-full divide-y divide-neutral-200 text-xs">
+          <div className="overflow-x-auto -mx-2 px-2 sm:mx-0 sm:px-0">
+            <table className="w-full min-w-[560px] divide-y divide-neutral-200 text-xs">
               <thead className="table-head">
                 <tr>
-                  <th className="px-3 py-2 text-left font-semibold text-neutral-500">
+                  <th className="px-2 py-2 text-left font-semibold text-neutral-500 whitespace-nowrap">
                     Date
                   </th>
-                  <th className="px-3 py-2 text-left font-semibold text-neutral-500">
+                  <th className="px-2 py-2 text-left font-semibold text-neutral-500 whitespace-nowrap">
                     Tenant
                   </th>
-                  <th className="px-3 py-2 text-left font-semibold text-neutral-500">
+                  <th className="px-2 py-2 text-left font-semibold text-neutral-500 whitespace-nowrap">
                     Amount
                   </th>
-                  <th className="px-3 py-2 text-left font-semibold text-neutral-500">
+                  <th className="px-2 py-2 text-left font-semibold text-neutral-500 whitespace-nowrap">
                     Method
                   </th>
-                  <th className="px-3 py-2 text-left font-semibold text-neutral-500">
+                  <th className="px-2 py-2 text-left font-semibold text-neutral-500 whitespace-nowrap">
                     Status
                   </th>
                 </tr>
@@ -300,21 +314,21 @@ export default function FinancialStaffDashboard() {
               <tbody className="divide-y divide-neutral-100 bg-white">
                 {payments.slice(0, 6).map((p) => (
                   <tr key={p._id} className="table-row">
-                    <td className="px-3 py-2 text-neutral-600">
+                    <td className="px-2 py-2 text-neutral-600 whitespace-nowrap">
                       {p.transactionDate
                         ? new Date(p.transactionDate).toLocaleDateString()
                         : "-"}
                     </td>
-                    <td className="px-3 py-2 text-neutral-700">
+                    <td className="px-2 py-2 text-neutral-700 max-w-[120px] truncate">
                       {p.tenantName || "Tenant"}
                     </td>
-                    <td className="px-3 py-2 text-neutral-700">
+                    <td className="px-2 py-2 text-neutral-700 whitespace-nowrap">
                       {formatCurrency(p.amountEtb || 0)}
                     </td>
-                    <td className="px-3 py-2 text-neutral-600">{p.paymentMethod}</td>
-                    <td className="px-3 py-2">
+                    <td className="px-2 py-2 text-neutral-600 whitespace-nowrap">{p.paymentMethod}</td>
+                    <td className="px-2 py-2">
                       <span
-                        className={`status-pill ${
+                        className={`status-pill whitespace-nowrap ${
                           p.status === "VERIFIED"
                             ? "status-success"
                             : p.status === "PENDING"

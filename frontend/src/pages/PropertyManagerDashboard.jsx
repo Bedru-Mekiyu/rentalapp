@@ -4,26 +4,29 @@ import { Link } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
 import toast from "react-hot-toast";
 import API from "../services/api";
+import { memo } from "react";
 import { Home, Users, Wrench, Plus, Eye, Sparkles } from "lucide-react";
 import PageHeader from "../components/PageHeader";
 import SkeletonRow from "../components/SkeletonRow";
 import DashboardCard from "../components/DashboardCard";
+import Avatar from "../components/Avatar";
 import { getLeaseMonthlyRentEtb } from "../utils/pricing";
 
-const Avatar = ({ name = "Tenant" }) => {
-  const initials = name
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase()
-    .slice(0, 2);
+// Local components (memoized for performance)
+const TenantCard = memo(function TenantCard({ lease }) {
+  const name = lease?.tenant?.fullName || "Unknown";
+  const unit = lease?.unitId?.unitNumber || "-";
 
   return (
-    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-600 text-xs font-semibold text-white ring-2 ring-white">
-      {initials}
+    <div className="flex items-center gap-3 rounded-lg bg-white/60 p-3 transition-colors hover:bg-white">
+      <Avatar name={name} />
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-sm font-medium text-slate-900">{name}</p>
+        <p className="text-xs text-slate-500">Unit {unit}</p>
+      </div>
     </div>
   );
-};
+});
 
 const statusColors = {
   available: "status-pill status-success",
@@ -262,13 +265,13 @@ export default function PropertyManagerDashboard() {
                 Search units and jump to key portfolio views.
               </p>
             </div>
-            <div className="flex w-full sm:w-auto">
+            <div className="w-full sm:w-auto sm:min-w-[200px] lg:min-w-[260px]">
               <input
                 type="text"
                 placeholder="Search by unit, floor, or status"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="form-input w-full text-sm sm:w-64"
+                className="form-input w-full text-sm"
               />
             </div>
           </div>
@@ -420,26 +423,26 @@ export default function PropertyManagerDashboard() {
             <p className="text-sm text-neutral-500">No maintenance requests yet.</p>
           </div>
         ) : (
-          <div className="mt-4 table-shell">
-            <table className="min-w-full divide-y divide-neutral-200 text-xs">
+          <div className="mt-4 overflow-x-auto -mx-2 px-2 sm:mx-0 sm:px-0">
+            <table className="w-full min-w-[640px] divide-y divide-neutral-200 text-xs">
               <thead className="table-head">
                 <tr>
-                  <th className="px-3 py-2 text-left font-medium text-neutral-700">
+                  <th className="px-2 py-2 text-left font-medium text-neutral-700 whitespace-nowrap">
                     Tenant
                   </th>
-                  <th className="px-3 py-2 text-left font-medium text-neutral-700">
+                  <th className="px-2 py-2 text-left font-medium text-neutral-700 whitespace-nowrap">
                     Unit
                   </th>
-                  <th className="px-3 py-2 text-left font-medium text-neutral-700">
+                  <th className="px-2 py-2 text-left font-medium text-neutral-700">
                     Description
                   </th>
-                  <th className="px-3 py-2 text-left font-medium text-neutral-700">
+                  <th className="px-2 py-2 text-left font-medium text-neutral-700 whitespace-nowrap">
                     Urgency
                   </th>
-                  <th className="px-3 py-2 text-left font-medium text-neutral-700">
+                  <th className="px-2 py-2 text-left font-medium text-neutral-700 whitespace-nowrap">
                     Status
                   </th>
-                  <th className="px-3 py-2 text-right font-medium text-neutral-700">
+                  <th className="px-2 py-2 text-right font-medium text-neutral-700 whitespace-nowrap">
                     Actions
                   </th>
                 </tr>
@@ -447,40 +450,40 @@ export default function PropertyManagerDashboard() {
               <tbody className="divide-y divide-neutral-100 bg-white">
                 {maintenanceRequests.map((r) => (
                   <tr key={r._id} className="table-row">
-                    <td className="px-3 py-2">
-                      <div className="flex items-center gap-2">
+                    <td className="px-2 py-2">
+                      <div className="flex items-center gap-2 min-w-0">
                         <Avatar
                           name={r.tenantId?.fullName || "Tenant"}
                         />
-                        <div>
-                          <p className="font-medium text-neutral-900">
+                        <div className="min-w-0">
+                          <p className="font-medium text-neutral-900 truncate max-w-[120px] sm:max-w-[160px]">
                             {r.tenantId?.fullName || "Tenant"}
                           </p>
-                          <p className="text-[11px] text-neutral-500">
+                          <p className="text-[11px] text-neutral-500 truncate max-w-[120px] sm:max-w-[160px]">
                             {r.tenantId?.email || ""}
                           </p>
                         </div>
                       </div>
                     </td>
-                    <td className="px-3 py-2 text-neutral-700">
+                    <td className="px-2 py-2 text-neutral-700 whitespace-nowrap">
                       Unit {r.unitId?.unitNumber || "N/A"}
                     </td>
-                    <td className="px-3 py-2 text-neutral-700 max-w-xs">
-                      <p className="line-clamp-2">
+                    <td className="px-2 py-2 text-neutral-700">
+                      <p className="line-clamp-2 max-w-[150px] sm:max-w-[200px]">
                         {r.description}
                       </p>
                     </td>
-                    <td className="px-3 py-2">
-                      <span className="status-pill status-warning">
+                    <td className="px-2 py-2">
+                      <span className="status-pill status-warning whitespace-nowrap">
                         {r.urgency}
                       </span>
                     </td>
-                    <td className="px-3 py-2">
-                      <span className="status-pill status-primary">
+                    <td className="px-2 py-2">
+                      <span className="status-pill status-primary whitespace-nowrap">
                         {r.status.replace("_", " ")}
                       </span>
                     </td>
-                    <td className="px-3 py-2 text-right">
+                    <td className="px-2 py-2 text-right">
                       <select
                         value={r.status}
                         onChange={(e) =>
@@ -489,7 +492,7 @@ export default function PropertyManagerDashboard() {
                             e.target.value
                           )
                         }
-                        className="form-select text-[11px]"
+                        className="form-select text-[11px] w-full sm:w-auto"
                       >
                         <option value="open">Open</option>
                         <option value="in_progress">

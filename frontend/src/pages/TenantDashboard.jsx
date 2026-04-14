@@ -1,5 +1,5 @@
 // src/pages/TenantDashboard.jsx
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
 import API from "../services/api";
@@ -27,6 +27,7 @@ import {
   Plus,
   X,
   Sparkles,
+  Upload,
 } from "lucide-react";
 import PageHeader from "../components/PageHeader";
 import SkeletonRow from "../components/SkeletonRow";
@@ -34,6 +35,7 @@ import SkeletonTable from "../components/SkeletonTable";
 import { getLeaseMonthlyRentEtb } from "../utils/pricing";
 
 const maintenanceSchema = z.object({
+  category: z.string(),
   description: z
     .string()
     .min(5, "Please describe the issue in detail (at least 5 characters)"),
@@ -50,6 +52,12 @@ export default function TenantDashboard() {
   const [requests, setRequests] = useState([]);
   const [documents, setDocuments] = useState([]);
   const [notifications, setNotifications] = useState([]);
+
+  // Enhanced maintenance form state
+  const [maintenanceImage, setMaintenanceImage] = useState(null);
+  const [maintenanceError, setMaintenanceError] = useState("");
+  const [maintenanceSubmitting, setMaintenanceSubmitting] = useState(false);
+  const statusTimersRef = useRef([]);
 
   const getMaintenanceStatusClass = (status) => {
     const normalized = status?.toLowerCase() || "";
@@ -72,6 +80,31 @@ export default function TenantDashboard() {
     if (normalized === "medium") return "status-primary";
     return "status-success";
   };
+
+  // Image preview for maintenance form
+  const maintenancePreview = useMemo(() => {
+    if (!maintenanceImage) return null;
+    return URL.createObjectURL(maintenanceImage);
+  }, [maintenanceImage]);
+
+  // Handle image selection
+  const handleMaintenanceImage = (file) => {
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      setMaintenanceError("Only image files are allowed");
+      return;
+    }
+    setMaintenanceError("");
+    setMaintenanceImage(file);
+  };
+
+  // Cleanup status timers on unmount
+  useEffect(() => {
+    return () => {
+      statusTimersRef.current.forEach((timer) => clearTimeout(timer));
+      statusTimersRef.current = [];
+    };
+  }, []);
 
   const {
     register,
@@ -213,16 +246,31 @@ export default function TenantDashboard() {
       return;
     }
 
+    setMaintenanceError("");
+    setMaintenanceSubmitting(true);
+
     try {
       const payload = {
         ...formData,
         unitId,
+        category: formData.category || "Other",
       };
+
+      // If image is present, upload it first (assuming there's an upload endpoint)
+      // For now, we'll include the image data in the payload
+      if (maintenanceImage) {
+        payload.image = maintenancePreview;
+      }
+
       console.log("Maintenance payload:", payload);
 
       const response = await API.post("/maintenance", payload);
       console.log("Maintenance API response:", response);
       toast.success("Maintenance request submitted successfully!");
+
+      // Reset form
+      setMaintenanceImage(null);
+      reset();
       loadData(); // Refresh requests list
     } catch (err) {
       console.error("TenantDashboard maintenance submit error", err);
@@ -230,6 +278,8 @@ export default function TenantDashboard() {
         err?.response?.data?.message ||
           "Failed to submit maintenance request"
       );
+    } finally {
+      setMaintenanceSubmitting(false);
     }
   };
 
@@ -524,24 +574,41 @@ export default function TenantDashboard() {
             </div>
           </div>
 
-          {/* Form */}
+          {/* Enhanced Form */}
           <form
             id="maintenance-form"
             onSubmit={handleSubmit(onMaintenanceSubmit)}
             className="mb-6 space-y-4 rounded-2xl border border-neutral-200 bg-white/90 p-4"
           >
+            {maintenanceError && (
+              <p className="text-sm text-danger-500 mb-2">{maintenanceError}</p>
+            )}
+
+            <div>
+              <label className="text-xs font-semibold uppercase tracking-wide text-neutral-500">Issue Category</label>
+              <select
+                className="form-select mt-1 mb-3 text-sm"
+                {...register("category")}
+              >
+                <option value="Plumbing">Plumbing</option>
+                <option value="Electrical">Electrical</option>
+                <option value="HVAC">HVAC</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
             <div>
               <label
                 htmlFor="description"
                 className="block text-sm font-medium text-neutral-700 mb-2"
               >
-                Describe the issue
+                Description
               </label>
               <textarea
                 id="description"
                 rows={3}
                 className="form-textarea text-sm"
-                placeholder="Example: The kitchen sink is leaking under the cabinet..."
+                placeholder="Describe the issue in detail..."
                 {...register("description")}
               />
               {errors.description && (
@@ -549,6 +616,48 @@ export default function TenantDashboard() {
                   {errors.description.message}
                 </p>
               )}
+            </div>
+
+            <div>
+              <label className="text-xs font-semibold uppercase tracking-wide text-neutral-500">Attach Photo (Optional)</label>
+              <div
+                onDragOver={(e) => e.preventDefault()}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  handleMaintenanceImage(e.dataTransfer.files[0]);
+                }}
+                className="border border-dashed rounded-2xl border-neutral-200 p-4 mt-1 text-center cursor-pointer hover:border-primary-400 transition"
+              >
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  id="maintenance-upload"
+                  onChange={(e) => handleMaintenanceImage(e.target.files[0])}
+                />
+                <label htmlFor="maintenance-upload" className="block cursor-pointer">
+                  {!maintenancePreview ? (
+                    <>
+                      <Upload className="mx-auto text-neutral-400 mb-2" />
+                      <p className="text-sm text-neutral-400">
+                        Drag and drop or click to upload
+                      </p>
+                    </>
+                  ) : (
+                    <img
+                      src={maintenancePreview}
+                      alt="Preview"
+                      className="mx-auto h-32 object-contain rounded"
+                    />
+                  )}
+                </label>
+                {maintenanceImage && (
+                  <div className="flex items-center justify-center mt-3 bg-neutral-100/80 rounded-full px-3 py-2 text-xs gap-2">
+                    <FileText className="w-4 h-4" />
+                    {maintenanceImage.name}
+                  </div>
+                )}
+              </div>
             </div>
 
             <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
@@ -577,10 +686,17 @@ export default function TenantDashboard() {
 
               <button
                 type="submit"
-                className="btn-primary w-full inline-flex items-center justify-center space-x-2 text-xs font-semibold sm:w-auto"
+                disabled={maintenanceSubmitting}
+                className={`btn-primary w-full inline-flex items-center justify-center space-x-2 text-xs font-semibold sm:w-auto ${
+                  maintenanceSubmitting ? "opacity-50 cursor-not-allowed" : ""
+                }`}
               >
-                <Send className="h-4 w-4" />
-                <span>Submit Request</span>
+                {maintenanceSubmitting ? "Submitting..." : (
+                  <>
+                    <Send className="h-4 w-4" />
+                    <span>Submit Request</span>
+                  </>
+                )}
               </button>
             </div>
           </form>

@@ -190,20 +190,20 @@ export default function TenantsPage() {
           <div className="empty-state-text">Try adjusting your search or status.</div>
         </div>
       ) : (
-        <div className="table-shell list-shell overflow-x-auto">
-          <table className="min-w-full divide-y divide-neutral-200 text-sm">
+        <div className="overflow-x-auto -mx-2 px-2 sm:mx-0 sm:px-0">
+          <table className="w-full min-w-[560px] divide-y divide-neutral-200 text-sm">
             <thead className="table-head">
               <tr>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-neutral-500">
+                <th className="px-2 py-3 text-left text-xs font-semibold text-neutral-500 sm:px-4 whitespace-nowrap">
                   Name / Contact
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-neutral-500">
+                <th className="px-2 py-3 text-left text-xs font-semibold text-neutral-500 sm:px-4 whitespace-nowrap">
                   Status
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-neutral-500">
+                <th className="px-2 py-3 text-left text-xs font-semibold text-neutral-500 sm:px-4 whitespace-nowrap">
                   Created
                 </th>
-                <th className="px-6 py-4 text-right text-xs font-semibold text-neutral-500">
+                <th className="px-2 py-3 text-right text-xs font-semibold text-neutral-500 sm:px-4 whitespace-nowrap">
                   Actions
                 </th>
               </tr>
@@ -211,50 +211,52 @@ export default function TenantsPage() {
             <tbody className="divide-y divide-neutral-100 bg-white">
               {pagedTenants.map((t) => (
                 <tr key={t._id} className="table-row stagger-item">
-                  <td className="px-6 py-4">
-                    <div className="font-medium text-neutral-900">
-                      {t.fullName || "Unnamed"}
-                    </div>
-                    <div className="text-xs text-neutral-500">
-                      {t.email}
-                      {t.phone && (
-                        <span className="ml-2 text-neutral-400">
-                          • {t.phone}
-                        </span>
-                      )}
+                  <td className="px-2 py-3 sm:px-4">
+                    <div className="min-w-0">
+                      <div className="font-medium text-neutral-900 truncate max-w-[160px] sm:max-w-[200px]">
+                        {t.fullName || "Unnamed"}
+                      </div>
+                      <div className="text-xs text-neutral-500 truncate max-w-[160px] sm:max-w-[200px]">
+                        {t.email}
+                        {t.phone && (
+                          <span className="ml-1 text-neutral-400 whitespace-nowrap">
+                            • {t.phone}
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-2 py-3 sm:px-4 whitespace-nowrap">
                     <StatusBadge status={t.status} />
                   </td>
-                  <td className="px-6 py-4 text-neutral-500">
+                  <td className="px-2 py-3 text-neutral-500 sm:px-4 whitespace-nowrap">
                     {t.createdAt
                       ? new Date(t.createdAt).toLocaleDateString()
                       : "—"}
                   </td>
-                  <td className="px-6 py-4 text-right">
-                    <div className="flex justify-end gap-2">
+                  <td className="px-2 py-3 text-right sm:px-4">
+                    <div className="flex justify-end gap-1 sm:gap-2">
                       {canDeactivate && t.status !== "SUSPENDED" && (
                         <button
                           onClick={() => handleDeactivate(t._id)}
-                          className="btn-pill btn-outline btn-outline-danger"
+                          className="btn-pill btn-outline btn-outline-danger whitespace-nowrap"
                         >
                           <UserX className="h-3 w-3" />
-                          <span>Deactivate</span>
+                          <span className="hidden sm:inline">Deactivate</span>
                         </button>
                       )}
                       {canReactivate && t.status === "SUSPENDED" && (
                         <button
                           onClick={() => handleReactivate(t._id)}
-                          className="btn-pill btn-outline btn-outline-success"
+                          className="btn-pill btn-outline btn-outline-success whitespace-nowrap"
                         >
                           <UserCheck className="h-3 w-3" />
-                          <span>Reactivate</span>
+                          <span className="hidden sm:inline">Reactivate</span>
                         </button>
                       )}
                       <Link
                         to={`/tenants/${t._id}`}
-                        className="btn-pill btn-outline btn-outline-neutral"
+                        className="btn-pill btn-outline btn-outline-neutral whitespace-nowrap"
                       >
                         <Eye className="h-3 w-3" />
                         <span>View</span>

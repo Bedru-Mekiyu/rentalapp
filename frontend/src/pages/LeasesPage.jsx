@@ -167,26 +167,26 @@ export default function LeasesPage() {
             <div className="empty-state-text">Try adjusting your search or filters.</div>
           </div>
         ) : (
-          <div className="table-shell overflow-x-hidden">
-            <table className="w-full table-auto divide-y divide-neutral-200 text-sm whitespace-normal">
+          <div className="overflow-x-auto -mx-2 px-2 sm:mx-0 sm:px-0">
+            <table className="w-full min-w-[680px] divide-y divide-neutral-200 text-sm">
               <thead className="table-head">
                 <tr>
-                  <th className="px-3 py-2 text-left text-[10px] font-bold text-neutral-600 uppercase tracking-wider sm:px-6">
+                  <th className="px-2 py-2 text-left text-[10px] font-bold text-neutral-600 uppercase tracking-wider sm:px-6 whitespace-nowrap">
                     Unit
                   </th>
-                  <th className="px-3 py-2 text-left text-[10px] font-bold text-neutral-600 uppercase tracking-wider sm:px-6">
+                  <th className="px-2 py-2 text-left text-[10px] font-bold text-neutral-600 uppercase tracking-wider sm:px-6 whitespace-nowrap">
                     Tenant
                   </th>
-                  <th className="px-3 py-2 text-left text-[10px] font-bold text-neutral-600 uppercase tracking-wider sm:px-6">
+                  <th className="px-2 py-2 text-left text-[10px] font-bold text-neutral-600 uppercase tracking-wider sm:px-6 whitespace-nowrap">
                     Term
                   </th>
-                  <th className="px-3 py-2 text-left text-[10px] font-bold text-neutral-600 uppercase tracking-wider sm:px-6">
+                  <th className="px-2 py-2 text-left text-[10px] font-bold text-neutral-600 uppercase tracking-wider sm:px-6 whitespace-nowrap">
                     Rent
                   </th>
-                  <th className="px-3 py-2 text-left text-[10px] font-bold text-neutral-600 uppercase tracking-wider sm:px-6">
+                  <th className="px-2 py-2 text-left text-[10px] font-bold text-neutral-600 uppercase tracking-wider sm:px-6 whitespace-nowrap">
                     Status
                   </th>
-                  <th className="px-3 py-2 text-left text-[10px] font-bold text-neutral-600 uppercase tracking-wider sm:px-6">
+                  <th className="px-2 py-2 text-left text-[10px] font-bold text-neutral-600 uppercase tracking-wider sm:px-6 whitespace-nowrap">
                     Action
                   </th>
                 </tr>
@@ -194,47 +194,47 @@ export default function LeasesPage() {
               <tbody className="divide-y divide-neutral-100 bg-white">
                 {pagedLeases.map((l, index) => (
                   <tr key={l._id} className={`table-row stagger-item ${index % 2 === 0 ? "bg-white" : "bg-neutral-50/30"}`}>
-                    <td className="px-3 py-3 sm:px-6">
+                    <td className="px-2 py-3 sm:px-6">
                       <div>
-                        <div className="text-sm font-semibold text-neutral-900 break-words">
+                        <div className="text-sm font-semibold text-neutral-900">
                           Unit {l.unitId?.unitNumber || "N/A"}
                         </div>
                         {l.unitId?.type && (
-                          <div className="mt-1 inline-block rounded-full bg-neutral-100/80 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-neutral-500 break-words">
+                          <div className="mt-1 inline-block rounded-full bg-neutral-100/80 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-neutral-500 whitespace-nowrap">
                             {l.unitId.type}
                           </div>
                         )}
                       </div>
                     </td>
-                    <td className="px-3 py-3 sm:px-6">
-                      <div>
-                        <div className="text-sm font-semibold text-neutral-900 break-words">
+                    <td className="px-2 py-3 sm:px-6">
+                      <div className="min-w-0">
+                        <div className="text-sm font-semibold text-neutral-900 truncate max-w-[140px] sm:max-w-[180px]">
                           {l.tenantId?.fullName || "Tenant"}
                         </div>
                         {l.tenantId?.email && (
-                          <div className="text-xs text-neutral-500 break-all">
+                          <div className="text-xs text-neutral-500 truncate max-w-[140px] sm:max-w-[180px]">
                             {l.tenantId.email}
                           </div>
                         )}
                       </div>
                     </td>
-                    <td className="px-3 py-3 sm:px-6">
+                    <td className="px-2 py-3 sm:px-6 whitespace-nowrap">
                       <div className="text-sm">
-                        <div className="font-medium text-neutral-900 break-words">
+                        <div className="font-medium text-neutral-900">
                           {formatDate(l.startDate)}
                         </div>
-                        <div className="text-neutral-500">to</div>
-                        <div className="font-medium text-neutral-900 break-words">
+                        <div className="text-neutral-500 text-[10px]">to</div>
+                        <div className="font-medium text-neutral-900">
                           {formatDate(l.endDate)}
                         </div>
                       </div>
                     </td>
-                    <td className="px-3 py-3 sm:px-6">
+                    <td className="px-2 py-3 sm:px-6 whitespace-nowrap">
                       <div className="text-base font-bold text-neutral-900">
                         {formatCurrency(getLeaseMonthlyRentEtb(l))}
                       </div>
                     </td>
-                    <td className="px-3 py-3 sm:px-6">
+                    <td className="px-2 py-3 sm:px-6 whitespace-nowrap">
                       <span
                         className={`inline-flex items-center gap-2 rounded-full px-2.5 py-1 text-[11px] font-semibold ${getLeaseStatusClass(l.status)}`}
                       >
@@ -242,8 +242,8 @@ export default function LeasesPage() {
                         {l.status}
                       </span>
                     </td>
-                    <td className="px-3 py-3 sm:px-6">
-                      <div className="flex flex-wrap gap-2">
+                    <td className="px-2 py-3 sm:px-6 whitespace-nowrap">
+                      <div className="flex flex-wrap gap-1 sm:gap-2">
                         <Link
                           to={`/leases/${l._id}`}
                           className="btn-pill btn-soft btn-soft-success"

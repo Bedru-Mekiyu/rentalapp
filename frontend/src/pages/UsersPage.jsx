@@ -214,23 +214,23 @@ export default function UsersPage() {
           <div className="empty-state-text">Try adjusting role or status filters.</div>
         </div>
       ) : (
-        <div className="table-shell list-shell overflow-x-auto">
-          <table className="min-w-full divide-y divide-neutral-200 text-sm">
+        <div className="overflow-x-auto -mx-2 px-2 sm:mx-0 sm:px-0">
+          <table className="w-full min-w-[600px] divide-y divide-neutral-200 text-sm">
             <thead className="table-head">
               <tr>
-                <th className="px-4 py-2 text-left text-xs font-semibold text-neutral-500">
+                <th className="px-2 py-2 text-left text-xs font-semibold text-neutral-500 sm:px-4 whitespace-nowrap">
                   Name / Contact
                 </th>
-                <th className="px-4 py-2 text-left text-xs font-semibold text-neutral-500">
+                <th className="px-2 py-2 text-left text-xs font-semibold text-neutral-500 sm:px-4 whitespace-nowrap">
                   Role
                 </th>
-                <th className="px-4 py-2 text-left text-xs font-semibold text-neutral-500">
+                <th className="px-2 py-2 text-left text-xs font-semibold text-neutral-500 sm:px-4 whitespace-nowrap">
                   Status
                 </th>
-                <th className="px-4 py-2 text-left text-xs font-semibold text-neutral-500">
+                <th className="px-2 py-2 text-left text-xs font-semibold text-neutral-500 sm:px-4 whitespace-nowrap">
                   Created
                 </th>
-                <th className="px-4 py-2 text-right text-xs font-semibold text-neutral-500">
+                <th className="px-2 py-2 text-right text-xs font-semibold text-neutral-500 sm:px-4 whitespace-nowrap">
                   Actions
                 </th>
               </tr>
@@ -238,38 +238,40 @@ export default function UsersPage() {
             <tbody className="divide-y divide-neutral-100 bg-white">
               {pagedUsers.map((u) => (
                 <tr key={u._id} className="table-row stagger-item">
-                  <td className="px-4 py-3">
-                    <div className="font-medium text-neutral-900">
-                      {u.fullName || "Unnamed"}
-                    </div>
-                    <div className="text-xs text-neutral-500">
-                      {u.email}
-                      {u.phone && (
-                        <span className="ml-2 text-neutral-400">
-                          • {u.phone}
-                        </span>
-                      )}
+                  <td className="px-2 py-3 sm:px-4">
+                    <div className="min-w-0">
+                      <div className="font-medium text-neutral-900 truncate max-w-[160px] sm:max-w-[200px]">
+                        {u.fullName || "Unnamed"}
+                      </div>
+                      <div className="text-xs text-neutral-500 truncate max-w-[160px] sm:max-w-[200px]">
+                        {u.email}
+                        {u.phone && (
+                          <span className="ml-1 text-neutral-400 whitespace-nowrap">
+                            • {u.phone}
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="px-2 py-3 sm:px-4 whitespace-nowrap">
                     <RoleBadge role={u.role} />
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="px-2 py-3 sm:px-4 whitespace-nowrap">
                     <StatusBadge status={u.status} />
                   </td>
-                  <td className="px-4 py-3 text-neutral-500">
+                  <td className="px-2 py-3 text-neutral-500 sm:px-4 whitespace-nowrap">
                     {u.createdAt
                       ? new Date(u.createdAt).toLocaleDateString()
                       : "—"}
                   </td>
-                  <td className="px-4 py-3 text-right">
-                    <div className="flex justify-end gap-2">
+                  <td className="px-2 py-3 text-right sm:px-4">
+                    <div className="flex justify-end gap-1 sm:gap-2">
                       {(canDeactivate || canReactivate) && (
                         <>
                           {u.status !== "SUSPENDED" && canDeactivate && (
                             <button
                               onClick={() => handleDeactivate(u._id)}
-                              className="btn-pill btn-outline btn-outline-danger"
+                              className="btn-pill btn-outline btn-outline-danger whitespace-nowrap"
                             >
                               Deactivate
                             </button>
@@ -277,7 +279,7 @@ export default function UsersPage() {
                           {u.status === "SUSPENDED" && canReactivate && (
                             <button
                               onClick={() => handleReactivate(u._id)}
-                              className="btn-pill btn-outline btn-outline-success"
+                              className="btn-pill btn-outline btn-outline-success whitespace-nowrap"
                             >
                               Reactivate
                             </button>
@@ -286,7 +288,7 @@ export default function UsersPage() {
                       )}
                       <Link
                         to={`/users/${u._id}`}
-                        className="btn-pill btn-outline btn-outline-neutral"
+                        className="btn-pill btn-outline btn-outline-neutral whitespace-nowrap"
                       >
                         View
                       </Link>
