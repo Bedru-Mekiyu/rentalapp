@@ -6,7 +6,6 @@ import API from "../services/api";
 import DashboardCard from "../components/DashboardCard";
 import PageHeader from "../components/PageHeader";
 import SkeletonRow from "../components/SkeletonRow";
-import SkeletonCard from "../components/SkeletonCard";
 import { Sparkles } from "lucide-react";
 
 const Avatar = ({ name }) => {
@@ -112,44 +111,42 @@ export default function FinancialStaffDashboard() {
     return (
       <div className="space-y-6">
         <PageHeader
-          eyebrow="Finance"
-          eyebrowClassName="bg-primary-100 text-primary-700"
           title="Financial Staff Dashboard"
           subtitle="View invoices, payment status, and financial reports."
         />
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <SkeletonCard>
+          <DashboardCard>
             <SkeletonRow className="h-3 w-24" />
             <div className="mt-3">
               <SkeletonRow className="h-8 w-28" />
             </div>
-          </SkeletonCard>
-          <SkeletonCard>
+          </DashboardCard>
+          <DashboardCard>
             <SkeletonRow className="h-3 w-24" />
             <div className="mt-3">
               <SkeletonRow className="h-8 w-16" />
             </div>
-          </SkeletonCard>
-          <SkeletonCard>
+          </DashboardCard>
+          <DashboardCard>
             <SkeletonRow className="h-3 w-28" />
             <div className="mt-3">
               <SkeletonRow className="h-8 w-24" />
             </div>
-          </SkeletonCard>
-          <SkeletonCard>
+          </DashboardCard>
+          <DashboardCard>
             <SkeletonRow className="h-3 w-28" />
             <div className="mt-3">
               <SkeletonRow className="h-8 w-20" />
             </div>
-          </SkeletonCard>
+          </DashboardCard>
         </div>
-        <SkeletonCard>
+        <DashboardCard>
           <div className="space-y-3">
             <SkeletonRow />
             <SkeletonRow />
             <SkeletonRow />
           </div>
-        </SkeletonCard>
+        </DashboardCard>
       </div>
     );
   }
@@ -157,8 +154,6 @@ export default function FinancialStaffDashboard() {
   return (
     <div className="space-y-6">
       <PageHeader
-        eyebrow="Finance"
-        eyebrowClassName="bg-primary-100 text-primary-700"
         title="Financial Staff Dashboard"
         subtitle="View invoices, payment status, and financial reports."
         actions={
@@ -178,26 +173,6 @@ export default function FinancialStaffDashboard() {
           </div>
         }
       />
-
-      <section className="insight-banner">
-        <div className="insight-icon">
-          <Sparkles className="h-5 w-5" />
-        </div>
-        <div>
-          <div className="insight-title">Queue spotlight</div>
-          <div className="insight-text">
-            {summary.pendingPayments} manual payments are waiting for review. Verify high-value payments first to reduce overdue balance.
-          </div>
-        </div>
-        <div className="insight-actions">
-          <Link to="/payments" className="btn-pill btn-outline btn-outline-success w-full justify-center sm:w-auto">
-            Review Payments
-          </Link>
-          <Link to="/finance" className="btn-pill btn-outline btn-outline-primary w-full justify-center sm:w-auto">
-            View Summary
-          </Link>
-        </div>
-      </section>
 
       {/* KPI row */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

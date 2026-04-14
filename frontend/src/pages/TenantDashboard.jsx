@@ -248,8 +248,6 @@ export default function TenantDashboard() {
     return (
       <div className="space-y-6">
         <PageHeader
-          eyebrow="Tenant"
-          eyebrowClassName="bg-primary-100 text-primary-700"
           title="Tenant Dashboard"
           subtitle="Loading your workspace..."
         />
@@ -291,8 +289,6 @@ export default function TenantDashboard() {
     return (
       <div className="space-y-6">
         <PageHeader
-          eyebrow="Tenant"
-          eyebrowClassName="bg-primary-100 text-primary-700"
           title="Tenant Dashboard"
           subtitle="Loading your dashboard..."
         />
@@ -326,8 +322,6 @@ export default function TenantDashboard() {
   return (
     <div className="space-y-6">
       <PageHeader
-        eyebrow="Tenant Portal"
-        eyebrowClassName="bg-primary-100 text-primary-700"
         title={`Welcome back, ${user?.fullName?.split(" ")[0] || "Tenant"}!`}
         subtitle={`Manage your lease, payments, and maintenance requests. ${formattedDate}`}
         actions={
@@ -710,7 +704,7 @@ export default function TenantDashboard() {
               <ul className="space-y-3">
                 {notifications.map((n, idx) => (
                   <li
-                    key={idx}
+                    key={`${n.date}-${n.message}-${idx}`}
                     className="flex items-start space-x-3 rounded-2xl border border-neutral-100 bg-white/90 p-3"
                   >
                     <div className="rounded-full bg-warning-100 p-1.5 mt-0.5">

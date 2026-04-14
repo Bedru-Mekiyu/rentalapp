@@ -7,9 +7,7 @@ import DashboardCard from "../components/DashboardCard";
 import { useAuthStore } from "../store/authStore";
 import { Users, Search, Filter, UserPlus, Eye, UserX, UserCheck } from "lucide-react";
 import PageHeader from "../components/PageHeader";
-import SkeletonRow from "../components/SkeletonRow";
 import SkeletonTable from "../components/SkeletonTable";
-import SkeletonCard from "../components/SkeletonCard";
 import Pagination from "../components/Pagination";
 
 const STATUS_OPTIONS = ["ALL", "ACTIVE", "SUSPENDED", "INVITED"];
@@ -126,14 +124,12 @@ export default function TenantsPage() {
     return (
       <div className="space-y-6">
         <PageHeader
-          eyebrow="Tenants"
-          eyebrowClassName="bg-primary-100 text-primary-700"
           title="Tenant Management"
           subtitle="Manage tenant accounts, access status, and profiles."
         />
-        <SkeletonCard title="Tenant Management">
+        <DashboardCard title="Tenant Management">
           <SkeletonTable rows={5} columns={4} />
-        </SkeletonCard>
+        </DashboardCard>
       </div>
     );
   }
@@ -141,8 +137,6 @@ export default function TenantsPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        eyebrow="Tenants"
-        eyebrowClassName="bg-primary-100 text-primary-700"
         title="Tenant Management"
         subtitle="Manage tenant accounts, access status, and profiles."
         actions={
@@ -191,12 +185,9 @@ export default function TenantsPage() {
 
       {/* Table */}
       {filteredTenants.length === 0 ? (
-        <div className="space-y-3">
-          <SkeletonTable rows={4} columns={4} />
-          <div className="empty-state">
-            <div className="empty-state-title">No tenants match your filters</div>
-            <div className="empty-state-text">Try adjusting your search or status.</div>
-          </div>
+        <div className="empty-state">
+          <div className="empty-state-title">No tenants match your filters</div>
+          <div className="empty-state-text">Try adjusting your search or status.</div>
         </div>
       ) : (
         <div className="table-shell list-shell overflow-x-auto">

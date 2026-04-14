@@ -7,7 +7,7 @@ import ResponsiveSection from "../components/ResponsiveSection";
 import PageHeader from "../components/PageHeader";
 import SkeletonRow from "../components/SkeletonRow";
 import SkeletonTable from "../components/SkeletonTable";
-import SkeletonCard from "../components/SkeletonCard";
+import DashboardCard from "../components/DashboardCard";
 import MobileBackBar from "../components/MobileBackBar";
 import { getLeaseMonthlyRentEtb } from "../utils/pricing";
 import { useAuthStore } from "../store/authStore";
@@ -66,21 +66,19 @@ export default function UnitDetailPage() {
     return (
       <div className="space-y-6">
         <PageHeader
-          eyebrow="Unit"
-          eyebrowClassName="bg-neutral-100 text-neutral-700"
           title="Unit Detail"
           subtitle="Loading unit details..."
         />
-        <SkeletonCard title="Unit Information">
+        <DashboardCard title="Unit Information">
           <div className="grid gap-4 md:grid-cols-3">
             <SkeletonRow className="h-16 w-full" />
             <SkeletonRow className="h-16 w-full" />
             <SkeletonRow className="h-16 w-full" />
           </div>
-        </SkeletonCard>
-        <SkeletonCard title="Lease History">
+        </DashboardCard>
+        <DashboardCard title="Lease History">
           <SkeletonTable rows={4} columns={5} />
-        </SkeletonCard>
+        </DashboardCard>
       </div>
     );
   }
@@ -116,8 +114,6 @@ export default function UnitDetailPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        eyebrow="Unit"
-        eyebrowClassName="bg-primary-100 text-primary-700"
         title={unit.name || "Unit Detail"}
         subtitle={`${unit.address || "No address"} · Floor ${unit.floor ?? "N/A"} · ${unit.status}`}
         backTo={isFinanceStaff ? undefined : backTarget}
@@ -182,14 +178,9 @@ export default function UnitDetailPage() {
           description="Current and past leases associated with this unit."
         >
           {leases.length === 0 ? (
-            <div className="space-y-3">
-              <SkeletonTable rows={3} columns={5} />
-              <div className="rounded-xl border border-dashed border-neutral-200 bg-neutral-50 px-6 py-6 text-center">
-                <div className="text-sm font-medium text-neutral-700">No leases found</div>
-                <div className="mt-1 text-xs text-neutral-500">
-                  This unit has no lease history yet.
-                </div>
-              </div>
+            <div className="empty-state">
+              <div className="empty-state-title">No leases found</div>
+              <div className="empty-state-text">This unit has no lease history yet.</div>
             </div>
           ) : (
             <div className="overflow-x-auto rounded-xl border border-neutral-200">

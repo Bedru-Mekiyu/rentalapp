@@ -6,9 +6,6 @@ import API from "../services/api";
 import DashboardCard from "../components/DashboardCard";
 import { useAuthStore } from "../store/authStore";
 import PageHeader from "../components/PageHeader";
-import SkeletonRow from "../components/SkeletonRow";
-import SkeletonTable from "../components/SkeletonTable";
-import SkeletonCard from "../components/SkeletonCard";
 import Pagination from "../components/Pagination";
 
 const ROLE_OPTIONS = ["ALL", "ADMIN", "PM", "GM", "FS", "TENANT"];
@@ -143,8 +140,6 @@ export default function UsersPage() {
     return (
       <div className="space-y-6">
         <PageHeader
-          eyebrow="Users"
-          eyebrowClassName="bg-primary-100 text-primary-700"
           title="Users"
           subtitle="Manage system users, roles, and access status."
         />
@@ -160,8 +155,6 @@ export default function UsersPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        eyebrow="Users"
-        eyebrowClassName="bg-primary-100 text-primary-700"
         title="Users"
         subtitle="Manage system users, roles, and access status."
         actions={
@@ -216,12 +209,9 @@ export default function UsersPage() {
 
       {/* Table */}
       {filteredUsers.length === 0 ? (
-        <div className="space-y-3">
-          <SkeletonTable rows={4} columns={5} />
-          <div className="empty-state">
-            <div className="empty-state-title">No users match your filters</div>
-            <div className="empty-state-text">Try adjusting role or status filters.</div>
-          </div>
+        <div className="empty-state">
+          <div className="empty-state-title">No users match your filters</div>
+          <div className="empty-state-text">Try adjusting role or status filters.</div>
         </div>
       ) : (
         <div className="table-shell list-shell overflow-x-auto">

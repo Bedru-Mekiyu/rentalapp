@@ -7,7 +7,7 @@ import API from "../services/api";
 import { Home, Users, Wrench, Plus, Eye, Sparkles } from "lucide-react";
 import PageHeader from "../components/PageHeader";
 import SkeletonRow from "../components/SkeletonRow";
-import SkeletonCard from "../components/SkeletonCard";
+import DashboardCard from "../components/DashboardCard";
 import { getLeaseMonthlyRentEtb } from "../utils/pricing";
 
 const Avatar = ({ name = "Tenant" }) => {
@@ -142,54 +142,52 @@ export default function PropertyManagerDashboard() {
     return (
       <div className="space-y-6">
         <PageHeader
-          eyebrow="Property Ops"
-          eyebrowClassName="bg-primary-100 text-primary-700"
           title="Property Manager Dashboard"
           subtitle="Overview of your property management operations."
         />
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          <SkeletonCard className="p-5">
+          <DashboardCard className="p-5">
             <SkeletonRow className="h-3 w-24" />
             <div className="mt-3">
               <SkeletonRow className="h-8 w-16" />
             </div>
-          </SkeletonCard>
-          <SkeletonCard className="p-5">
+          </DashboardCard>
+          <DashboardCard className="p-5">
             <SkeletonRow className="h-3 w-24" />
             <div className="mt-3">
               <SkeletonRow className="h-8 w-16" />
             </div>
-          </SkeletonCard>
-          <SkeletonCard className="p-5">
+          </DashboardCard>
+          <DashboardCard className="p-5">
             <SkeletonRow className="h-3 w-24" />
             <div className="mt-3">
               <SkeletonRow className="h-8 w-16" />
             </div>
-          </SkeletonCard>
-          <SkeletonCard className="p-5">
+          </DashboardCard>
+          <DashboardCard className="p-5">
             <SkeletonRow className="h-3 w-24" />
             <div className="mt-3">
               <SkeletonRow className="h-8 w-16" />
             </div>
-          </SkeletonCard>
+          </DashboardCard>
         </div>
         <div className="grid gap-6 lg:grid-cols-3">
-          <SkeletonCard className="lg:col-span-2 p-5">
+          <DashboardCard className="lg:col-span-2 p-5">
             <SkeletonRow className="h-8 w-64" />
             <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
               <SkeletonRow className="h-28 w-full" />
               <SkeletonRow className="h-28 w-full" />
               <SkeletonRow className="h-28 w-full" />
             </div>
-          </SkeletonCard>
-          <SkeletonCard className="p-5">
+          </DashboardCard>
+          <DashboardCard className="p-5">
             <SkeletonRow className="h-6 w-32" />
             <div className="mt-4 space-y-3">
               <SkeletonRow className="h-12 w-full" />
               <SkeletonRow className="h-12 w-full" />
               <SkeletonRow className="h-12 w-full" />
             </div>
-          </SkeletonCard>
+          </DashboardCard>
         </div>
       </div>
     );
@@ -198,8 +196,6 @@ export default function PropertyManagerDashboard() {
   return (
     <div className="space-y-8">
       <PageHeader
-        eyebrow="Property Ops"
-        eyebrowClassName="bg-primary-100 text-primary-700"
         title="Property Manager Dashboard"
         subtitle="Overview of your property management operations."
         actions={
@@ -231,12 +227,15 @@ export default function PropertyManagerDashboard() {
           </div>
         </div>
         <div className="insight-actions">
-          <Link
-            to="/maintenance"
+          <button
+            onClick={() => {
+              const el = document.getElementById("maintenance-section");
+              if (el) el.scrollIntoView({ behavior: "smooth" });
+            }}
             className="btn-pill btn-outline btn-outline-primary"
           >
             Review Maintenance
-          </Link>
+          </button>
         </div>
       </section>
 
@@ -275,10 +274,9 @@ export default function PropertyManagerDashboard() {
           </div>
 
           {filteredUnits.length === 0 ? (
-            <div className="mt-4 space-y-2">
-              <SkeletonRow className="h-4 w-1/2" />
-              <SkeletonRow className="h-4 w-2/3" />
-              <p className="text-sm text-neutral-500">No units found.</p>
+            <div className="mt-4 empty-state">
+              <div className="empty-state-title">No units found</div>
+              <div className="empty-state-text">Try adjusting your search.</div>
             </div>
           ) : (
             <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
@@ -302,7 +300,7 @@ export default function PropertyManagerDashboard() {
                 return (
                   <article
                     key={unit._id}
-                    className="stagger-item surface-panel flex flex-col gap-3 p-4 text-xs"
+                    className="stagger-item bg-white rounded-xl border border-neutral-200/60 shadow-sm flex flex-col gap-3 p-4 text-xs hover:shadow-md transition-shadow"
                   >
                     <div className="flex flex-wrap items-start justify-between gap-2">
                       <div>
@@ -400,7 +398,7 @@ export default function PropertyManagerDashboard() {
       </div>
 
       {/* Maintenance requests */}
-      <section className="surface-panel mt-4 p-6">
+      <section id="maintenance-section" className="surface-panel mt-4 p-6">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="panel-title">Maintenance Requests</h2>

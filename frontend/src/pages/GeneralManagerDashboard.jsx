@@ -18,7 +18,7 @@ import {
 import jsPDF from "jspdf";
 import Papa from "papaparse";
 import PageHeader from "../components/PageHeader";
-import SkeletonCard from "../components/SkeletonCard";
+import DashboardCard from "../components/DashboardCard";
 import { Sparkles } from "lucide-react";
 
 export default function GeneralManagerDashboard() {
@@ -203,22 +203,22 @@ export default function GeneralManagerDashboard() {
   if (loading) {
     return (
       <div className="space-y-6">
-        <SkeletonCard>
+        <DashboardCard>
           <div className="skeleton h-4 w-24" />
           <div className="mt-3 space-y-2">
             <div className="skeleton h-8 w-72" />
             <div className="skeleton h-3 w-96" />
           </div>
-        </SkeletonCard>
+        </DashboardCard>
         <div className="grid gap-6 md:grid-cols-3">
           <KpiSkeleton />
           <KpiSkeleton />
           <KpiSkeleton />
         </div>
-        <SkeletonCard>
+        <DashboardCard>
           <div className="skeleton h-5 w-48" />
           <div className="mt-6 skeleton h-56 w-full" />
-        </SkeletonCard>
+        </DashboardCard>
       </div>
     );
   }
@@ -227,8 +227,6 @@ export default function GeneralManagerDashboard() {
     <div className="space-y-6">
       {/* Header */}
       <PageHeader
-        eyebrow="Portfolio"
-        eyebrowClassName="bg-primary-100 text-primary-700"
         title="General Manager Dashboard"
         subtitle={`Welcome back, ${user?.fullName || "General Manager"}. Here's your portfolio overview.`}
         actions={
@@ -355,21 +353,21 @@ export default function GeneralManagerDashboard() {
             </ResponsiveContainer>
           </div>
           <div className="space-y-4">
-            <div className="surface-panel p-4">
+            <div className="bg-neutral-50/80 rounded-xl border border-neutral-100 p-4">
               <Stat
                 label="Current Month Revenue"
                 value={formatCurrency(revenueStats.currentMonth)}
                 icon="📈"
               />
             </div>
-            <div className="surface-panel p-4">
+            <div className="bg-neutral-50/80 rounded-xl border border-neutral-100 p-4">
               <Stat
                 label="Month-to-Date Revenue"
                 value={formatCurrency(revenueStats.monthToDate)}
                 icon="📊"
               />
             </div>
-            <div className="surface-panel p-4">
+            <div className="bg-neutral-50/80 rounded-xl border border-neutral-100 p-4">
               <Stat
                 label="Avg Revenue per Occupied Unit"
                 value={formatCurrency(revenueStats.avgPerUnit)}

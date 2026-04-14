@@ -5,7 +5,6 @@ import API from "../services/api";
 import DashboardCard from "../components/DashboardCard";
 import PageHeader from "../components/PageHeader";
 import SkeletonRow from "../components/SkeletonRow";
-import SkeletonCard from "../components/SkeletonCard";
 
 export default function PropertiesPage() {
   const [properties, setProperties] = useState([]);
@@ -54,25 +53,23 @@ export default function PropertiesPage() {
     return (
       <div className="space-y-6">
         <PageHeader
-          eyebrow="Property"
-          eyebrowClassName="bg-primary-100 text-primary-700"
           title="Property"
           subtitle="Configure your main building/property details."
         />
-        <SkeletonCard title="Current Property">
+        <DashboardCard title="Current Property">
           <div className="space-y-3">
             <SkeletonRow className="h-5 w-1/2" />
             <SkeletonRow className="h-4 w-2/3" />
             <SkeletonRow className="h-4 w-1/3" />
           </div>
-        </SkeletonCard>
-        <SkeletonCard title="Create Property">
+        </DashboardCard>
+        <DashboardCard title="Create Property">
           <div className="grid gap-4 md:grid-cols-4">
             <SkeletonRow className="h-10 w-full md:col-span-2" />
             <SkeletonRow className="h-10 w-full md:col-span-2" />
             <SkeletonRow className="h-20 w-full md:col-span-4" />
           </div>
-        </SkeletonCard>
+        </DashboardCard>
       </div>
     );
   }
@@ -82,8 +79,6 @@ export default function PropertiesPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        eyebrow="Property"
-        eyebrowClassName="bg-primary-100 text-primary-700"
         title="Property"
         subtitle="Configure your main building/property details."
       />

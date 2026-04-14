@@ -1,5 +1,5 @@
 // src/pages/LeasesPage.jsx
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import API from "../services/api";
@@ -7,7 +7,6 @@ import DashboardCard from "../components/DashboardCard";
 import PageHeader from "../components/PageHeader";
 import SkeletonRow from "../components/SkeletonRow";
 import SkeletonTable from "../components/SkeletonTable";
-import SkeletonCard from "../components/SkeletonCard";
 import Pagination from "../components/Pagination";
 import { useAuthStore } from "../store/authStore";
 import { getLeaseMonthlyRentEtb } from "../utils/pricing";
@@ -26,16 +25,21 @@ export default function LeasesPage() {
   const canManage = user?.role === "ADMIN" || user?.role === "PM";
 
   useEffect(() => {
-    loadLeases();
+    const controller = new AbortController();
+    loadLeases(controller.signal);
+    return () => controller.abort();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const loadLeases = async () => {
+  const loadLeases = async (signal) => {
     try {
       setLoading(true);
-      const res = await API.get("/leases"); // GET /api/leases[listAllLeases]
+      const res = await API.get("/leases", { signal }); // GET /api/leases[listAllLeases]
       setLeases(res.data?.data || []);
-    } catch {
-      toast.error("Failed to load leases");
+    } catch (err) {
+      if (err.name !== 'AbortError') {
+        toast.error("Failed to load leases");
+      }
     } finally {
       setLoading(false);
     }
@@ -66,40 +70,38 @@ export default function LeasesPage() {
     return filteredLeases.slice(start, start + PAGE_SIZE);
   }, [filteredLeases, page]);
 
-  const formatCurrency = (v) =>
+  const formatCurrency = useCallback((v) =>
     new Intl.NumberFormat("en-ET", {
       style: "currency",
       currency: "ETB",
       maximumFractionDigits: 0,
-    }).format(v || 0);
+    }).format(v || 0), []);
 
-  const formatDate = (d) =>
-    d ? new Date(d).toLocaleDateString() : "—";
+  const formatDate = useCallback((d) =>
+    d ? new Date(d).toLocaleDateString() : "—", []);
 
-  const getLeaseStatusClass = (value) => {
+  const getLeaseStatusClass = useCallback((value) => {
     if (value === "ACTIVE") return "bg-success-100 text-success-700";
     if (value === "ENDED") return "bg-neutral-100 text-neutral-700";
     return "bg-warning-100 text-warning-700";
-  };
+  }, []);
 
   if (loading) {
     return (
       <div className="space-y-6">
         <PageHeader
-          eyebrow="Leases"
-          eyebrowClassName="bg-primary-100 text-primary-700"
           title="Leases"
           subtitle="View and manage active and past leases."
         />
-        <SkeletonCard>
+        <DashboardCard>
           <div className="flex flex-wrap items-center gap-3">
             <SkeletonRow className="h-10 w-64 rounded-2xl" />
             <SkeletonRow className="h-8 w-48 rounded-full" />
           </div>
-        </SkeletonCard>
-        <SkeletonCard title="Lease List">
+        </DashboardCard>
+        <DashboardCard title="Lease List">
           <SkeletonTable rows={5} columns={6} />
-        </SkeletonCard>
+        </DashboardCard>
       </div>
     );
   }
@@ -107,8 +109,6 @@ export default function LeasesPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        eyebrow="Leases"
-        eyebrowClassName="bg-primary-100 text-primary-700"
         title="Leases"
         subtitle="View and manage active and past leases."
         actions={
@@ -157,23 +157,14 @@ export default function LeasesPage() {
       {/* Leases table */}
       <DashboardCard title="Lease List">
         {filteredLeases.length === 0 ? (
-          <div className="text-center py-12">
+          <div className="empty-state py-12">
             <div className="mx-auto h-16 w-16 rounded-full bg-neutral-100 flex items-center justify-center mb-4">
               <svg className="h-8 w-8 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
             </div>
-            <div className="mx-auto max-w-xs space-y-2">
-              <SkeletonRow className="h-4 w-3/4" />
-              <SkeletonRow className="h-4 w-2/3" />
-            </div>
-            <div className="mt-4">
-              <SkeletonTable rows={4} columns={6} />
-            </div>
-            <div className="empty-state mt-4">
-              <div className="empty-state-title">No leases found</div>
-              <div className="empty-state-text">Try adjusting your search or filters.</div>
-            </div>
+            <div className="empty-state-title">No leases found</div>
+            <div className="empty-state-text">Try adjusting your search or filters.</div>
           </div>
         ) : (
           <div className="table-shell overflow-x-hidden">

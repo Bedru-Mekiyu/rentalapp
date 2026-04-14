@@ -7,7 +7,7 @@ import ResponsiveSection from "../components/ResponsiveSection";
 import PageHeader from "../components/PageHeader";
 import SkeletonRow from "../components/SkeletonRow";
 import SkeletonTable from "../components/SkeletonTable";
-import SkeletonCard from "../components/SkeletonCard";
+import DashboardCard from "../components/DashboardCard";
 import { useAuthStore } from "../store/authStore";
 import MobileBackBar from "../components/MobileBackBar";
 
@@ -92,21 +92,19 @@ export default function TenantDetailPage() {
     return (
       <div className="space-y-6">
         <PageHeader
-          eyebrow="Tenants"
-          eyebrowClassName="bg-primary-100 text-primary-700"
           title="Tenant Detail"
           subtitle="Loading tenant profile..."
         />
-        <SkeletonCard title="Tenant Overview">
+        <DashboardCard title="Tenant Overview">
           <div className="grid gap-4 md:grid-cols-3">
             <SkeletonRow className="h-16 w-full" />
             <SkeletonRow className="h-16 w-full" />
             <SkeletonRow className="h-16 w-full" />
           </div>
-        </SkeletonCard>
-        <SkeletonCard title="Lease History">
+        </DashboardCard>
+        <DashboardCard title="Lease History">
           <SkeletonTable rows={4} columns={4} />
-        </SkeletonCard>
+        </DashboardCard>
       </div>
     );
   }
@@ -130,8 +128,6 @@ export default function TenantDetailPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        eyebrow="Tenants"
-        eyebrowClassName="bg-primary-100 text-primary-700"
         title={profile.fullName || "Tenant Detail"}
         subtitle={`${profile.email || "No email"} · Tenant`}
         backTo="/tenants"

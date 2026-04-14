@@ -4,26 +4,34 @@ export default function DashboardCard({
   description,
   children,
   actions,
-  action, // support singular prop too
+  action,
   className = "",
-  collapsibleOnMobile = true,
+  premium = false,
+  icon: Icon,
 }) {
   const renderedActions = actions || action;
   const hasHeader = title || description || renderedActions;
-  const shouldAccordion = collapsibleOnMobile && (title || description);
-    const sectionClassName = `surface-panel card-reveal hover-lift p-3 sm:p-5 lg:p-6 ${
-    shouldAccordion ? "mobile-accordion-card" : ""
-  } ${className}`.trim();
 
-  const cardBody = (
-    <section className={sectionClassName}>
+  return (
+    <section
+      className={`${
+        premium ? "surface-panel-premium" : "surface-panel"
+      } p-4 sm:p-5 ${className}`.trim()}
+    >
       {hasHeader && (
         <div className="mb-4 flex items-start justify-between gap-3">
-          <div>
-            {title && <h2 className="panel-title">{title}</h2>}
-            {description && (
-              <p className="panel-subtitle mt-1">{description}</p>
+          <div className="flex items-center gap-2">
+            {Icon && (
+              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
+                <Icon className="h-4 w-4" />
+              </span>
             )}
+            <div>
+              {title && <h2 className="panel-title">{title}</h2>}
+              {description && (
+                <p className="panel-subtitle mt-1">{description}</p>
+              )}
+            </div>
           </div>
           {renderedActions && (
             <div className="flex items-center gap-2">{renderedActions}</div>
@@ -32,18 +40,5 @@ export default function DashboardCard({
       )}
       {children}
     </section>
-  );
-
-  if (!shouldAccordion) {
-    return cardBody;
-  }
-
-  return (
-    <details open>
-      <summary className="accordion-summary sm:hidden">
-        <span>{title || "Details"}</span>
-      </summary>
-      <div className="mt-3 sm:mt-0">{cardBody}</div>
-    </details>
   );
 }

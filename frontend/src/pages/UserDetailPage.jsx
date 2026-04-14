@@ -7,7 +7,7 @@ import ResponsiveSection from "../components/ResponsiveSection";
 import PageHeader from "../components/PageHeader";
 import SkeletonRow from "../components/SkeletonRow";
 import SkeletonTable from "../components/SkeletonTable";
-import SkeletonCard from "../components/SkeletonCard";
+import DashboardCard from "../components/DashboardCard";
 import { useAuthStore } from "../store/authStore";
 import MobileBackBar from "../components/MobileBackBar";
 
@@ -102,21 +102,19 @@ export default function UserDetailPage() {
     return (
       <div className="space-y-6">
         <PageHeader
-          eyebrow="Users"
-          eyebrowClassName="bg-primary-100 text-primary-700"
           title="User Detail"
           subtitle="Loading user profile..."
         />
-        <SkeletonCard title="Profile Overview">
+        <DashboardCard title="Profile Overview">
           <div className="grid gap-4 md:grid-cols-3">
             <SkeletonRow className="h-16 w-full" />
             <SkeletonRow className="h-16 w-full" />
             <SkeletonRow className="h-16 w-full" />
           </div>
-        </SkeletonCard>
-        <SkeletonCard title="Activity">
+        </DashboardCard>
+        <DashboardCard title="Activity">
           <SkeletonTable rows={4} columns={4} />
-        </SkeletonCard>
+        </DashboardCard>
       </div>
     );
   }
@@ -141,8 +139,6 @@ export default function UserDetailPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        eyebrow="Users"
-        eyebrowClassName="bg-primary-100 text-primary-700"
         title={profile.fullName || "User Detail"}
         subtitle={`${profile.email || "No email"} · ${profile.role || "User"}`}
         backTo="/users"

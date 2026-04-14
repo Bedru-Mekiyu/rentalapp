@@ -58,8 +58,6 @@ export default function NewUserPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        eyebrow="Users"
-        eyebrowClassName="bg-primary-100 text-primary-700"
         title="Add New User"
         subtitle="Create a new account and assign an appropriate role."
         actions={

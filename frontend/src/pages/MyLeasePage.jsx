@@ -57,8 +57,6 @@ export default function MyLeasePage() {
     return (
       <div className="space-y-6">
         <PageHeader
-          eyebrow="Lease"
-          eyebrowClassName="bg-primary-100 text-primary-700"
           title="My Lease"
           subtitle="View your current lease details and status."
         />
@@ -77,8 +75,6 @@ export default function MyLeasePage() {
     return (
       <div className="space-y-6">
         <PageHeader
-          eyebrow="Lease"
-          eyebrowClassName="bg-primary-100 text-primary-700"
           title="My Lease"
           subtitle="View your current lease details and status."
         />

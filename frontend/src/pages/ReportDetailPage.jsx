@@ -68,8 +68,6 @@ export default function ReportDetailPage() {
     return (
       <div className="space-y-6">
         <PageHeader
-          eyebrow="Reports"
-          eyebrowClassName="bg-primary-100 text-primary-700"
           title="Report Detail"
           subtitle="Loading report data..."
           actions={
@@ -103,8 +101,6 @@ export default function ReportDetailPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        eyebrow="Reports"
-        eyebrowClassName="bg-primary-100 text-primary-700"
         title={report.title}
         subtitle={report.subtitle}
         actions={

@@ -8,7 +8,7 @@ import { useAuthStore } from "../store/authStore";
 import PageHeader from "../components/PageHeader";
 import SkeletonRow from "../components/SkeletonRow";
 import SkeletonTable from "../components/SkeletonTable";
-import SkeletonCard from "../components/SkeletonCard";
+import DashboardCard from "../components/DashboardCard";
 import MobileBackBar from "../components/MobileBackBar";
 import { getLeaseMonthlyRentEtb } from "../utils/pricing";
 
@@ -107,21 +107,19 @@ export default function LeaseDetailPage() {
     return (
       <div className="space-y-6">
         <PageHeader
-          eyebrow="Lease"
-          eyebrowClassName="bg-primary-100 text-primary-700"
           title="Lease Detail"
           subtitle="Loading lease details..."
         />
-        <SkeletonCard title="Lease Overview">
+        <DashboardCard title="Lease Overview">
           <div className="grid gap-4 md:grid-cols-3">
             <SkeletonRow className="h-16 w-full" />
             <SkeletonRow className="h-16 w-full" />
             <SkeletonRow className="h-16 w-full" />
           </div>
-        </SkeletonCard>
-        <SkeletonCard title="Payment Summary">
+        </DashboardCard>
+        <DashboardCard title="Payment Summary">
           <SkeletonTable rows={4} columns={4} />
-        </SkeletonCard>
+        </DashboardCard>
       </div>
     );
   }
@@ -152,10 +150,8 @@ export default function LeaseDetailPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        eyebrow="Lease"
-        eyebrowClassName="bg-primary-100 text-primary-700"
-        title="Lease Detail"
-        subtitle={`${lease.unitId?.name || "Unit"} · ${lease.tenantId?.fullName || "Tenant"}`}
+        title={`Lease · ${lease.unitId?.unitNumber || "Unit"}`}
+        subtitle={`${lease.tenantId?.fullName || "Tenant"} · ${lease.status}`}
         backTo={useRightStackedBackAction ? undefined : backTarget}
         backLabel={backLabel}
         actions={

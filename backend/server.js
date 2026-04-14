@@ -2,6 +2,8 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 import { connectDB } from './src/config/db.js';        // fixed named import
 import errorHandler from './src/middleware/errorHandler.js';
@@ -13,6 +15,7 @@ import leaseRoutes from './src/routes/lease.routes.js';
 import unitRoutes from './src/routes/unit.routes.js';
 import propertyRoutes from './src/routes/property.routes.js';
 import maintenanceRoutes from './src/routes/maintenanceRoutes.js';
+import uploadRoutes from './src/routes/upload.routes.js';
 import { applyHelmet, rateLimiter } from './src/middleware/security.js';
 
 const app = express();
@@ -74,6 +77,11 @@ app.use(rateLimiter);
 // Common middleware
 app.use(express.json());
 
+// Static files for uploads
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 // DB
 // Health
 app.get('/', (req, res) => {
@@ -101,6 +109,7 @@ app.use('/api/leases', leaseRoutes);
 app.use('/api/units', unitRoutes);
 app.use('/api/properties', propertyRoutes);
 app.use('/api/maintenance', maintenanceRoutes);
+app.use('/api/uploads', uploadRoutes);
 
 // Error handler after routes
 app.use(errorHandler);

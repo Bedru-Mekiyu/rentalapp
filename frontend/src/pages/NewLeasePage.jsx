@@ -122,8 +122,6 @@ export default function NewLeasePage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        eyebrow="Leases"
-        eyebrowClassName="bg-primary-100 text-primary-700"
         title="New Lease"
         subtitle="Create a new lease agreement for a tenant and unit."
       />

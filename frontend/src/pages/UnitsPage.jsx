@@ -7,7 +7,6 @@ import DashboardCard from "../components/DashboardCard";
 import PageHeader from "../components/PageHeader";
 import SkeletonRow from "../components/SkeletonRow";
 import SkeletonTable from "../components/SkeletonTable";
-import SkeletonCard from "../components/SkeletonCard";
 import Pagination from "../components/Pagination";
 import { useAuthStore } from "../store/authStore";
 
@@ -36,16 +35,21 @@ export default function UnitsPage() {
   });
 
   useEffect(() => {
-    fetchUnits();
+    const controller = new AbortController();
+    fetchUnits(controller.signal);
+    return () => controller.abort();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const fetchUnits = async () => {
+  const fetchUnits = async (signal) => {
     try {
       setLoading(true);
-      const res = await API.get("/units");
+      const res = await API.get("/units", { signal });
       setUnits(res.data?.data || []); // { success, data }
-    } catch {
-      toast.error("Failed to load units");
+    } catch (err) {
+      if (err.name !== 'AbortError') {
+        toast.error("Failed to load units");
+      }
     } finally {
       setLoading(false);
     }
@@ -115,20 +119,18 @@ export default function UnitsPage() {
     return (
       <div className="space-y-6">
         <PageHeader
-          eyebrow="Inventory"
-          eyebrowClassName="bg-primary-100 text-primary-700"
           title="Units"
           subtitle="Manage units, pricing, and availability."
         />
-        <SkeletonCard>
+        <DashboardCard>
           <div className="flex flex-wrap items-center gap-3">
             <SkeletonRow className="h-10 w-64 rounded-2xl" />
             <SkeletonRow className="h-8 w-48 rounded-full" />
           </div>
-        </SkeletonCard>
-        <SkeletonCard title="Unit List">
+        </DashboardCard>
+        <DashboardCard title="Unit List">
           <SkeletonTable rows={5} columns={7} />
-        </SkeletonCard>
+        </DashboardCard>
       </div>
     );
   }
@@ -136,8 +138,6 @@ export default function UnitsPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        eyebrow="Inventory"
-        eyebrowClassName="bg-primary-100 text-primary-700"
         title="Units"
         subtitle="Manage units, pricing, and availability."
         actions={
@@ -191,12 +191,9 @@ export default function UnitsPage() {
       {/* Units table */}
       <DashboardCard title="Unit List">
         {filteredUnits.length === 0 ? (
-          <div className="space-y-3">
-            <SkeletonTable rows={4} columns={7} />
-            <div className="rounded-xl border border-dashed border-neutral-200 bg-neutral-50 px-6 py-8 text-center">
-              <div className="text-sm font-medium text-neutral-700">No units found</div>
-              <div className="mt-1 text-xs text-neutral-500">Try clearing filters or add a new unit.</div>
-            </div>
+          <div className="empty-state">
+            <div className="empty-state-title">No units found</div>
+            <div className="empty-state-text">Try clearing filters or add a new unit.</div>
           </div>
         ) : (
           <div className="table-shell list-shell bg-white">

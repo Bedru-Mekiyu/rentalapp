@@ -1,4 +1,3 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function PageHeader({
@@ -20,9 +19,9 @@ export default function PageHeader({
   };
 
   return (
-    <header className={`surface-panel header-panel p-4 sm:p-6 ${className}`.trim()}>
+    <header className={`mb-8 ${className}`.trim()}>
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div className="space-y-2">
+        <div className="space-y-3">
           {backTo !== undefined && backTo !== null && (
             <button
               type="button"
@@ -37,7 +36,7 @@ export default function PageHeader({
               {eyebrow}
             </span>
           )}
-          <h1 className="page-title tracking-tight">{title}</h1>
+          <h1 className="page-title">{title}</h1>
           {subtitle && <p className="page-subtitle">{subtitle}</p>}
         </div>
         {actions && (
@@ -46,7 +45,6 @@ export default function PageHeader({
           </div>
         )}
       </div>
-      <div className="section-divider mt-5" />
     </header>
   );
 }

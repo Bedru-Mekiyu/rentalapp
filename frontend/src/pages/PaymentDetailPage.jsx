@@ -7,7 +7,7 @@ import ResponsiveSection from "../components/ResponsiveSection";
 import PageHeader from "../components/PageHeader";
 import SkeletonRow from "../components/SkeletonRow";
 import SkeletonTable from "../components/SkeletonTable";
-import SkeletonCard from "../components/SkeletonCard";
+import DashboardCard from "../components/DashboardCard";
 import { useAuthStore } from "../store/authStore";
 import MobileBackBar from "../components/MobileBackBar";
 
@@ -89,21 +89,19 @@ export default function PaymentDetailPage() {
     return (
       <div className="space-y-6">
         <PageHeader
-          eyebrow="Payments"
-          eyebrowClassName="bg-primary-100 text-primary-700"
           title="Payment Detail"
           subtitle="Loading payment details..."
         />
-        <SkeletonCard title="Payment Overview">
+        <DashboardCard title="Payment Overview">
           <div className="grid gap-4 md:grid-cols-3">
             <SkeletonRow className="h-16 w-full" />
             <SkeletonRow className="h-16 w-full" />
             <SkeletonRow className="h-16 w-full" />
           </div>
-        </SkeletonCard>
-        <SkeletonCard title="References">
+        </DashboardCard>
+        <DashboardCard title="References">
           <SkeletonTable rows={3} columns={3} />
-        </SkeletonCard>
+        </DashboardCard>
       </div>
     );
   }
@@ -129,9 +127,7 @@ export default function PaymentDetailPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        eyebrow="Payments"
-        eyebrowClassName="bg-primary-100 text-primary-700"
-        title="Payment Detail"
+        title={`Payment ${payment.externalTransactionId || payment._id?.slice(-6) || ""}`}
         subtitle={`${tenantName} · ${unitName}`}
         backTo={useRightStackedBackAction ? undefined : backTarget}
         backLabel={backLabel}

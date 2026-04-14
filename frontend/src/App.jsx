@@ -27,6 +27,7 @@ import UnitDetailPage from "./pages/UnitDetailPage";
 import LeaseDetailPage from "./pages/LeaseDetailPage";
 import TenantsPage from "./pages/TenantsPage";
 import MyLeasePage from "./pages/MyLeasePage";
+import Maintenance from "./pages/Maintenance";
 import ReportDetailPage from "./pages/ReportDetailPage";
 import SkeletonRow from "./components/SkeletonRow";
 
@@ -113,6 +114,7 @@ function App() {
         <Route path="payments" element={<PaymentsPage />} />
         <Route path="payments/:id" element={<PaymentDetailPage />} />
         <Route path="finance" element={<FinancePage />} />
+        <Route path="maintenance" element={<Maintenance />} />
 
         <Route path="users" element={<UsersPage />} />
         <Route path="users/new" element={<NewUserPage />} />

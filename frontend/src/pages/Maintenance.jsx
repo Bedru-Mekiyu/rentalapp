@@ -7,7 +7,7 @@ import {
   Wrench,
 } from "lucide-react";
 
-import Card from "../components/Card";
+import DashboardCard from "../components/DashboardCard";
 import PageHeader from "../components/PageHeader";
 
 export default function Maintenance() {
@@ -111,14 +111,12 @@ export default function Maintenance() {
   return (
     <div className="space-y-6">
       <PageHeader
-        eyebrow="Maintenance"
-        eyebrowClassName="bg-primary-100 text-primary-700"
         title="Maintenance Requests"
         subtitle="Report issues, attach photos, and track request status."
       />
 
       {/*  Submit Form */}
-      <Card>
+      <DashboardCard>
         <h2 className="panel-title mb-3 flex items-center gap-2">
           <Wrench className="w-5 h-5 text-success-500" />
           Submit New Request
@@ -203,11 +201,11 @@ export default function Maintenance() {
         >
           {submitting ? "Submitting..." : "Submit Request"}
         </button>
-      </Card>
+      </DashboardCard>
 
       {/* 🔹 Status Tracker */}
       {currentStatus && (
-        <Card title="Current Request Status">
+        <DashboardCard title="Current Request Status">
           <div className="flex justify-between items-center">
             <StatusStep label="Received" active />
             <Line active={currentStatus !== "Received"} />
@@ -224,12 +222,12 @@ export default function Maintenance() {
               active={currentStatus === "Completed"}
             />
           </div>
-        </Card>
+        </DashboardCard>
       )}
 
       {/*  Request History */}
       {requests.length > 0 && (
-        <Card title="Your Requests">
+        <DashboardCard title="Your Requests">
           {requests.map((req) => (
             <div key={req.id} className="stagger-item border-b border-neutral-100 py-3">
               <p className="font-medium">{req.category}</p>
@@ -255,7 +253,7 @@ export default function Maintenance() {
               </span>
             </div>
           ))}
-        </Card>
+        </DashboardCard>
       )}
     </div>
   );

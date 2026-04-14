@@ -7,7 +7,6 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { DollarSign, AlertTriangle, CheckCircle, Calendar } from "lucide-react";
 import PageHeader from "../components/PageHeader";
 import SkeletonRow from "../components/SkeletonRow";
-import SkeletonCard from "../components/SkeletonCard";
 
 export default function FinancePage() {
   const [leases, setLeases] = useState([]);
@@ -90,8 +89,6 @@ export default function FinancePage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        eyebrow="Finance"
-        eyebrowClassName="bg-primary-100 text-primary-700"
         title="Finance & Lease Analytics"
         subtitle="View financial KPIs and per-lease payment summaries."
       />
@@ -135,24 +132,24 @@ export default function FinancePage() {
         {loadingSummary && (
           <div className="space-y-4">
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              <SkeletonCard>
+              <DashboardCard>
                 <SkeletonRow className="h-3 w-28" />
                 <div className="mt-3">
                   <SkeletonRow className="h-8 w-32" />
                 </div>
-              </SkeletonCard>
-              <SkeletonCard>
+              </DashboardCard>
+              <DashboardCard>
                 <SkeletonRow className="h-3 w-32" />
                 <div className="mt-3">
                   <SkeletonRow className="h-8 w-32" />
                 </div>
-              </SkeletonCard>
-              <SkeletonCard>
+              </DashboardCard>
+              <DashboardCard>
                 <SkeletonRow className="h-3 w-32" />
                 <div className="mt-3">
                   <SkeletonRow className="h-8 w-24" />
                 </div>
-              </SkeletonCard>
+              </DashboardCard>
             </div>
             <div className="surface-panel analytics-panel p-4 sm:p-5">
               <SkeletonRow className="h-48 w-full" />
@@ -162,7 +159,7 @@ export default function FinancePage() {
 
         {!loadingSummary && summary && selectedLeaseId === "ALL" && (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            <div className="surface-panel card-reveal hover-lift stagger-item p-4 sm:p-6">
+            <div className="bg-white rounded-xl border border-neutral-200/60 shadow-sm hover:shadow-md transition-shadow card-reveal stagger-item p-4 sm:p-6">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-wide text-success-700">Total Revenue (YTD)</p>
@@ -173,7 +170,7 @@ export default function FinancePage() {
                 <DollarSign className="h-8 w-8 text-success-600" />
               </div>
             </div>
-            <div className="surface-panel card-reveal hover-lift stagger-item p-4 sm:p-6">
+            <div className="bg-white rounded-xl border border-neutral-200/60 shadow-sm hover:shadow-md transition-shadow card-reveal stagger-item p-4 sm:p-6">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-wide text-danger-700">Outstanding Balance</p>
@@ -184,7 +181,7 @@ export default function FinancePage() {
                 <AlertTriangle className="h-8 w-8 text-danger-600" />
               </div>
             </div>
-            <div className="surface-panel card-reveal hover-lift stagger-item p-4 sm:p-6">
+            <div className="bg-white rounded-xl border border-neutral-200/60 shadow-sm hover:shadow-md transition-shadow card-reveal stagger-item p-4 sm:p-6">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-wide text-secondary-700">On-time Payment Rate</p>
@@ -254,7 +251,7 @@ export default function FinancePage() {
               </ResponsiveContainer>
             </div>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              <div className="surface-panel card-reveal hover-lift stagger-item p-4">
+              <div className="bg-white rounded-xl border border-neutral-200/60 shadow-sm hover:shadow-md transition-shadow card-reveal stagger-item p-4">
                 <div className="flex items-start gap-2">
                   <DollarSign className="h-5 w-5 text-neutral-600" />
                   <div>
@@ -265,7 +262,7 @@ export default function FinancePage() {
                   </div>
                 </div>
               </div>
-              <div className="surface-panel card-reveal hover-lift stagger-item p-4">
+              <div className="bg-white rounded-xl border border-neutral-200/60 shadow-sm hover:shadow-md transition-shadow card-reveal stagger-item p-4">
                 <div className="flex items-start gap-2">
                   <CheckCircle className="h-5 w-5 text-success-600" />
                   <div>
@@ -276,7 +273,7 @@ export default function FinancePage() {
                   </div>
                 </div>
               </div>
-              <div className="surface-panel card-reveal hover-lift stagger-item p-4">
+              <div className="bg-white rounded-xl border border-neutral-200/60 shadow-sm hover:shadow-md transition-shadow card-reveal stagger-item p-4">
                 <div className="flex items-start gap-2">
                   <AlertTriangle className="h-5 w-5 text-danger-600" />
                   <div>
@@ -287,7 +284,7 @@ export default function FinancePage() {
                   </div>
                 </div>
               </div>
-              <div className="surface-panel card-reveal hover-lift stagger-item p-4">
+              <div className="bg-white rounded-xl border border-neutral-200/60 shadow-sm hover:shadow-md transition-shadow card-reveal stagger-item p-4">
                 <div className="flex items-start gap-2">
                   <Calendar className="h-5 w-5 text-secondary-600" />
                   <div>

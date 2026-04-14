@@ -1,6 +1,7 @@
 // src/pages/PaymentsPage.jsx
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { Upload, FileText, X, Eye } from "lucide-react";
 import toast from "react-hot-toast";
 import API from "../services/api";
 import DashboardCard from "../components/DashboardCard";
@@ -8,7 +9,6 @@ import { useAuthStore } from "../store/authStore";
 import PageHeader from "../components/PageHeader";
 import SkeletonRow from "../components/SkeletonRow";
 import SkeletonTable from "../components/SkeletonTable";
-import SkeletonCard from "../components/SkeletonCard";
 import Pagination from "../components/Pagination";
 import { getLeaseMonthlyRentEtb } from "../utils/pricing";
 
@@ -37,6 +37,10 @@ export default function PaymentsPage() {
     paymentMethod: "CASH",
     externalTransactionId: "",
   });
+
+  const [receiptFile, setReceiptFile] = useState(null);
+  const [receiptPreview, setReceiptPreview] = useState(null);
+  const [uploadingReceipt, setUploadingReceipt] = useState(false);
 
   const canCreate =
     user?.role === "TENANT" || user?.role === "ADMIN";
@@ -99,6 +103,15 @@ export default function PaymentsPage() {
 
     fetchLeases();
   }, [user, canCreate]);
+
+  // Cleanup receipt preview on unmount
+  useEffect(() => {
+    return () => {
+      if (receiptPreview) {
+        URL.revokeObjectURL(receiptPreview);
+      }
+    };
+  }, [receiptPreview]);
 
   const getLeaseLabel = (lease) => {
     const unit = lease.unitId?.unitNumber || "Unit";
@@ -163,10 +176,65 @@ export default function PaymentsPage() {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleReceiptChange = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith("image/")) {
+      toast.error("Only image files (JPEG, PNG, GIF, WEBP) are allowed");
+      return;
+    }
+
+    // Validate file size (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("File size must be less than 5MB");
+      return;
+    }
+
+    setReceiptFile(file);
+    setReceiptPreview(URL.createObjectURL(file));
+  };
+
+  const clearReceipt = () => {
+    setReceiptFile(null);
+    if (receiptPreview) {
+      URL.revokeObjectURL(receiptPreview);
+    }
+    setReceiptPreview(null);
+  };
+
   const handleCreate = async (e) => {
     e.preventDefault();
     try {
       setCreating(true);
+
+      let receiptUrl = null;
+
+      // Upload receipt if selected
+      if (receiptFile) {
+        setUploadingReceipt(true);
+        const formData = new FormData();
+        formData.append("receipt", receiptFile);
+
+        try {
+          const uploadRes = await API.post("/uploads/receipt", formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          });
+          receiptUrl = uploadRes.data?.data?.url;
+        } catch (uploadErr) {
+          toast.error(
+            uploadErr.response?.data?.message || "Failed to upload receipt"
+          );
+          setCreating(false);
+          setUploadingReceipt(false);
+          return;
+        } finally {
+          setUploadingReceipt(false);
+        }
+      }
 
       const payload = {
         leaseId: form.leaseId,
@@ -175,6 +243,7 @@ export default function PaymentsPage() {
         paymentMethod: form.paymentMethod,
         externalTransactionId:
           form.externalTransactionId || undefined,
+        receiptUrl: receiptUrl || undefined,
       };
 
       const res = await API.post("/payments", payload); // POST /api/payments
@@ -189,6 +258,7 @@ export default function PaymentsPage() {
         paymentMethod: "CASH",
         externalTransactionId: "",
       });
+      clearReceipt();
     } catch (err) {
       toast.error(
         err.response?.data?.message || "Failed to create payment"
@@ -231,17 +301,15 @@ export default function PaymentsPage() {
     return (
       <div className="space-y-6">
         <PageHeader
-          eyebrow="Payments"
-          eyebrowClassName="bg-primary-100 text-primary-700"
           title="Payments"
           subtitle="Record tenant payments and verify them once confirmed."
         />
-        <SkeletonCard>
+        <DashboardCard>
           <div className="space-y-3">
             <SkeletonRow className="h-4 w-48" />
             <SkeletonTable rows={5} columns={7} />
           </div>
-        </SkeletonCard>
+        </DashboardCard>
       </div>
     );
   }
@@ -249,8 +317,6 @@ export default function PaymentsPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        eyebrow="Payments"
-        eyebrowClassName="bg-primary-100 text-primary-700"
         title="Payments"
         subtitle="Record tenant payments and verify them once confirmed."
       />
@@ -386,15 +452,63 @@ export default function PaymentsPage() {
               </div>
             </div>
 
+            {/* Receipt Upload */}
+            <div className="mt-3">
+              <label className="mb-1 block text-[11px] font-medium text-neutral-600">
+                Receipt Image (Proof of Payment)
+              </label>
+              <div className="flex flex-wrap items-center gap-3">
+                {!receiptPreview ? (
+                  <label className="flex cursor-pointer items-center gap-2 rounded-lg border border-dashed border-neutral-300 bg-neutral-50 px-4 py-2 text-xs text-neutral-600 transition hover:border-primary-400 hover:bg-primary-50">
+                    <Upload className="h-4 w-4" />
+                    <span>Upload receipt image</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleReceiptChange}
+                      className="hidden"
+                    />
+                  </label>
+                ) : (
+                  <div className="flex items-center gap-3">
+                    <div className="relative">
+                      <img
+                        src={receiptPreview}
+                        alt="Receipt preview"
+                        className="h-16 w-16 rounded-lg object-cover border border-neutral-200"
+                      />
+                      <button
+                        type="button"
+                        onClick={clearReceipt}
+                        className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-danger-500 text-white shadow-sm hover:bg-danger-600"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                    <span className="text-xs text-neutral-500">
+                      {receiptFile?.name}
+                    </span>
+                  </div>
+                )}
+                <span className="text-[10px] text-neutral-400">
+                  Max 5MB (JPEG, PNG, GIF)
+                </span>
+              </div>
+            </div>
+
             <div className="mt-3 flex justify-end">
               <button
                 type="submit"
-                disabled={creating}
+                disabled={creating || uploadingReceipt}
                 className={`btn-primary text-[11px] uppercase tracking-wide ${
-                  creating ? "opacity-70" : ""
+                  creating || uploadingReceipt ? "opacity-70" : ""
                 }`}
               >
-                {creating ? "Saving..." : "Record payment"}
+                {uploadingReceipt
+                  ? "Uploading receipt..."
+                  : creating
+                  ? "Saving..."
+                  : "Record payment"}
               </button>
             </div>
           </form>
@@ -431,6 +545,9 @@ export default function PaymentsPage() {
                     Transaction ID
                   </th>
                   <th className="px-3 py-2 text-left font-semibold text-neutral-600">
+                    Receipt
+                  </th>
+                  <th className="px-3 py-2 text-left font-semibold text-neutral-600">
                     Lease
                   </th>
                   <th className="px-3 py-2 text-left font-semibold text-neutral-600">
@@ -465,6 +582,21 @@ export default function PaymentsPage() {
                     </td>
                     <td className="px-3 py-2">
                       {p.externalTransactionId || "—"}
+                    </td>
+                    <td className="px-3 py-2">
+                      {p.receiptUrl ? (
+                        <a
+                          href={`${import.meta.env.VITE_API_BASE_URL?.replace('/api', '') || 'http://localhost:5000'}${p.receiptUrl}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 text-xs font-semibold text-primary-600 hover:text-primary-700"
+                        >
+                          <Eye className="h-3.5 w-3.5" />
+                          View
+                        </a>
+                      ) : (
+                        <span className="text-xs text-neutral-400">—</span>
+                      )}
                     </td>
                     <td className="px-3 py-2">
                       {p.leaseId ? (
