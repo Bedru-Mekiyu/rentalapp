@@ -18,6 +18,7 @@ const PAGE_SIZE = 25;
 
 export default function PaymentsPage() {
   const { user } = useAuthStore();
+  const userId = user?._id || user?.id;
 
   const [payments, setPayments] = useState([]);
   const [search, setSearch] = useState("");
@@ -49,10 +50,10 @@ export default function PaymentsPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (!user) return;
+        if (!userId) return;
 
         if (user.role === "TENANT") {
-          const res = await API.get(`/payments/by-tenant/${user.id}`);
+          const res = await API.get(`/payments/by-tenant/${userId}`);
           setPayments(res.data?.data || []);
           return;
         }
@@ -87,7 +88,7 @@ export default function PaymentsPage() {
         setLoadingLeases(true);
         const endpoint =
           user.role === "TENANT"
-            ? `/leases/by-tenant/${user.id}`
+            ? `/leases/by-tenant/${userId}`
             : "/leases";
         const res = await API.get(endpoint);
         setLeaseOptions(res.data?.data || []);
@@ -102,7 +103,7 @@ export default function PaymentsPage() {
     };
 
     fetchLeases();
-  }, [user, canCreate]);
+  }, [user, canCreate, userId]);
 
   // Cleanup receipt preview on unmount
   useEffect(() => {
@@ -526,7 +527,7 @@ export default function PaymentsPage() {
           </div>
         ) : (
           <div className="overflow-x-auto -mx-2 px-2 sm:mx-0 sm:px-0">
-            <table className="w-full min-w-[720px] divide-y divide-neutral-200 text-xs">
+            <table className="w-full min-w-180 divide-y divide-neutral-200 text-xs">
               <thead className="bg-neutral-50">
                 <tr>
                   <th className="px-2 py-2 text-left font-semibold text-neutral-600 whitespace-nowrap">
@@ -580,7 +581,7 @@ export default function PaymentsPage() {
                         {p.status}
                     </span>
                     </td>
-                    <td className="px-2 py-2 max-w-[100px] truncate" title={p.externalTransactionId}>
+                    <td className="px-2 py-2 max-w-25 truncate" title={p.externalTransactionId}>
                       {p.externalTransactionId || "—"}
                     </td>
                     <td className="px-2 py-2 whitespace-nowrap">

@@ -14,6 +14,9 @@ import { getLeaseMonthlyRentEtb } from "../utils/pricing";
 const STATUS_FILTERS = ["All", "ACTIVE", "ENDED"];
 const PAGE_SIZE = 20;
 
+const isCanceledRequest = (error) =>
+  error?.code === "ERR_CANCELED" || error?.name === "CanceledError";
+
 export default function LeasesPage() {
   const { user } = useAuthStore();
   const [leases, setLeases] = useState([]);
@@ -37,7 +40,7 @@ export default function LeasesPage() {
       const res = await API.get("/leases", { signal }); // GET /api/leases[listAllLeases]
       setLeases(res.data?.data || []);
     } catch (err) {
-      if (err.name !== 'AbortError') {
+      if (!isCanceledRequest(err)) {
         toast.error("Failed to load leases");
       }
     } finally {

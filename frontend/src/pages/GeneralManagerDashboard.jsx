@@ -247,26 +247,6 @@ export default function GeneralManagerDashboard() {
         }
       />
 
-      <section className="insight-banner">
-        <div className="insight-icon">
-          <Sparkles className="h-5 w-5" />
-        </div>
-        <div>
-          <div className="insight-title">Portfolio insight</div>
-          <div className="insight-text">
-            Occupancy is at {kpis.occupancyRate}% with {occupancyStats.vacantUnits} vacant units. Consider targeted campaigns in low-occupancy unit types.
-          </div>
-        </div>
-        <div className="insight-actions">
-          <button className="btn-pill btn-outline btn-outline-primary" onClick={exportPDF}>
-            Export Snapshot
-          </button>
-          <button className="btn-pill btn-outline btn-outline-success" onClick={exportCSV}>
-            Download CSV
-          </button>
-        </div>
-      </section>
-
       {/* KPI Cards */}
       <div className="grid gap-6 md:grid-cols-3">
         <KpiCard

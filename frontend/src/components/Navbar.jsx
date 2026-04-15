@@ -12,15 +12,12 @@ export default function Navbar() {
         <div className="flex items-center gap-3">
           <img
             src={logoImage}
-            alt="Rental Management Logo"
+            alt="Ethiopia islamic affairs superm counsil Logo"
             className="h-11 w-11 rounded-xl object-cover shadow-lg shadow-emerald-500/20"
           />
           <div className="flex flex-col">
             <span className="app-title text-lg font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
-              Rental Management
-            </span>
-            <span className="text-[10px] font-medium text-slate-500 tracking-wide uppercase">
-              Property & Finance Platform
+              Ethiopia islamic affairs superm counsil
             </span>
           </div>
         </div>

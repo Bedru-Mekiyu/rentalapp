@@ -13,6 +13,9 @@ import { useAuthStore } from "../store/authStore";
 const statusFilters = ["All", "VACANT", "OCCUPIED", "UNDER_MAINTENANCE"];
 const PAGE_SIZE = 10;
 
+const isCanceledRequest = (error) =>
+  error?.code === "ERR_CANCELED" || error?.name === "CanceledError";
+
 export default function UnitsPage() {
   const { user } = useAuthStore();
   const [units, setUnits] = useState([]);
@@ -47,7 +50,7 @@ export default function UnitsPage() {
       const res = await API.get("/units", { signal });
       setUnits(res.data?.data || []); // { success, data }
     } catch (err) {
-      if (err.name !== 'AbortError') {
+      if (!isCanceledRequest(err)) {
         toast.error("Failed to load units");
       }
     } finally {

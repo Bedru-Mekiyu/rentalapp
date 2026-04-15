@@ -17,7 +17,7 @@ export default function AppHeader({ title }) {
         <div className="flex items-center gap-2">
           <img
             src={logoImage}
-            alt="Rental Management Logo"
+            alt="Ethiopia islamic affairs superm counsil Logo"
             className="h-8 w-8 rounded-lg object-cover"
           />
           <h1 className="app-title text-lg font-semibold text-slate-900">
