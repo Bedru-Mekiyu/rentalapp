@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import API from "../services/api";
 import DashboardCard from "../components/DashboardCard";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from "recharts";
-import { DollarSign, AlertTriangle, CheckCircle, Calendar } from "lucide-react";
+import { DollarSign, AlertTriangle, CheckCircle, Calendar, Wrench } from "lucide-react";
 import PageHeader from "../components/PageHeader";
 import SkeletonRow from "../components/SkeletonRow";
 
@@ -14,9 +14,12 @@ export default function FinancePage() {
   const [summary, setSummary] = useState(null);
   const [loadingLeases, setLoadingLeases] = useState(true);
   const [loadingSummary, setLoadingSummary] = useState(false);
+  const [maintenanceRequests, setMaintenanceRequests] = useState([]);
+  const [loadingMaintenance, setLoadingMaintenance] = useState(false);
 
   useEffect(() => {
     loadLeases();
+    loadMaintenanceRequests();
   }, []);
 
   useEffect(() => {
@@ -65,6 +68,19 @@ export default function FinancePage() {
     }
   };
 
+  const loadMaintenanceRequests = async () => {
+    try {
+      setLoadingMaintenance(true);
+      const res = await API.get("/maintenance");
+      setMaintenanceRequests(res.data?.data || []);
+    } catch (err) {
+      toast.error(err?.response?.data?.message || "Failed to load maintenance requests");
+      setMaintenanceRequests([]);
+    } finally {
+      setLoadingMaintenance(false);
+    }
+  };
+
   const formatCurrency = (v) =>
     new Intl.NumberFormat("en-ET", {
       style: "currency",
@@ -91,6 +107,20 @@ export default function FinancePage() {
       <PageHeader
         title="Finance & Lease Analytics"
         subtitle="View financial KPIs and per-lease payment summaries."
+        actions={
+          <button
+            type="button"
+            className="btn-secondary text-xs font-semibold"
+            onClick={() => {
+              const section = document.getElementById("maintenance-report-section");
+              if (section) {
+                section.scrollIntoView({ behavior: "smooth", block: "start" });
+              }
+            }}
+          >
+            Maintenance Report
+          </button>
+        }
       />
 
       {/* Financial Summary */}
@@ -123,7 +153,7 @@ export default function FinancePage() {
               </select>
             )}
           </div>
-          <div className="text-xs text-neutral-500">
+          <div className="min-w-0 text-xs text-neutral-500">
             Choose a lease to fetch its financial summary from the backend
             service. Aggregate shows portfolio-level data for all leases.
           </div>
@@ -198,7 +228,7 @@ export default function FinancePage() {
         {!loadingSummary && summary && selectedLeaseId !== "ALL" && (
           <>
             <div className="surface-panel analytics-panel mb-4 p-4 sm:p-5">
-              <div className="mb-3 flex items-center justify-between">
+              <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
                 <p className="text-xs font-semibold uppercase tracking-wide text-neutral-600">
                   Billing vs Payments
                 </p>
@@ -312,6 +342,80 @@ export default function FinancePage() {
           </p>
         )}
       </DashboardCard>
+
+      <div id="maintenance-report-section">
+      <DashboardCard
+        title="Maintenance Request Report"
+        description="Read-only maintenance request feed for finance visibility."
+      >
+        {loadingMaintenance ? (
+          <div className="space-y-3">
+            <SkeletonRow className="h-10 w-full" />
+            <SkeletonRow className="h-10 w-full" />
+            <SkeletonRow className="h-10 w-full" />
+          </div>
+        ) : maintenanceRequests.length === 0 ? (
+          <div className="empty-state">
+            <div className="empty-state-title">No maintenance requests found</div>
+            <div className="empty-state-text">Requests will appear here when submitted by tenants.</div>
+          </div>
+        ) : (
+          <div className="overflow-x-auto -mx-2 px-2 sm:mx-0 sm:px-0">
+            <table className="w-full min-w-150 divide-y divide-neutral-200 text-xs">
+              <thead className="table-head">
+                <tr>
+                  <th className="px-2 py-2 text-left font-semibold text-neutral-500 whitespace-nowrap">Date</th>
+                  <th className="px-2 py-2 text-left font-semibold text-neutral-500 whitespace-nowrap">Unit</th>
+                  <th className="px-2 py-2 text-left font-semibold text-neutral-500 whitespace-nowrap">Category</th>
+                  <th className="px-2 py-2 text-left font-semibold text-neutral-500 whitespace-nowrap">Urgency</th>
+                  <th className="px-2 py-2 text-left font-semibold text-neutral-500 whitespace-nowrap">Status</th>
+                  <th className="px-2 py-2 text-left font-semibold text-neutral-500">Issue</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-neutral-100 bg-white">
+                {maintenanceRequests.slice(0, 15).map((request) => (
+                  <tr key={request._id} className="table-row">
+                    <td className="px-2 py-2 whitespace-nowrap text-neutral-600">
+                      {request.createdAt ? new Date(request.createdAt).toLocaleDateString() : "-"}
+                    </td>
+                    <td className="px-2 py-2 whitespace-nowrap text-neutral-700">
+                      {request.unitId?.unitNumber || "N/A"}
+                    </td>
+                    <td className="px-2 py-2 whitespace-nowrap text-neutral-700">
+                      {request.category || "General"}
+                    </td>
+                    <td className="px-2 py-2 whitespace-nowrap text-neutral-700">
+                      {request.urgency || "Normal"}
+                    </td>
+                    <td className="px-2 py-2 whitespace-nowrap">
+                      <span className="status-pill status-neutral">{request.status || "Pending"}</span>
+                    </td>
+                    <td className="px-2 py-2 text-neutral-700">
+                      <div className="max-w-60 truncate" title={request.description || ""}>
+                        {request.description || "-"}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+        <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-[11px] text-neutral-500">
+          <div className="inline-flex items-center gap-1.5">
+            <Wrench className="h-3.5 w-3.5" />
+            Read-only feed for finance team and general managers.
+          </div>
+          <button
+            type="button"
+            className="link-action link-action-primary"
+            onClick={loadMaintenanceRequests}
+          >
+            Refresh maintenance data
+          </button>
+        </div>
+      </DashboardCard>
+      </div>
     </div>
   );
 }

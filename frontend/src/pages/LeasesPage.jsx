@@ -129,7 +129,7 @@ export default function LeasesPage() {
       {/* Filters */}
       <DashboardCard>
         <div className="flex flex-wrap items-center gap-3">
-          <div className="relative flex-1 min-w-[200px]">
+          <div className="relative min-w-0 flex-1 sm:min-w-50">
             <input
               type="text"
               placeholder="Search by unit or tenant..."
@@ -171,7 +171,7 @@ export default function LeasesPage() {
           </div>
         ) : (
           <div className="overflow-x-auto -mx-2 px-2 sm:mx-0 sm:px-0">
-            <table className="w-full min-w-[680px] divide-y divide-neutral-200 text-sm">
+            <table className="w-full min-w-170 divide-y divide-neutral-200 text-sm">
               <thead className="table-head">
                 <tr>
                   <th className="px-2 py-2 text-left text-[10px] font-bold text-neutral-600 uppercase tracking-wider sm:px-6 whitespace-nowrap">
@@ -211,11 +211,11 @@ export default function LeasesPage() {
                     </td>
                     <td className="px-2 py-3 sm:px-6">
                       <div className="min-w-0">
-                        <div className="text-sm font-semibold text-neutral-900 truncate max-w-[140px] sm:max-w-[180px]">
+                        <div className="text-sm font-semibold text-neutral-900 truncate max-w-35 sm:max-w-45">
                           {l.tenantId?.fullName || "Tenant"}
                         </div>
                         {l.tenantId?.email && (
-                          <div className="text-xs text-neutral-500 truncate max-w-[140px] sm:max-w-[180px]">
+                          <div className="text-xs text-neutral-500 truncate max-w-35 sm:max-w-45">
                             {l.tenantId.email}
                           </div>
                         )}

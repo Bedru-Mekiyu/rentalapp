@@ -20,13 +20,13 @@ router.post(
   createMaintenanceRequest
 );
 
-// Admin/PM: list all requests (with optional filters)
-router.get("/", auth(["ADMIN", "PM"]), getMaintenanceRequests);
+// Admin/PM/GM/FS: list all requests (FS is read-only)
+router.get("/", auth(["ADMIN", "PM", "GM", "FS"]), getMaintenanceRequests);
 
 // Tenant: list requests by tenant id
 router.get(
   "/by-tenant/:tenantId",
-  auth(["TENANT", "ADMIN", "PM"]),
+  auth(["TENANT", "ADMIN", "PM", "GM", "FS"]),
   getMaintenanceRequestsByTenant
 );
 

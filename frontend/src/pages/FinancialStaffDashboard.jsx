@@ -285,13 +285,58 @@ export default function FinancialStaffDashboard() {
       </DashboardCard>
 
       {/* Payment history + reports */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
         <DashboardCard
           title="Payment History"
           description="Recent payment records."
         >
-          <div className="overflow-x-auto -mx-2 px-2 sm:mx-0 sm:px-0">
-            <table className="w-full min-w-[560px] divide-y divide-neutral-200 text-xs">
+          <div className="space-y-3 sm:hidden">
+            {payments.slice(0, 6).map((p) => (
+              <div
+                key={p._id}
+                className="rounded-xl border border-neutral-200 bg-white p-3 text-xs"
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0">
+                    <p className="truncate font-semibold text-neutral-900">
+                      {p.tenantName || "Tenant"}
+                    </p>
+                    <p className="text-neutral-500">
+                      {p.transactionDate
+                        ? new Date(p.transactionDate).toLocaleDateString()
+                        : "-"}
+                    </p>
+                  </div>
+                  <span
+                    className={`status-pill whitespace-nowrap ${
+                      p.status === "VERIFIED"
+                        ? "status-success"
+                        : p.status === "PENDING"
+                        ? "status-warning"
+                        : "status-danger"
+                    }`}
+                  >
+                    {p.status}
+                  </span>
+                </div>
+                <div className="mt-2 grid grid-cols-2 gap-2 text-[11px]">
+                  <div>
+                    <p className="text-neutral-500">Amount</p>
+                    <p className="font-medium text-neutral-800">
+                      {formatCurrency(p.amountEtb || 0)}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-neutral-500">Method</p>
+                    <p className="font-medium text-neutral-800">{p.paymentMethod}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="hidden overflow-x-auto -mx-2 px-2 sm:mx-0 sm:px-0 sm:block">
+            <table className="w-full min-w-140 divide-y divide-neutral-200 text-xs">
               <thead className="table-head">
                 <tr>
                   <th className="px-2 py-2 text-left font-semibold text-neutral-500 whitespace-nowrap">
@@ -319,7 +364,7 @@ export default function FinancialStaffDashboard() {
                         ? new Date(p.transactionDate).toLocaleDateString()
                         : "-"}
                     </td>
-                    <td className="px-2 py-2 text-neutral-700 max-w-[120px] truncate">
+                    <td className="px-2 py-2 text-neutral-700 max-w-30 truncate">
                       {p.tenantName || "Tenant"}
                     </td>
                     <td className="px-2 py-2 text-neutral-700 whitespace-nowrap">
@@ -351,7 +396,7 @@ export default function FinancialStaffDashboard() {
           description="Key financial reports (view‑only)."
         >
           <ul className="space-y-2 text-xs">
-            <li className="stagger-item flex items-center justify-between rounded-2xl border border-neutral-100 bg-neutral-50/70 px-3 py-2">
+            <li className="stagger-item flex flex-col items-start gap-2 rounded-2xl border border-neutral-100 bg-neutral-50/70 px-3 py-2 sm:flex-row sm:items-center sm:justify-between">
               <span>Monthly Revenue Report</span>
               <Link
                 to="/reports/monthly-revenue"
@@ -360,7 +405,7 @@ export default function FinancialStaffDashboard() {
                 View
               </Link>
             </li>
-            <li className="stagger-item flex items-center justify-between rounded-2xl border border-neutral-100 bg-neutral-50/70 px-3 py-2">
+            <li className="stagger-item flex flex-col items-start gap-2 rounded-2xl border border-neutral-100 bg-neutral-50/70 px-3 py-2 sm:flex-row sm:items-center sm:justify-between">
               <span>Delinquency Report</span>
               <Link
                 to="/reports/delinquency"
@@ -369,7 +414,7 @@ export default function FinancialStaffDashboard() {
                 View
               </Link>
             </li>
-            <li className="stagger-item flex items-center justify-between rounded-2xl border border-neutral-100 bg-neutral-50/70 px-3 py-2">
+            <li className="stagger-item flex flex-col items-start gap-2 rounded-2xl border border-neutral-100 bg-neutral-50/70 px-3 py-2 sm:flex-row sm:items-center sm:justify-between">
               <span>Expense Report</span>
               <Link
                 to="/reports/expense"

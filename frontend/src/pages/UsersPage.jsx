@@ -181,7 +181,7 @@ export default function UsersPage() {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <select
             className="form-select text-sm"
             value={roleFilter}
@@ -215,7 +215,7 @@ export default function UsersPage() {
         </div>
       ) : (
         <div className="overflow-x-auto -mx-2 px-2 sm:mx-0 sm:px-0">
-          <table className="w-full min-w-[600px] divide-y divide-neutral-200 text-sm">
+          <table className="w-full min-w-150 divide-y divide-neutral-200 text-sm">
             <thead className="table-head">
               <tr>
                 <th className="px-2 py-2 text-left text-xs font-semibold text-neutral-500 sm:px-4 whitespace-nowrap">
@@ -240,10 +240,10 @@ export default function UsersPage() {
                 <tr key={u._id} className="table-row stagger-item">
                   <td className="px-2 py-3 sm:px-4">
                     <div className="min-w-0">
-                      <div className="font-medium text-neutral-900 truncate max-w-[160px] sm:max-w-[200px]">
+                      <div className="font-medium text-neutral-900 truncate max-w-40 sm:max-w-50">
                         {u.fullName || "Unnamed"}
                       </div>
-                      <div className="text-xs text-neutral-500 truncate max-w-[160px] sm:max-w-[200px]">
+                      <div className="text-xs text-neutral-500 truncate max-w-40 sm:max-w-50">
                         {u.email}
                         {u.phone && (
                           <span className="ml-1 text-neutral-400 whitespace-nowrap">

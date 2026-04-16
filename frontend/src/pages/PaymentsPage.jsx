@@ -58,7 +58,12 @@ export default function PaymentsPage() {
           return;
         }
 
-        if (user.role === "PM" || user.role === "ADMIN" || user.role === "FS") {
+        if (
+          user.role === "PM" ||
+          user.role === "ADMIN" ||
+          user.role === "FS" ||
+          user.role === "GM"
+        ) {
           const res = await API.get("/payments");
           setPayments(res.data?.data || []);
           return;

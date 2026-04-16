@@ -14,11 +14,14 @@ import { validateCreatePayment } from "../middleware/validators.js";
 
 const router = Router();
 
-// staff roles that can manage/verify payments
-const STAFF_ROLES = ["PM", "ADMIN", "FS"];
+// roles that can view payment data (read-only for GM)
+const PAYMENT_VIEW_ROLES = ["PM", "ADMIN", "FS", "GM"];
+
+// roles that can manage/verify payments
+const PAYMENT_MANAGE_ROLES = ["PM", "ADMIN", "FS"];
 
 // PM + ADMIN + FS can see all payments (verification dashboard)
-router.get("/", auth(STAFF_ROLES), listPayments);
+router.get("/", auth(PAYMENT_VIEW_ROLES), listPayments);
 
 // Tenants + admin can create a payment record (no FS; add "PM" if you want)
 router.post(
@@ -29,19 +32,19 @@ router.post(
 );
 
 // Only PM and ADMIN can change status (verify/reject)
-router.patch("/:id/status", auth(STAFF_ROLES), updatePaymentStatus);
+router.patch("/:id/status", auth(PAYMENT_MANAGE_ROLES), updatePaymentStatus);
 
 // Only PM and ADMIN see payments by lease (back-office view)
-router.get("/by-lease/:leaseId", auth(STAFF_ROLES), listByLease);
+router.get("/by-lease/:leaseId", auth(PAYMENT_VIEW_ROLES), listByLease);
 
 // Tenants + PM + ADMIN + FS can see payments for a tenant
 router.get(
   "/by-tenant/:tenantId",
-  auth(["TENANT", ...STAFF_ROLES]),
+  auth(["TENANT", ...PAYMENT_VIEW_ROLES]),
   listByTenant
 );
 
 // Payment detail for tenant or staff
-router.get("/:id", auth(["TENANT", ...STAFF_ROLES]), getPaymentById);
+router.get("/:id", auth(["TENANT", ...PAYMENT_VIEW_ROLES]), getPaymentById);
 
 export default router;

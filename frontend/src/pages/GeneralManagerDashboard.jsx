@@ -416,7 +416,7 @@ export default function GeneralManagerDashboard() {
 
       {/* Reports */}
       <section className="surface-panel p-6">
-        <div className="mb-4 flex items-center justify-between">
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
           <div>
             <h2 className="panel-title">Financial Reports</h2>
             <p className="panel-subtitle">
@@ -424,8 +424,8 @@ export default function GeneralManagerDashboard() {
             </p>
           </div>
         </div>
-        <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white/90">
-          <table className="w-full text-xs">
+        <div className="overflow-x-auto rounded-2xl border border-neutral-200 bg-white/90">
+          <table className="w-full min-w-140 text-xs">
             <thead className="bg-neutral-50/80 text-left text-neutral-500">
               <tr>
                 <th className="px-3 py-2">Report ID</th>

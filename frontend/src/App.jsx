@@ -142,7 +142,7 @@ function App() {
         <Route
           path="maintenance"
           element={
-            user?.role === "ADMIN" || user?.role === "PM" || user?.role === "GM" ? (
+            user?.role === "ADMIN" || user?.role === "PM" || user?.role === "GM" || user?.role === "FS" ? (
               <Suspense fallback={<PageLoading />}>
                 <Maintenance />
               </Suspense>
