@@ -120,7 +120,14 @@ body {
 }
 
 body.login-page {
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+@media (min-width: 1024px) {
+  body.login-page {
+    overflow: hidden;
+  }
 }
 
 html {
